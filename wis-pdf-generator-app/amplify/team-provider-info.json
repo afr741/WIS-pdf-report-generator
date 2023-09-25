@@ -10,6 +10,14 @@
       "StackName": "amplify-hvireportapp-dev-22828",
       "StackId": "arn:aws:cloudformation:us-east-1:169759725246:stack/amplify-hvireportapp-dev-22828/79c0d6e0-5bea-11ee-985f-0e9abc877abf",
       "AmplifyAppId": "d2bf90vjdhnc3x"
+    },
+    "categories": {
+      "auth": {
+        "hvireportapp96ea0c41": {}
+      },
+      "api": {
+        "hvireportapp": {}
+      }
     }
   }
 }

@@ -1,0 +1,61 @@
+# this is an auto generated file. This will be overwritten
+
+mutation CreateReport(
+  $input: CreateReportInput!
+  $condition: ModelReportConditionInput
+) {
+  createReport(input: $input, condition: $condition) {
+    id
+    name
+    testLocation
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation UpdateReport(
+  $input: UpdateReportInput!
+  $condition: ModelReportConditionInput
+) {
+  updateReport(input: $input, condition: $condition) {
+    id
+    name
+    testLocation
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation DeleteReport(
+  $input: DeleteReportInput!
+  $condition: ModelReportConditionInput
+) {
+  deleteReport(input: $input, condition: $condition) {
+    id
+    name
+    testLocation
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    createdAt
+    updatedAt
+    __typename
+  }
+}

@@ -1,0 +1,52 @@
+# this is an auto generated file. This will be overwritten
+
+subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
+  onCreateReport(filter: $filter) {
+    id
+    name
+    testLocation
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput) {
+  onUpdateReport(filter: $filter) {
+    id
+    name
+    testLocation
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput) {
+  onDeleteReport(filter: $filter) {
+    id
+    name
+    testLocation
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    createdAt
+    updatedAt
+    __typename
+  }
+}
