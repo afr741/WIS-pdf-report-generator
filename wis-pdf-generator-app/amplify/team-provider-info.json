@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-hvireportapp-dev-22828-authRole",
+      "UnauthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvireportapp-dev-22828-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvireportapp-dev-22828-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-hvireportapp-dev-22828-deployment",
+      "UnauthRoleName": "amplify-hvireportapp-dev-22828-unauthRole",
+      "StackName": "amplify-hvireportapp-dev-22828",
+      "StackId": "arn:aws:cloudformation:us-east-1:169759725246:stack/amplify-hvireportapp-dev-22828/79c0d6e0-5bea-11ee-985f-0e9abc877abf",
+      "AmplifyAppId": "d2bf90vjdhnc3x"
+    }
+  }
+}
