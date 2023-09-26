@@ -1,22 +1,22 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-hvireportapp-dev-22828-authRole",
-      "UnauthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvireportapp-dev-22828-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvireportapp-dev-22828-authRole",
+      "AuthRoleName": "amplify-hvigen-dev-151624-authRole",
+      "UnauthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvigen-dev-151624-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvigen-dev-151624-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-hvireportapp-dev-22828-deployment",
-      "UnauthRoleName": "amplify-hvireportapp-dev-22828-unauthRole",
-      "StackName": "amplify-hvireportapp-dev-22828",
-      "StackId": "arn:aws:cloudformation:us-east-1:169759725246:stack/amplify-hvireportapp-dev-22828/79c0d6e0-5bea-11ee-985f-0e9abc877abf",
-      "AmplifyAppId": "d2bf90vjdhnc3x"
+      "DeploymentBucketName": "amplify-hvigen-dev-151624-deployment",
+      "UnauthRoleName": "amplify-hvigen-dev-151624-unauthRole",
+      "StackName": "amplify-hvigen-dev-151624",
+      "StackId": "arn:aws:cloudformation:us-east-1:169759725246:stack/amplify-hvigen-dev-151624/c1ff8cb0-5c55-11ee-af03-12b3e04e42fd",
+      "AmplifyAppId": "d275476ssy5cup"
     },
     "categories": {
       "auth": {
-        "hvireportapp96ea0c41": {}
+        "hvigend8bb609a": {}
       },
       "api": {
-        "hvireportapp": {}
+        "hvigen": {}
       }
     }
   }

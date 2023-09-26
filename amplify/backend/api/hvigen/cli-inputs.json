@@ -1,7 +1,7 @@
 {
   "version": 1,
   "serviceConfiguration": {
-    "apiName": "hvireportapp",
+    "apiName": "hvigen",
     "serviceName": "AppSync",
     "defaultAuthType": {
       "mode": "API_KEY",
