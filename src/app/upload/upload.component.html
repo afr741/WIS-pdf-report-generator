@@ -1,1 +1,47 @@
 <p>upload works!</p>
+
+<!-- <app-uploads> -->
+<div class="form-body">
+  <form
+    autocomplete="off"
+    [formGroup]="createForm"
+    (ngSubmit)="onCreate(createForm.value)"
+  >
+    <div>
+      <label>Name: </label>
+      <input type="text" formControlName="name" autocomplete="off" />
+    </div>
+    <div>
+      <label>Test Location: </label>
+      <input type="text" formControlName="testLocation" autocomplete="off" />
+    </div>
+    <div>
+      <label>Report Number: </label>
+      <input type="text" formControlName="reportNum" autocomplete="off" />
+    </div>
+    <div>
+      <label>Lot Number: </label>
+      <input type="text" formControlName="lotNum" autocomplete="off" />
+    </div>
+    <div>
+      <label>Customer Name: </label>
+      <input type="text" formControlName="reportNum" autocomplete="off" />
+    </div>
+    <div>
+      <label>Stations: </label>
+      <input type="text" formControlName="stations" autocomplete="off" />
+    </div>
+    <div>
+      <label>Variety: </label>
+      <input type="text" formControlName="variety" autocomplete="off" />
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<div *ngFor="let report of reports">
+  <div>{{ report?.name }}</div>
+  <div>{{ report?.testLocation }}</div>
+  <div>{{ report?.reportNum }}</div>
+</div>
+<!-- </app-uploads> -->
