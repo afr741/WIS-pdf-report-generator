@@ -1,0 +1,13 @@
+{
+  "resourceName": "rawData",
+  "policyUUID": "57a8df90",
+  "bucketName": "rawdatafiles",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ"
+  ],
+  "triggerFunction": "S3Trigger1b00b2ea",
+  "groupAccess": {}
+}
