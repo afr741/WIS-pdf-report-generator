@@ -8,9 +8,10 @@ type Report @model {
   name: String!
   testLocation: String!
   reportNum: String!
-  lotNum: String
+  lotNum: String!
   customerName: String!
   origin: String!
   stations: String!
   variety: String!
+  attachmentUrl: String
 }

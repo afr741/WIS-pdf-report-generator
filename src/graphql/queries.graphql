@@ -11,6 +11,7 @@ query GetReport($id: ID!) {
     origin
     stations
     variety
+    attachmentUrl
     createdAt
     updatedAt
     __typename
@@ -33,6 +34,7 @@ query ListReports(
       origin
       stations
       variety
+      attachmentUrl
       createdAt
       updatedAt
       __typename

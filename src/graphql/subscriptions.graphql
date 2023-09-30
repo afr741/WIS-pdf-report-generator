@@ -11,6 +11,7 @@ subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
     origin
     stations
     variety
+    attachmentUrl
     createdAt
     updatedAt
     __typename
@@ -28,6 +29,7 @@ subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput) {
     origin
     stations
     variety
+    attachmentUrl
     createdAt
     updatedAt
     __typename
@@ -45,6 +47,7 @@ subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput) {
     origin
     stations
     variety
+    attachmentUrl
     createdAt
     updatedAt
     __typename

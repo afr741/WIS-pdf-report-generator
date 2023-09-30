@@ -1,9 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
-import { Injectable } from "@angular/core";
-import API, { graphqlOperation, GraphQLResult } from "@aws-amplify/api-graphql";
-import { Observable } from "zen-observable-ts";
+import { Injectable } from '@angular/core';
+import API, { graphqlOperation, GraphQLResult } from '@aws-amplify/api-graphql';
+import { Observable } from 'zen-observable-ts';
 
 export interface SubscriptionResponse<T> {
   value: GraphQLResult<T>;
@@ -20,11 +20,12 @@ export type CreateReportInput = {
   name: string;
   testLocation: string;
   reportNum: string;
-  lotNum?: string | null;
+  lotNum: string;
   customerName: string;
   origin: string;
   stations: string;
   variety: string;
+  attachmentUrl?: string | null;
 };
 
 export type ModelReportConditionInput = {
@@ -36,6 +37,7 @@ export type ModelReportConditionInput = {
   origin?: ModelStringInput | null;
   stations?: ModelStringInput | null;
   variety?: ModelStringInput | null;
+  attachmentUrl?: ModelStringInput | null;
   and?: Array<ModelReportConditionInput | null> | null;
   or?: Array<ModelReportConditionInput | null> | null;
   not?: ModelReportConditionInput | null;
@@ -58,16 +60,16 @@ export type ModelStringInput = {
 };
 
 export enum ModelAttributeTypes {
-  binary = "binary",
-  binarySet = "binarySet",
-  bool = "bool",
-  list = "list",
-  map = "map",
-  number = "number",
-  numberSet = "numberSet",
-  string = "string",
-  stringSet = "stringSet",
-  _null = "_null"
+  binary = 'binary',
+  binarySet = 'binarySet',
+  bool = 'bool',
+  list = 'list',
+  map = 'map',
+  number = 'number',
+  numberSet = 'numberSet',
+  string = 'string',
+  stringSet = 'stringSet',
+  _null = '_null',
 }
 
 export type ModelSizeInput = {
@@ -81,16 +83,17 @@ export type ModelSizeInput = {
 };
 
 export type Report = {
-  __typename: "Report";
+  __typename: 'Report';
   id: string;
   name: string;
   testLocation: string;
   reportNum: string;
-  lotNum?: string | null;
+  lotNum: string;
   customerName: string;
   origin: string;
   stations: string;
   variety: string;
+  attachmentUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -105,6 +108,7 @@ export type UpdateReportInput = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
+  attachmentUrl?: string | null;
 };
 
 export type DeleteReportInput = {
@@ -121,6 +125,7 @@ export type ModelReportFilterInput = {
   origin?: ModelStringInput | null;
   stations?: ModelStringInput | null;
   variety?: ModelStringInput | null;
+  attachmentUrl?: ModelStringInput | null;
   and?: Array<ModelReportFilterInput | null> | null;
   or?: Array<ModelReportFilterInput | null> | null;
   not?: ModelReportFilterInput | null;
@@ -143,7 +148,7 @@ export type ModelIDInput = {
 };
 
 export type ModelReportConnection = {
-  __typename: "ModelReportConnection";
+  __typename: 'ModelReportConnection';
   items: Array<Report | null>;
   nextToken?: string | null;
 };
@@ -158,6 +163,7 @@ export type ModelSubscriptionReportFilterInput = {
   origin?: ModelSubscriptionStringInput | null;
   stations?: ModelSubscriptionStringInput | null;
   variety?: ModelSubscriptionStringInput | null;
+  attachmentUrl?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionReportFilterInput | null> | null;
   or?: Array<ModelSubscriptionReportFilterInput | null> | null;
 };
@@ -193,78 +199,83 @@ export type ModelSubscriptionStringInput = {
 };
 
 export type CreateReportMutation = {
-  __typename: "Report";
+  __typename: 'Report';
   id: string;
   name: string;
   testLocation: string;
   reportNum: string;
-  lotNum?: string | null;
+  lotNum: string;
   customerName: string;
   origin: string;
   stations: string;
   variety: string;
+  attachmentUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
 export type UpdateReportMutation = {
-  __typename: "Report";
+  __typename: 'Report';
   id: string;
   name: string;
   testLocation: string;
   reportNum: string;
-  lotNum?: string | null;
+  lotNum: string;
   customerName: string;
   origin: string;
   stations: string;
   variety: string;
+  attachmentUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
 export type DeleteReportMutation = {
-  __typename: "Report";
+  __typename: 'Report';
   id: string;
   name: string;
   testLocation: string;
   reportNum: string;
-  lotNum?: string | null;
+  lotNum: string;
   customerName: string;
   origin: string;
   stations: string;
   variety: string;
+  attachmentUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
 export type GetReportQuery = {
-  __typename: "Report";
+  __typename: 'Report';
   id: string;
   name: string;
   testLocation: string;
   reportNum: string;
-  lotNum?: string | null;
+  lotNum: string;
   customerName: string;
   origin: string;
   stations: string;
   variety: string;
+  attachmentUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
 export type ListReportsQuery = {
-  __typename: "ModelReportConnection";
+  __typename: 'ModelReportConnection';
   items: Array<{
-    __typename: "Report";
+    __typename: 'Report';
     id: string;
     name: string;
     testLocation: string;
     reportNum: string;
-    lotNum?: string | null;
+    lotNum: string;
     customerName: string;
     origin: string;
     stations: string;
     variety: string;
+    attachmentUrl?: string | null;
     createdAt: string;
     updatedAt: string;
   } | null>;
@@ -272,52 +283,55 @@ export type ListReportsQuery = {
 };
 
 export type OnCreateReportSubscription = {
-  __typename: "Report";
+  __typename: 'Report';
   id: string;
   name: string;
   testLocation: string;
   reportNum: string;
-  lotNum?: string | null;
+  lotNum: string;
   customerName: string;
   origin: string;
   stations: string;
   variety: string;
+  attachmentUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
 export type OnUpdateReportSubscription = {
-  __typename: "Report";
+  __typename: 'Report';
   id: string;
   name: string;
   testLocation: string;
   reportNum: string;
-  lotNum?: string | null;
+  lotNum: string;
   customerName: string;
   origin: string;
   stations: string;
   variety: string;
+  attachmentUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
 export type OnDeleteReportSubscription = {
-  __typename: "Report";
+  __typename: 'Report';
   id: string;
   name: string;
   testLocation: string;
   reportNum: string;
-  lotNum?: string | null;
+  lotNum: string;
   customerName: string;
   origin: string;
   stations: string;
   variety: string;
+  attachmentUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class APIService {
   async CreateReport(
@@ -336,12 +350,13 @@ export class APIService {
           origin
           stations
           variety
+          attachmentUrl
           createdAt
           updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input
+      input,
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -367,12 +382,13 @@ export class APIService {
           origin
           stations
           variety
+          attachmentUrl
           createdAt
           updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input
+      input,
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -398,12 +414,13 @@ export class APIService {
           origin
           stations
           variety
+          attachmentUrl
           createdAt
           updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input
+      input,
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -426,12 +443,13 @@ export class APIService {
           origin
           stations
           variety
+          attachmentUrl
           createdAt
           updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      id
+      id,
     };
     const response = (await API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -457,6 +475,7 @@ export class APIService {
             origin
             stations
             variety
+            attachmentUrl
             createdAt
             updatedAt
           }
@@ -481,7 +500,7 @@ export class APIService {
   OnCreateReportListener(
     filter?: ModelSubscriptionReportFilterInput
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateReport">>
+    SubscriptionResponse<Pick<__SubscriptionContainer, 'onCreateReport'>>
   > {
     const statement = `subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
         onCreateReport(filter: $filter) {
@@ -495,6 +514,7 @@ export class APIService {
           origin
           stations
           variety
+          attachmentUrl
           createdAt
           updatedAt
         }
@@ -506,14 +526,14 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateReport">>
+      SubscriptionResponse<Pick<__SubscriptionContainer, 'onCreateReport'>>
     >;
   }
 
   OnUpdateReportListener(
     filter?: ModelSubscriptionReportFilterInput
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateReport">>
+    SubscriptionResponse<Pick<__SubscriptionContainer, 'onUpdateReport'>>
   > {
     const statement = `subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput) {
         onUpdateReport(filter: $filter) {
@@ -527,6 +547,7 @@ export class APIService {
           origin
           stations
           variety
+          attachmentUrl
           createdAt
           updatedAt
         }
@@ -538,14 +559,14 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateReport">>
+      SubscriptionResponse<Pick<__SubscriptionContainer, 'onUpdateReport'>>
     >;
   }
 
   OnDeleteReportListener(
     filter?: ModelSubscriptionReportFilterInput
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteReport">>
+    SubscriptionResponse<Pick<__SubscriptionContainer, 'onDeleteReport'>>
   > {
     const statement = `subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput) {
         onDeleteReport(filter: $filter) {
@@ -559,6 +580,7 @@ export class APIService {
           origin
           stations
           variety
+          attachmentUrl
           createdAt
           updatedAt
         }
@@ -570,7 +592,7 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteReport">>
+      SubscriptionResponse<Pick<__SubscriptionContainer, 'onDeleteReport'>>
     >;
   }
 }

@@ -39,6 +39,15 @@
       <label>Variety: </label>
       <input type="text" formControlName="variety" autocomplete="off" />
     </div>
+    <div>
+      <label>Excel file(s): </label>
+      <input
+        type="file"
+        formControlName="attachmentUrl"
+        name="attachmentUrl"
+        (change)="onFileChange($event)"
+      />
+    </div>
     <button type="submit">Submit</button>
   </form>
 </div>
