@@ -63,29 +63,14 @@ export class UploadComponent implements OnInit, OnDestroy {
               'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           }
         );
+        const createdAttachmentURL = await Storage.get(uploadResponse.key);
 
         // Update the report's attachmentUrl with the URL of the uploaded file
-        report.attachmentUrl = uploadResponse.key;
-        console.log('UPDATED report', report);
-        // Create the report with the updated attachmentUrl
+        report.attachmentUrl = createdAttachmentURL;
         await this.createReportWithAttachment(report);
-
-        // console.log('FILE', this.selectedFile);
-        // await Storage.put(report.name, this.selectedFile, {
-        //   contentType:
-        //     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        // })
-        //   .then((uploadResponse: any) => {
-        //     report.attachmentUrl = '';
-        //     this.createReportWithAttachment(report);
-        //   })
-        //   .catch((e) => console.log(`error uploading file to storage: ${e}`));
       } catch (error) {
         console.log('Error uploading file locally: ', error);
       }
-    } else {
-      // No file selected, create the report without an attachment
-      this.createReportWithAttachment(report);
     }
   }
 
