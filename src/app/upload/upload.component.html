@@ -1,7 +1,8 @@
-<p>upload works!</p>
-
-<!-- <app-uploads> -->
 <div class="form-body">
+  <button class="nav-link" (click)="logOut()">
+    Logout <span class="sr-only">(current)</span>
+  </button>
+
   <form
     autocomplete="off"
     [formGroup]="createForm"
@@ -57,4 +58,3 @@
   <div>{{ report?.testLocation }}</div>
   <div>{{ report?.reportNum }}</div>
 </div>
-<!-- </app-uploads> -->

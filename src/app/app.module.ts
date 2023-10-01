@@ -7,7 +7,6 @@ import { LoginComponent } from './login/login.component';
 import { UploadComponent } from './upload/upload.component';
 import { PdfComponent } from './pdf/pdf.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 @NgModule({
   declarations: [AppComponent, LoginComponent, UploadComponent, PdfComponent],
   imports: [

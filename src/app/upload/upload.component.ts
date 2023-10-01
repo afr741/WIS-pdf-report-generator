@@ -3,7 +3,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** Subscription type will be inferred from this library */
 import { ZenObservable } from 'zen-observable-ts';
-import { Storage } from 'aws-amplify';
+import { Storage, Auth } from 'aws-amplify';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -14,7 +16,11 @@ export class UploadComponent implements OnInit, OnDestroy {
   public reports: Array<Report> = [];
   private selectedFile: File | null = null; // Store the selected file
 
-  constructor(private api: APIService, private fb: FormBuilder) {
+  constructor(
+    private api: APIService,
+    private fb: FormBuilder,
+    public router: Router
+  ) {
     this.createForm = this.fb.group({
       name: ['', Validators.required],
       testLocation: ['', Validators.required],
@@ -88,10 +94,18 @@ export class UploadComponent implements OnInit, OnDestroy {
       .CreateReport(report)
       .then(() => {
         console.log('Item created!', report);
+        this.router.navigate(['/pdf']);
         this.createForm.reset();
       })
       .catch((e) => {
         console.log('Error creating report...', e);
       });
+  }
+  logOut() {
+    Auth.signOut({ global: true })
+      .then((data) => {
+        this.router.navigate(['/login']);
+      })
+      .catch((err) => console.log(err));
   }
 }
