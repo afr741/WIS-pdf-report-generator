@@ -73,7 +73,7 @@ export class UploadComponent implements OnInit, OnDestroy {
 
         // Update the report's attachmentUrl with the URL of the uploaded file
         report.attachmentUrl = createdAttachmentURL;
-        await this.createReportWithAttachment(report);
+        this.createReportWithAttachment(report);
       } catch (error) {
         console.log('Error uploading file locally: ', error);
       }
