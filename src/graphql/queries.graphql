@@ -12,6 +12,7 @@ query GetReport($id: ID!) {
     stations
     variety
     attachmentUrl
+    dataRows
     createdAt
     updatedAt
     __typename
@@ -35,6 +36,7 @@ query ListReports(
       stations
       variety
       attachmentUrl
+      dataRows
       createdAt
       updatedAt
       __typename

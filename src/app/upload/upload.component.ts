@@ -59,25 +59,26 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   public async onCreate(report: Report) {
     // Check if a file is selected and needs to be uploaded
-    if (this.selectedFile) {
-      try {
-        const uploadResponse = await Storage.put(
-          report.name,
-          this.selectedFile,
-          {
-            contentType:
-              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          }
-        );
-        const createdAttachmentURL = await Storage.get(uploadResponse.key);
+    console.log('report', report);
+    // if (this.selectedFile) {
+    //   try {
+    //     const uploadResponse = await Storage.put(
+    //       `${report.name}-${report.reportNum}`,
+    //       this.selectedFile,
+    //       {
+    //         contentType:
+    //           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    //       }
+    //     );
+    //     const createdAttachmentURL = await Storage.get(uploadResponse.key);
 
-        // Update the report's attachmentUrl with the URL of the uploaded file
-        report.attachmentUrl = createdAttachmentURL;
-        this.createReportWithAttachment(report);
-      } catch (error) {
-        console.log('Error uploading file locally: ', error);
-      }
-    }
+    //     // Update the report's attachmentUrl with the URL of the uploaded file
+    //     report.attachmentUrl = createdAttachmentURL;
+    //     this.createReportWithAttachment(report);
+    //   } catch (error) {
+    //     console.log('Error uploading file locally: ', error);
+    //   }
+    // }
   }
 
   // Handle file change event and update the formData

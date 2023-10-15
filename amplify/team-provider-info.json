@@ -21,7 +21,7 @@
       "function": {
         "S3Trigger1b00b2ea": {
           "deploymentBucketName": "amplify-hvigen-dev-151624-deployment",
-          "s3Key": "amplify-builds/S3Trigger1b00b2ea-6d38792f546a5a696b71-build.zip"
+          "s3Key": "amplify-builds/S3Trigger1b00b2ea-375535374b7052593567-build.zip"
         }
       },
       "storage": {
