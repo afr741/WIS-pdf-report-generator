@@ -45,3 +45,40 @@ query ListReports(
     __typename
   }
 }
+
+query ReportsByAttachmentUrlAndName(
+  $attachmentUrl: String!
+  $name: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelReportFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  reportsByAttachmentUrlAndName(
+    attachmentUrl: $attachmentUrl
+    name: $name
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      name
+      testLocation
+      reportNum
+      lotNum
+      customerName
+      origin
+      stations
+      variety
+      attachmentUrl
+      dataRows
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}

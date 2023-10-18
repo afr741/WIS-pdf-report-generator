@@ -13,6 +13,7 @@ type Report @model {
   origin: String!
   stations: String!
   variety: String!
-  attachmentUrl: String
+  attachmentUrl: String!
+    @index(name: "attachmentUrlIndex", sortKeyFields: ["name"])
   dataRows: [AWSJSON]
 }

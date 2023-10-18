@@ -25,7 +25,7 @@ export type CreateReportInput = {
   origin: string;
   stations: string;
   variety: string;
-  attachmentUrl?: string | null;
+  attachmentUrl: string;
   dataRows?: Array<string | null> | null;
 };
 
@@ -95,7 +95,7 @@ export type Report = {
   origin: string;
   stations: string;
   variety: string;
-  attachmentUrl?: string | null;
+  attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
   updatedAt: string;
@@ -158,6 +158,21 @@ export type ModelReportConnection = {
   nextToken?: string | null;
 };
 
+export type ModelStringKeyConditionInput = {
+  eq?: string | null;
+  le?: string | null;
+  lt?: string | null;
+  ge?: string | null;
+  gt?: string | null;
+  between?: Array<string | null> | null;
+  beginsWith?: string | null;
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC"
+}
+
 export type ModelSubscriptionReportFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   name?: ModelSubscriptionStringInput | null;
@@ -215,7 +230,7 @@ export type CreateReportMutation = {
   origin: string;
   stations: string;
   variety: string;
-  attachmentUrl?: string | null;
+  attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
   updatedAt: string;
@@ -232,7 +247,7 @@ export type UpdateReportMutation = {
   origin: string;
   stations: string;
   variety: string;
-  attachmentUrl?: string | null;
+  attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
   updatedAt: string;
@@ -249,7 +264,7 @@ export type DeleteReportMutation = {
   origin: string;
   stations: string;
   variety: string;
-  attachmentUrl?: string | null;
+  attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
   updatedAt: string;
@@ -266,7 +281,7 @@ export type GetReportQuery = {
   origin: string;
   stations: string;
   variety: string;
-  attachmentUrl?: string | null;
+  attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
   updatedAt: string;
@@ -285,7 +300,28 @@ export type ListReportsQuery = {
     origin: string;
     stations: string;
     variety: string;
-    attachmentUrl?: string | null;
+    attachmentUrl: string;
+    dataRows?: Array<string | null> | null;
+    createdAt: string;
+    updatedAt: string;
+  } | null>;
+  nextToken?: string | null;
+};
+
+export type ReportsByAttachmentUrlAndNameQuery = {
+  __typename: "ModelReportConnection";
+  items: Array<{
+    __typename: "Report";
+    id: string;
+    name: string;
+    testLocation: string;
+    reportNum: string;
+    lotNum: string;
+    customerName: string;
+    origin: string;
+    stations: string;
+    variety: string;
+    attachmentUrl: string;
     dataRows?: Array<string | null> | null;
     createdAt: string;
     updatedAt: string;
@@ -304,7 +340,7 @@ export type OnCreateReportSubscription = {
   origin: string;
   stations: string;
   variety: string;
-  attachmentUrl?: string | null;
+  attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
   updatedAt: string;
@@ -321,7 +357,7 @@ export type OnUpdateReportSubscription = {
   origin: string;
   stations: string;
   variety: string;
-  attachmentUrl?: string | null;
+  attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
   updatedAt: string;
@@ -338,7 +374,7 @@ export type OnDeleteReportSubscription = {
   origin: string;
   stations: string;
   variety: string;
-  attachmentUrl?: string | null;
+  attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
   updatedAt: string;
@@ -515,6 +551,68 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
     return <ListReportsQuery>response.data.listReports;
+  }
+  async ReportsByAttachmentUrlAndName(
+    attachmentUrl: string,
+    name?: ModelStringKeyConditionInput,
+    sortDirection?: ModelSortDirection,
+    filter?: ModelReportFilterInput,
+    limit?: number,
+    nextToken?: string
+  ): Promise<ReportsByAttachmentUrlAndNameQuery> {
+    const statement = `query ReportsByAttachmentUrlAndName($attachmentUrl: String!, $name: ModelStringKeyConditionInput, $sortDirection: ModelSortDirection, $filter: ModelReportFilterInput, $limit: Int, $nextToken: String) {
+        reportsByAttachmentUrlAndName(
+          attachmentUrl: $attachmentUrl
+          name: $name
+          sortDirection: $sortDirection
+          filter: $filter
+          limit: $limit
+          nextToken: $nextToken
+        ) {
+          __typename
+          items {
+            __typename
+            id
+            name
+            testLocation
+            reportNum
+            lotNum
+            customerName
+            origin
+            stations
+            variety
+            attachmentUrl
+            dataRows
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      attachmentUrl
+    };
+    if (name) {
+      gqlAPIServiceArguments.name = name;
+    }
+    if (sortDirection) {
+      gqlAPIServiceArguments.sortDirection = sortDirection;
+    }
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (limit) {
+      gqlAPIServiceArguments.limit = limit;
+    }
+    if (nextToken) {
+      gqlAPIServiceArguments.nextToken = nextToken;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <ReportsByAttachmentUrlAndNameQuery>(
+      response.data.reportsByAttachmentUrlAndName
+    );
   }
   OnCreateReportListener(
     filter?: ModelSubscriptionReportFilterInput
