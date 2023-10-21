@@ -5,6 +5,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ZenObservable } from 'zen-observable-ts';
 import { Storage, Auth } from 'aws-amplify';
 import { Router } from '@angular/router';
+import * as XLSX from 'xlsx';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+
+// pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-upload',
@@ -59,31 +64,50 @@ export class UploadComponent implements OnInit, OnDestroy {
   }
 
   public async onCreate(report: Report) {
+    console.log(this.selectedFile);
     if (this.selectedFile) {
-      const uniqueIdentifier = new Date().getTime();
-      const fileNameWithoutSpaces = this.selectedFile.name.replace(/ /g, '');
-      const key = `${report.name}_${uniqueIdentifier}_${fileNameWithoutSpaces}`;
-      try {
-        const uploadResponse = await Storage.put(key, this.selectedFile, {
-          contentType:
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        });
-        // Update the report's attachmentUrl with the URL of the uploaded file
-        report.attachmentUrl = uploadResponse.key;
-        this.createReportWithAttachment(report);
-      } catch (error) {
-        console.log('Error uploading file locally: ', error);
-      }
+      const workbook = XLSX.readFile(this.selectedFile.name);
+      console.log('workbook: ' + workbook);
     }
+
+    // if (this.selectedFile) {
+    //   const uniqueIdentifier = new Date().getTime();
+    //   const fileNameWithoutSpaces = this.selectedFile.name.replace(/ /g, '');
+    //   const key = `${report.name}_${uniqueIdentifier}_${fileNameWithoutSpaces}`;
+    //   try {
+    //     const uploadResponse = await Storage.put(key, this.selectedFile, {
+    //       contentType:
+    //         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    //     });
+    //     // Update the report's attachmentUrl with the URL of the uploaded file
+    //     report.attachmentUrl = uploadResponse.key;
+    //     this.createReportWithAttachment(report);
+    //   } catch (error) {
+    //     console.log('Error uploading file locally: ', error);
+    //   }
+    // }
   }
 
   // Handle file change event and update the formData
   onFileChange(event: any) {
-    const fileList: FileList | null = event.target.files;
-    if (fileList && fileList.length > 0) {
-      console.log(this.createForm);
-      this.selectedFile = fileList[0];
-    }
+    // const fileList: FileList | null = event.target.files;
+    // if (fileList && fileList.length > 0) {
+    //   console.log(this.createForm);
+    //   this.selectedFile = fileList[0];
+    // }
+
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const binarystr = e.target.result;
+      const workbook = XLSX.read(binarystr, { type: 'binary' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      console.log(data);
+      this.generatePDF(data);
+    };
+    reader.readAsBinaryString(file);
   }
 
   private createReportWithAttachment(report: Report) {
