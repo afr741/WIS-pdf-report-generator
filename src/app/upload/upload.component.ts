@@ -15,7 +15,8 @@ export class UploadComponent implements OnInit, OnDestroy {
   public createForm: FormGroup;
   public reports: Array<Report> = [];
   private selectedFile: File | null = null; // Store the selected file
-
+  private hasUpdate: boolean = false;
+  private currentReport: Report | null = null;
   constructor(
     private api: APIService,
     private fb: FormBuilder,
@@ -35,7 +36,8 @@ export class UploadComponent implements OnInit, OnDestroy {
     });
   }
 
-  private subscription: ZenObservable.Subscription | null = null;
+  private createSubscription: ZenObservable.Subscription | null = null;
+  private modifySubscription: ZenObservable.Subscription | null = null;
 
   async ngOnInit() {
     /* fetch reports when app loads */
@@ -43,19 +45,33 @@ export class UploadComponent implements OnInit, OnDestroy {
       this.reports = event.items as Report[];
     });
 
-    /* subscribe to new restaurants being created */
-    this.subscription = this.api
+    /* subscribe to new report being created */
+    this.createSubscription = this.api
       .OnCreateReportListener()
       .subscribe((event: any) => {
         const newReport = event.value.data.onCreateReport;
         this.reports = [newReport, ...this.reports];
       });
+    //TBD
+    this.modifySubscription = this.api
+      .OnUpdateReportListener({
+        name: { eq: 'test123' },
+      })
+      .subscribe((event: any) => {
+        console.log(event);
+        // this.router.navigate(['/pdf']);
+      });
   }
   ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.createSubscription) {
+      this.createSubscription.unsubscribe();
     }
-    this.subscription = null;
+    this.createSubscription = null;
+
+    if (this.modifySubscription) {
+      this.modifySubscription.unsubscribe();
+    }
+    this.modifySubscription = null;
   }
 
   public async onCreate(report: Report) {
@@ -63,6 +79,7 @@ export class UploadComponent implements OnInit, OnDestroy {
       const uniqueIdentifier = new Date().getTime();
       const fileNameWithoutSpaces = this.selectedFile.name.replace(/ /g, '');
       const key = `${report.name}_${uniqueIdentifier}_${fileNameWithoutSpaces}`;
+
       try {
         const uploadResponse = await Storage.put(key, this.selectedFile, {
           contentType:
@@ -70,6 +87,8 @@ export class UploadComponent implements OnInit, OnDestroy {
         });
         // Update the report's attachmentUrl with the URL of the uploaded file
         report.attachmentUrl = uploadResponse.key;
+        this.currentReport = report;
+        report.dataRows = null;
         this.createReportWithAttachment(report);
       } catch (error) {
         console.log('Error uploading file locally: ', error);
@@ -87,13 +106,13 @@ export class UploadComponent implements OnInit, OnDestroy {
   }
 
   private createReportWithAttachment(report: Report) {
-    console.log(report);
+    this.currentReport = report;
+    console.log('currentreport', this.currentReport);
     this.api
       .CreateReport(report)
       .then(() => {
         console.log('Item created!', report);
         this.router.navigate(['/pdf']);
-        this.createForm.reset();
       })
       .catch((e) => {
         console.log('Error creating report...', e);

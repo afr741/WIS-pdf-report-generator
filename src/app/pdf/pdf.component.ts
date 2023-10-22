@@ -16,40 +16,50 @@ export class PdfComponent implements OnInit {
 
   async ngOnInit() {
     /* fetch reports when app loads */
-    this.api.ListReports().then((event) => {
-      this.reports = event.items as Report[];
-      console.log('reports', this.reports);
-      //sort based on dates
-      this.reports.sort((a, b) => {
-        let dateA: any = new Date(a.updatedAt);
-        let dateB: any = new Date(b.updatedAt);
+    setTimeout(() => {
+      this.api.ListReports().then((event) => {
+        this.reports = event.items as Report[];
+        console.log('reports', this.reports);
+        //sort based on dates
+        this.reports.sort((a, b) => {
+          let dateA: any = new Date(a.updatedAt);
+          let dateB: any = new Date(b.updatedAt);
 
-        return dateB - dateA;
+          return dateB - dateA;
+        });
       });
-    });
+    }, 5000);
   }
 
   generatePDF() {
-    let data = this.reports[0].dataRows as string[][] | undefined;
+    let data = this.reports[0].dataRows;
     console.log('Generating PDF', data);
     if (!data) return;
     let extractedRows = data.slice(12, 36);
+    let arrayedRows = [];
+    console.log('Extracted rows', extractedRows);
     for (let i = 0; i < extractedRows.length; i++) {
-      const innerArray = extractedRows[i];
-      if (innerArray) {
-        // Iterate through the inner array
+      let innerItem = extractedRows[i];
+      if (innerItem) {
+        let innerArray = JSON.parse(innerItem);
+        console.log('Generating inner array', innerArray);
+        // // Iterate through the inner array
         for (let j = 0; j < innerArray.length; j++) {
           if (innerArray[j] === null || innerArray[j] === undefined) {
             // Replace null with an empty string
             innerArray[j] = '';
+          } else {
+            // Convert the item to a string and rounds the numbers down
+            innerArray[j] = isNaN(Number(innerArray[j]))
+              ? innerArray[j].toString()
+              : Number(innerArray[j]).toFixed(2).toString();
           }
         }
+        arrayedRows.push(innerArray);
       }
     }
-    // let removedNulls = extractedRows.map((row: any): any => {
-    //   if (row == null || row == undefined) return '';
-    // });
-    console.log(extractedRows);
+
+    console.log('arrayedRows', arrayedRows);
 
     let docDefinition = {
       content: [
@@ -57,7 +67,7 @@ export class PdfComponent implements OnInit {
         { text: 'hello zozo' },
         {
           table: {
-            body: extractedRows,
+            body: arrayedRows,
           },
         },
       ],
