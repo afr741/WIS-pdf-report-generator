@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+
+// import 'pdfmake/build/pdfmake';
+// const pdfMake = { createPdf: window['createPdf'] }: any;
+
 import { APIService, Report } from '../API.service';
 import { Router } from '@angular/router';
 
+// declare const pdfMake: any;
 @Component({
   selector: 'app-pdf',
   templateUrl: './pdf.component.html',
