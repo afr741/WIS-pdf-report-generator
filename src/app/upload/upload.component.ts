@@ -53,14 +53,12 @@ export class UploadComponent implements OnInit, OnDestroy {
         this.reports = [newReport, ...this.reports];
       });
     //TBD
-    this.modifySubscription = this.api
-      .OnUpdateReportListener({
-        name: { eq: 'test123' },
-      })
-      .subscribe((event: any) => {
-        console.log(event);
-        // this.router.navigate(['/pdf']);
-      });
+    // this.modifySubscription = this.api
+    //   .OnUpdateReportListener({ name: { eq: 'sampleName' } })
+    //   .subscribe((event: any) => {
+    //     console.log(event);
+    //     // this.router.navigate(['/pdf']);
+    //   });
   }
   ngOnDestroy() {
     if (this.createSubscription) {

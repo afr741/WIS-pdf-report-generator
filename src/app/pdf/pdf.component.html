@@ -1,10 +1,13 @@
-<div>
+<div *ngIf="!isLoading; else loading">
   <p>pdf works!</p>
-
   <div *ngFor="let report of reports">
     <div>{{ report?.name }}</div>
     <div>{{ report?.testLocation }}</div>
     <div>{{ report?.reportNum }}</div>
   </div>
-  <button (click)="generatePDF()">generatePDF</button>
+  <button (click)="openPDF()">open your pdf</button>
+  <button (click)="downloadPDF()">download your pdf</button>
 </div>
+<ng-template #loading>
+  <p>Loading...</p>
+</ng-template>
