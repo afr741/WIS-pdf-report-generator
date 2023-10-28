@@ -1,0 +1,7 @@
+<div *ngIf="dbEntryData != null; else notfound">
+  <p>qrcode works!</p>
+</div>
+
+<ng-template #notfound>
+  <p>NOT FOUND!</p>
+</ng-template>
