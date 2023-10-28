@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ZenObservable } from 'zen-observable-ts';
 import { Storage, Auth } from 'aws-amplify';
 import { Router } from '@angular/router';
+import { throwError } from 'rxjs';
+import { AuthService } from 'src/app/AuthService';
 
 @Component({
   selector: 'app-upload',
@@ -20,7 +22,8 @@ export class UploadComponent implements OnInit, OnDestroy {
   constructor(
     private api: APIService,
     private fb: FormBuilder,
-    public router: Router
+    public router: Router,
+    public authService: AuthService
   ) {
     // (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
     this.createForm = this.fb.group({
@@ -116,11 +119,13 @@ export class UploadComponent implements OnInit, OnDestroy {
         console.log('Error creating report...', e);
       });
   }
-  logOut() {
-    Auth.signOut({ global: true })
-      .then((data) => {
-        this.router.navigate(['/login']);
-      })
-      .catch((err) => console.log(err));
+  public async onSignOut() {
+    try {
+      await this.authService.onSignOut();
+      //temp workaround for persistence
+      this.router.navigate(['/login']);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
