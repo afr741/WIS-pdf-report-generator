@@ -26,18 +26,21 @@ import { AuthorizeGuard } from './auth.guard';
     AmplifyAuthenticatorModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot([
-      { path: 'login', component: LoginComponent },
-      { path: 'qrcode', component: QrcodeComponent },
-      { path: 'pdf', component: PdfComponent, canActivate: [AuthorizeGuard] },
+    RouterModule.forRoot(
+      [
+        { path: 'login', component: LoginComponent },
+        { path: 'qrcode', component: QrcodeComponent },
+        { path: 'pdf', component: PdfComponent, canActivate: [AuthorizeGuard] },
 
-      {
-        path: 'upload',
-        component: UploadComponent,
-        canActivate: [AuthorizeGuard],
-      },
-      { path: '', redirectTo: 'upload', pathMatch: 'full' },
-    ]),
+        {
+          path: 'upload',
+          component: UploadComponent,
+          canActivate: [AuthorizeGuard],
+        },
+        { path: '', redirectTo: 'upload', pathMatch: 'full' },
+      ],
+      { enableTracing: true }
+    ),
   ],
   providers: [AuthService],
   bootstrap: [AppComponent],
