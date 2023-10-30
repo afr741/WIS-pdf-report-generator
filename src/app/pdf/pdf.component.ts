@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import * as CryptoJS from 'crypto-js';
 
 import { APIService, Report } from '../API.service';
 import { Router } from '@angular/router';
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
 export class PdfComponent implements OnInit {
   public reports: Array<Report> = [];
   public pdfData: any = null;
-
+  private secretKey: string = 'wis';
   public isLoading: boolean = true;
   constructor(private api: APIService, public router: Router) {}
 
@@ -49,51 +50,37 @@ export class PdfComponent implements OnInit {
       } else {
         this.isLoading = false;
         this.processPDFData();
+        this.generateQRCode();
       }
     };
 
     fetchData(); // Start the initial data fetch.
   }
 
-  // async ngOnInit() {
-  //   /* fetch reports when app loads */
-  //   const fetchReports = async () => {
-  //     try {
-  //       const response = await this.api.ListReports();
-  //       this.reports = response.items as Report[];
-  //       console.log('reports', this.reports);
+  makeUrlFriendly(encryptedText: string): string {
+    // URL-encode the base64 string
+    const urlFriendlyText = encodeURIComponent(encryptedText);
 
-  //       // Sort based on dates
-  //       this.reports = this.reports.sort((a, b) => {
-  //         const dateA: any = new Date(a.updatedAt);
-  //         const dateB: any = new Date(b.updatedAt);
-  //         return dateB - dateA;
-  //       });
+    return urlFriendlyText;
+  }
 
-  //       // Check if dataRows is available
-  //       if (this.reports.length > 0 && this.reports[0].dataRows !== null) {
-  //         console.log('check if', this.reports[0]);
-  //         this.processPDFData();
-  //       } else {
-  //         // Continue fetching reports
-  //         console.log('settime', this.reports);
-  //         setTimeout(fetchReports, 5000);
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //       // Retry after a delay in case of an error
-  //       setTimeout(fetchReports, 5000);
-  //     }
-  //   };
+  generateQRCode() {
+    const textToEncrypt = this.reports[0].id;
 
-  //   // Initial call to start the recursive process
-  //   fetchReports();
-  // }
+    const encryptedText = CryptoJS.AES.encrypt(
+      textToEncrypt,
+      this.secretKey
+    ).toString();
+    const ecnryptedURLParam = this.makeUrlFriendly(encryptedText);
+    console.log(ecnryptedURLParam);
+  }
+
+  encryptQRCodeParam() {}
 
   processPDFData() {
     let data = this.reports[0].dataRows;
     if (!data) return;
-    let extractedRows = data.slice(12, 36);
+    let extractedRows = data.slice(12, 36); //rework this to extract rows inteligently
     let arrayedRows = [];
     // console.log('Extracted rows', extractedRows);
     for (let i = 0; i < extractedRows.length; i++) {

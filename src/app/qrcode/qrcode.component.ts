@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { APIService, Report } from '../API.service';
 import { ActivatedRoute } from '@angular/router';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-qrcode',
@@ -9,7 +10,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./qrcode.component.css'],
 })
 export class QrcodeComponent implements OnInit {
-  public queryParam: string;
+  public decodedID: string;
+  private secretKey: string = 'wis';
   public dbEntryData: Report | null = null;
   // when pinging this page
   // take the query param from page URL
@@ -18,19 +20,36 @@ export class QrcodeComponent implements OnInit {
   // use retrieved data to display the results in html template
 
   constructor(private api: APIService, private route: ActivatedRoute) {
-    this.queryParam = '1';
+    this.decodedID = '';
   }
 
-  decodeQueryParam(queryParam: string): string {
-    if (queryParam) console.log(queryParam);
-    return '';
+  convertToOriginal(urlFriendlyText: string): string {
+    const decodedBase64 = decodeURIComponent(urlFriendlyText);
+
+    return decodedBase64;
+  }
+  decodeQueryParam(queryParam: string): void {
+    if (queryParam) console.log('queryParam', queryParam);
+
+    const originalEncryptedText = this.convertToOriginal(queryParam);
+
+    const decryptedText = CryptoJS.AES.decrypt(
+      originalEncryptedText,
+      this.secretKey
+    ).toString(CryptoJS.enc.Utf8);
+    console.log('Decrypted Text:', decryptedText);
+
+    this.decodedID = decryptedText;
   }
 
   async ngOnInit() {
     const queryParams = this.route.snapshot.queryParams;
+
     this.decodeQueryParam(queryParams['code']);
-    this.api.GetReport(this.queryParam).then((event) => {
+
+    await this.api.GetReport(this.decodedID).then((event) => {
       this.dbEntryData = event;
+      console.log(event);
     });
   }
 }
