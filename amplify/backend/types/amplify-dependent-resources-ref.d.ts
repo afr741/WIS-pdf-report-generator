@@ -18,7 +18,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
-    "S3Trigger1b00b2ea": {
+    "s3triggerfileprocessing": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
@@ -27,7 +27,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "rawData": {
+    "hvi8gen8assets": {
       "BucketName": "string",
       "Region": "string"
     }

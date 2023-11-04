@@ -1,5 +1,18 @@
 <div *ngIf="dbEntryData != null; else notfound">
+  <div>WIS LOGO</div>
   <p>qrcode works!</p>
+  <table>
+    <!-- <thead>
+    <tr>
+      <th *ngFor="let key of dataRows[10]">{{ key }}</th>
+    </tr>
+  </thead> -->
+    <tbody>
+      <tr *ngFor="let item of dataRows">
+        <td *ngFor="let value of item">{{ value }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <ng-template #notfound>

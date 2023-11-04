@@ -1,13 +1,33 @@
 {
   "api": {
     "hvigen": {
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "hvigend8bb609a"
+        }
+      ],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [],
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authhvigend8bb609a"
+              }
+            },
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 7
+              "apiKeyExpirationDate": "2024-11-01T11:51:58.205Z",
+              "apiKeyExpirationDays": 365,
+              "description": "reportkey"
             },
             "authenticationType": "API_KEY"
           }
@@ -46,32 +66,43 @@
     }
   },
   "function": {
-    "S3Trigger1b00b2ea": {
+    "s3triggerfileprocessing": {
       "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "hvigen"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_function_S3Trigger1b00b2ea_deploymentBucketName": {
+    "AMPLIFY_function_s3triggerfileprocessing_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "S3Trigger1b00b2ea"
+          "resourceName": "s3triggerfileprocessing"
         }
       ]
     },
-    "AMPLIFY_function_S3Trigger1b00b2ea_s3Key": {
+    "AMPLIFY_function_s3triggerfileprocessing_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "S3Trigger1b00b2ea"
+          "resourceName": "s3triggerfileprocessing"
         }
       ]
     }
   },
   "storage": {
-    "rawData": {
+    "hvi8gen8assets": {
       "dependsOn": [
         {
           "attributes": [
@@ -80,7 +111,7 @@
             "LambdaExecutionRole"
           ],
           "category": "function",
-          "resourceName": "S3Trigger1b00b2ea"
+          "resourceName": "s3triggerfileprocessing"
         }
       ],
       "providerPlugin": "awscloudformation",

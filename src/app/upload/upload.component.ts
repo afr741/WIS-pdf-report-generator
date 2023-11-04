@@ -44,9 +44,9 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     /* fetch reports when app loads */
-    this.api.ListReports().then((event) => {
-      this.reports = event.items as Report[];
-    });
+    // this.api.ListReports().then((event) => {
+    //   this.reports = event.items as Report[];
+    // });
 
     /* subscribe to new report being created */
     this.createSubscription = this.api

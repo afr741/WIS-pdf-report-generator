@@ -1,5 +1,12 @@
 {
   "AppSyncApiName": "hvigen",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2023-11-02T11:52:08.587Z",
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authhvigend8bb609a",
+      "Outputs.UserPoolId"
+    ]
+  }
 }

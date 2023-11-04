@@ -13,6 +13,7 @@ export class QrcodeComponent implements OnInit {
   public decodedID: string;
   private secretKey: string = 'wis';
   public dbEntryData: Report | null = null;
+  public dataRows: any[] = [];
   // when pinging this page
   // take the query param from page URL
   // decode the query param, get page id(attachementurlname)
@@ -42,6 +43,37 @@ export class QrcodeComponent implements OnInit {
     this.decodedID = decryptedText;
   }
 
+  parseData(data: any): any {
+    // for (const item of data) {
+    //   const parsedItem = JSON.parse(item.replace(/\\/g, '')) as string;
+    //   this.dataRows.push(parsedItem);
+    // }
+    let arrayedRows = [];
+    let extractedRows = data;
+    for (let i = 0; i < extractedRows.length; i++) {
+      let innerItem = extractedRows[i];
+      if (innerItem) {
+        let innerArray = JSON.parse(innerItem);
+        // console.log('Generating inner array', innerArray);
+        // // Iterate through the inner array
+        for (let j = 0; j < innerArray.length; j++) {
+          if (innerArray[j] === null || innerArray[j] === undefined) {
+            // Replace null with an empty string
+            innerArray[j] = '';
+          } else {
+            // Convert the item to a string and rounds the numbers down
+            innerArray[j] = isNaN(Number(innerArray[j]))
+              ? innerArray[j].toString()
+              : Number(innerArray[j]).toFixed(2).toString();
+          }
+        }
+        arrayedRows.push(innerArray);
+      }
+    }
+    this.dataRows = arrayedRows;
+    console.log('arrayedRows', this.dataRows);
+  }
+
   async ngOnInit() {
     const queryParams = this.route.snapshot.queryParams;
 
@@ -50,6 +82,7 @@ export class QrcodeComponent implements OnInit {
     await this.api.GetReport(this.decodedID).then((event) => {
       this.dbEntryData = event;
       console.log(event);
+      this.parseData(this.dbEntryData.dataRows);
     });
   }
 }

@@ -18,14 +18,14 @@
       "api": {
         "hvigen": {}
       },
-      "function": {
-        "S3Trigger1b00b2ea": {
-          "deploymentBucketName": "amplify-hvigen-dev-151624-deployment",
-          "s3Key": "amplify-builds/S3Trigger1b00b2ea-375535374b7052593567-build.zip"
-        }
-      },
       "storage": {
-        "rawData": {}
+        "hvi8gen8assets": {}
+      },
+      "function": {
+        "s3triggerfileprocessing": {
+          "deploymentBucketName": "amplify-hvigen-dev-151624-deployment",
+          "s3Key": "amplify-builds/s3triggerfileprocessing-35365a572f38654f4647-build.zip"
+        }
       }
     }
   }

@@ -1,0 +1,14 @@
+{
+  "resourceName": "hvi8gen8assets",
+  "policyUUID": "dfce3c5a",
+  "bucketName": "hvigenfiles",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "groupAccess": {},
+  "triggerFunction": "s3triggerfileprocessing"
+}
