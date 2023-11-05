@@ -49,26 +49,23 @@ export class QrcodeComponent implements OnInit {
     //   this.dataRows.push(parsedItem);
     // }
     let arrayedRows = [];
-    let extractedRows = data;
+    let extractedRows = JSON.parse(data[0]);
     for (let i = 0; i < extractedRows.length; i++) {
-      let innerItem = extractedRows[i];
-      if (innerItem) {
-        let innerArray = JSON.parse(innerItem);
-        // console.log('Generating inner array', innerArray);
-        // // Iterate through the inner array
-        for (let j = 0; j < innerArray.length; j++) {
-          if (innerArray[j] === null || innerArray[j] === undefined) {
-            // Replace null with an empty string
-            innerArray[j] = '';
-          } else {
-            // Convert the item to a string and rounds the numbers down
-            innerArray[j] = isNaN(Number(innerArray[j]))
-              ? innerArray[j].toString()
-              : Number(innerArray[j]).toFixed(2).toString();
-          }
+      let innerArray = extractedRows[i];
+      // console.log('Generating inner array', innerArray);
+      // // Iterate through the inner array
+      for (let j = 0; j < innerArray.length; j++) {
+        if (innerArray[j] === null || innerArray[j] === undefined) {
+          // Replace null with an empty string
+          innerArray[j] = '';
+        } else {
+          // Convert the item to a string and rounds the numbers down
+          innerArray[j] = isNaN(Number(innerArray[j]))
+            ? innerArray[j].toString()
+            : Number(innerArray[j]).toFixed(2).toString();
         }
-        arrayedRows.push(innerArray);
       }
+      arrayedRows.push(innerArray);
     }
     this.dataRows = arrayedRows;
     console.log('arrayedRows', this.dataRows);

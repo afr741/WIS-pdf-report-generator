@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import * as CryptoJS from 'crypto-js';
-
 import { APIService, Report } from '../API.service';
 import { Router } from '@angular/router';
+import * as QRCode from 'qrcode';
 
 @Component({
   selector: 'app-pdf',
@@ -16,6 +16,8 @@ export class PdfComponent implements OnInit {
   public pdfData: any = null;
   private secretKey: string = 'wis';
   public isLoading: boolean = true;
+  public qrImage: any = null;
+  public qrImageURL: string = '';
   constructor(private api: APIService, public router: Router) {}
 
   async ngOnInit() {
@@ -26,7 +28,6 @@ export class PdfComponent implements OnInit {
         .ListReports()
         .then((event) => {
           this.reports = event.items as Report[];
-          console.log('reports', this.reports);
           this.reports.sort((a, b) => {
             let dateA: any = new Date(a.updatedAt);
             let dateB: any = new Date(b.updatedAt);
@@ -36,7 +37,7 @@ export class PdfComponent implements OnInit {
         .catch((err) => {
           console.log(err);
         });
-      console.log('null reports', this.reports);
+      console.log('sorted reports', this.reports);
       if (this.reports[0].dataRows == null) {
         if (pollingAttempts < 10) {
           // Limit the number of polling attempts
@@ -50,7 +51,6 @@ export class PdfComponent implements OnInit {
       } else {
         this.isLoading = false;
         this.processPDFData();
-        this.generateQRCode();
       }
     };
 
@@ -64,56 +64,61 @@ export class PdfComponent implements OnInit {
     return urlFriendlyText;
   }
 
-  generateQRCode() {
+  async generateQRCodeImageAndURL() {
     const textToEncrypt = this.reports[0].id;
 
     const encryptedText = CryptoJS.AES.encrypt(
       textToEncrypt,
       this.secretKey
     ).toString();
-    const ecnryptedURLParam = this.makeUrlFriendly(encryptedText);
-    console.log(ecnryptedURLParam);
+    const ecnryptedURLParam: string = this.makeUrlFriendly(encryptedText);
+    const appURL = window.location.origin;
+    console.log('encrypted url', ecnryptedURLParam, ' current url', appURL);
+    this.qrImageURL = `${appURL}/qrcode?code=${ecnryptedURLParam}`;
+    this.qrImage = await QRCode.toDataURL(this.qrImageURL);
+    return { qrImage: this.qrImage, qrURL: this.qrImageURL };
   }
 
   encryptQRCodeParam() {}
 
-  processPDFData() {
+  async processPDFData() {
     let data = this.reports[0].dataRows;
-    if (!data) return;
-    let extractedRows = data.slice(12, 36); //rework this to extract rows inteligently
+    if (!data || data[0] === null) return;
+    let extractedRows = JSON.parse(data[0]).slice(12, 36); //rework this to extract rows inteligently
+
     let arrayedRows = [];
-    // console.log('Extracted rows', extractedRows);
     for (let i = 0; i < extractedRows.length; i++) {
-      let innerItem = extractedRows[i];
-      if (innerItem) {
-        let innerArray = JSON.parse(innerItem);
-        // console.log('Generating inner array', innerArray);
-        // // Iterate through the inner array
-        for (let j = 0; j < innerArray.length; j++) {
-          if (innerArray[j] === null || innerArray[j] === undefined) {
-            // Replace null with an empty string
-            innerArray[j] = '';
-          } else {
-            // Convert the item to a string and rounds the numbers down
-            innerArray[j] = isNaN(Number(innerArray[j]))
-              ? innerArray[j].toString()
-              : Number(innerArray[j]).toFixed(2).toString();
-          }
+      let innerArray = extractedRows[i];
+
+      // // Iterate through the inner array
+      for (let j = 0; j < innerArray.length; j++) {
+        if (innerArray[j] === null || innerArray[j] === undefined) {
+          // Replace null with an empty string
+          innerArray[j] = '';
+        } else {
+          // Convert the item to a string and rounds the numbers down
+          innerArray[j] = isNaN(Number(innerArray[j]))
+            ? innerArray[j].toString()
+            : Number(innerArray[j]).toFixed(2).toString();
         }
-        arrayedRows.push(innerArray);
       }
+      arrayedRows.push(innerArray);
     }
 
     console.log('arrayedRows', arrayedRows);
-
+    const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
     let docDefinition = {
       content: [
         { text: 'hello world' },
-        { text: 'hello zozo' },
         {
           table: {
             body: arrayedRows,
           },
+        },
+        { image: qrImage },
+        {
+          text: 'Scan the QR Code or click here',
+          link: qrURL,
         },
       ],
     };
