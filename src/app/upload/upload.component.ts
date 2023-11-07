@@ -18,6 +18,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   public reports: Array<Report> = [];
   private selectedFile: File | null = null; // Store the selected file
   private hasUpdate: boolean = false;
+  public error?: string | null = null;
   private currentReport: Report | null = null;
   constructor(
     private api: APIService,
@@ -91,8 +92,9 @@ export class UploadComponent implements OnInit, OnDestroy {
         this.currentReport = report;
         report.dataRows = null;
         this.createReportWithAttachment(report);
-      } catch (error) {
+      } catch (error: any) {
         console.log('Error uploading file locally: ', error);
+        this.error = error;
       }
     }
   }
@@ -108,16 +110,21 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   private createReportWithAttachment(report: Report) {
     this.currentReport = report;
-    console.log('currentreport', this.currentReport);
-    this.api
-      .CreateReport(report)
-      .then(() => {
-        console.log('Item created!', report);
-        this.router.navigate(['/pdf']);
-      })
-      .catch((e) => {
-        console.log('Error creating report...', e);
-      });
+    if (this.currentReport.name === '') {
+      this.error = 'name is required';
+    } else {
+      console.log('currentreport', this.currentReport);
+      this.api
+        .CreateReport(report)
+        .then(() => {
+          console.log('Item created!', report);
+          this.router.navigate(['/pdf']);
+        })
+        .catch((e) => {
+          console.log('Error creating report...', e);
+          this.error = 'Error creating report';
+        });
+    }
   }
   public async onSignOut() {
     try {

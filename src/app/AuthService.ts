@@ -5,10 +5,13 @@ import { jwtDecode } from 'jwt-decode';
 @Injectable()
 export class AuthService {
   private decodedToken: any | null;
+  private user: any;
   //TBD make jwt work, currently using local storage
   public async login(email: string, password: string) {
     const user = await Auth.signIn(String(email), String(password));
+    this.user = user;
     try {
+      console.log(user.signInUserSession);
       let decoded = jwtDecode(user.signInUserSession.idToken.jwtToken);
       const JWTvalue = user.signInUserSession.getAccessToken().getJwtToken();
       this.decodedToken = decoded;
@@ -20,6 +23,21 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  public async onreset(password: string) {
+    let resetmessage = '';
+    await Auth.completeNewPassword(this.user, password, {})
+      .then(() => {
+        // this.message = 'Password updated successfully.';
+        console.log('Password updated successfully.');
+        resetmessage = 'success';
+      })
+      .catch((error) => {
+        console.log(error);
+        resetmessage = error.message;
+      });
+    return resetmessage;
   }
 
   getExpiryTime() {

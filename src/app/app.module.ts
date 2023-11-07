@@ -11,6 +11,7 @@ import { QrcodeComponent } from './qrcode/qrcode.component';
 import { AuthService } from './AuthService';
 import { RouterModule } from '@angular/router';
 import { AuthorizeGuard } from './auth.guard';
+import { ResetComponent } from './reset/reset.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { AuthorizeGuard } from './auth.guard';
     UploadComponent,
     PdfComponent,
     QrcodeComponent,
+    ResetComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,6 +30,7 @@ import { AuthorizeGuard } from './auth.guard';
     ReactiveFormsModule,
     RouterModule.forRoot([
       { path: 'login', component: LoginComponent },
+      { path: 'reset', component: ResetComponent },
       { path: 'qrcode', component: QrcodeComponent },
       { path: 'pdf', component: PdfComponent, canActivate: [AuthorizeGuard] },
 

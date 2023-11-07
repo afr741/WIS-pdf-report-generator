@@ -1,0 +1,40 @@
+<div class="row d-flex justify-content-md-center">
+  <div class="col-md-6">
+    <form>
+      <div class="form-outline mb-4">
+        <label for="pwd" class="form-label">New Password:</label>
+        <input
+          type="password"
+          [(ngModel)]="password"
+          class="form-control"
+          id="pwd"
+          placeholder="Enter password"
+          name="pswd"
+        />
+      </div>
+      <div class="form-outline mb-4">
+        <label for="pwd" class="form-label">Confirm Password:</label>
+        <input
+          type="password"
+          [(ngModel)]="confirmPassword"
+          class="form-control"
+          id="newpwd"
+          placeholder="Enter password"
+          name="confirmpswd"
+        />
+      </div>
+
+      <div class="col-md-4">
+        <button
+          type="submit"
+          (click)="OnConfirm()"
+          class="btn btn-primary btn-block mb-4"
+        >
+          Confirm
+        </button>
+
+        <p class="alert alert-danger" *ngIf="error" role="alert">{{ error }}</p>
+      </div>
+    </form>
+  </div>
+</div>

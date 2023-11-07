@@ -29,7 +29,12 @@ export class LoginComponent implements OnInit {
           String(this.email),
           String(this.password)
         );
-        return this.router.navigate(['upload']);
+        console.log(user);
+        if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+          return this.router.navigate(['/reset']);
+        } else {
+          return this.router.navigate(['upload']);
+        }
       } else {
         this.error = "email or password can't be empty";
       }
