@@ -12,6 +12,12 @@ import { AuthService } from './AuthService';
 import { RouterModule } from '@angular/router';
 import { AuthorizeGuard } from './auth.guard';
 import { ResetComponent } from './reset/reset.component';
+import { GridModule } from '@progress/kendo-angular-grid';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NavigationModule } from '@progress/kendo-angular-navigation';
+import { InputsModule } from '@progress/kendo-angular-inputs';
+import { LabelModule } from '@progress/kendo-angular-label';
+import { ButtonsModule } from '@progress/kendo-angular-buttons';
 
 @NgModule({
   declarations: [
@@ -28,6 +34,9 @@ import { ResetComponent } from './reset/reset.component';
     AmplifyAuthenticatorModule,
     FormsModule,
     ReactiveFormsModule,
+    InputsModule,
+    LabelModule,
+    ButtonsModule,
     RouterModule.forRoot([
       { path: 'login', component: LoginComponent },
       { path: 'reset', component: ResetComponent },
@@ -41,6 +50,9 @@ import { ResetComponent } from './reset/reset.component';
       },
       { path: '', redirectTo: 'upload', pathMatch: 'full' },
     ]),
+    GridModule,
+    BrowserAnimationsModule,
+    NavigationModule,
   ],
   providers: [AuthService],
   bootstrap: [AppComponent],
