@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { Auth } from 'aws-amplify';
 
-import { stringify } from 'querystring';
 import { AuthService } from './AuthService';
 
 @Component({

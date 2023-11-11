@@ -18,6 +18,8 @@ import { NavigationModule } from '@progress/kendo-angular-navigation';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
+import { UploadsModule } from '@progress/kendo-angular-upload';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,9 @@ import { ButtonsModule } from '@progress/kendo-angular-buttons';
     InputsModule,
     LabelModule,
     ButtonsModule,
+    UploadsModule,
+    HttpClientModule,
+
     RouterModule.forRoot([
       { path: 'login', component: LoginComponent },
       { path: 'reset', component: ResetComponent },

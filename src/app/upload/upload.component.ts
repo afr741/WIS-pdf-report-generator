@@ -1,6 +1,11 @@
 import { APIService, Report } from '../API.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 /** Subscription type will be inferred from this library */
 import { ZenObservable } from 'zen-observable-ts';
 import { Storage, Auth } from 'aws-amplify';
@@ -17,7 +22,6 @@ export class UploadComponent implements OnInit, OnDestroy {
   public createForm: FormGroup;
   public reports: Array<Report> = [];
   private selectedFile: File | null = null; // Store the selected file
-  private hasUpdate: boolean = false;
   public error?: string | null = null;
   private currentReport: Report | null = null;
   constructor(
@@ -44,11 +48,6 @@ export class UploadComponent implements OnInit, OnDestroy {
   private modifySubscription: ZenObservable.Subscription | null = null;
 
   async ngOnInit() {
-    /* fetch reports when app loads */
-    // this.api.ListReports().then((event) => {
-    //   this.reports = event.items as Report[];
-    // });
-
     /* subscribe to new report being created */
     this.createSubscription = this.api
       .OnCreateReportListener()
@@ -56,14 +55,8 @@ export class UploadComponent implements OnInit, OnDestroy {
         const newReport = event.value.data.onCreateReport;
         this.reports = [newReport, ...this.reports];
       });
-    //TBD
-    // this.modifySubscription = this.api
-    //   .OnUpdateReportListener({ name: { eq: 'sampleName' } })
-    //   .subscribe((event: any) => {
-    //     console.log(event);
-    //     // this.router.navigate(['/pdf']);
-    //   });
   }
+
   ngOnDestroy() {
     if (this.createSubscription) {
       this.createSubscription.unsubscribe();
@@ -101,10 +94,12 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   // Handle file change event and update the formData
   onFileChange(event: any) {
-    const fileList: FileList | null = event.target.files;
+    console.log('File changed', event);
+    const fileList: any = event.files;
     if (fileList && fileList.length > 0) {
-      console.log(this.createForm);
-      this.selectedFile = fileList[0];
+      // console.log(this.createForm);
+      this.selectedFile = fileList[0].rawFile;
+      console.log('selected file,', fileList[0]);
     }
   }
 

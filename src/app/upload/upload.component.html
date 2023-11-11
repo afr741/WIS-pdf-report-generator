@@ -1,4 +1,4 @@
-<div class="form-body">
+<!-- <div class="form-body">
   <button class="nav-link" (click)="onSignOut()">
     Logout <span class="sr-only">(current)</span>
   </button>
@@ -63,7 +63,7 @@
       />
     </div>
     <div>
-      <label>Stations: </label>
+      <label>: </label>Stations
       <input
         type="text"
         formControlName="stations"
@@ -93,4 +93,128 @@
     <button type="submit">Submit</button>
     <p class="alert alert-danger" *ngIf="error" role="alert">{{ error }}</p>
   </form>
+</div> -->
+
+<div class="example-wrap">
+  <form
+    class="k-form k-form-md"
+    [formGroup]="createForm"
+    (ngSubmit)="onCreate(createForm.value)"
+  >
+    <fieldset class="k-form-fieldset">
+      <legend class="k-form-legend">Upload file and fill details</legend>
+
+      <kendo-formfield>
+        <kendo-label labelCssClass="k-form-label" text="name" />
+        <kendo-textbox
+          formControlName="name"
+          #name
+          required
+          placeholder="Enter name"
+        ></kendo-textbox>
+        <kendo-formerror> name is required</kendo-formerror>
+      </kendo-formfield>
+
+      <kendo-formfield>
+        <kendo-label labelCssClass="k-form-label" text="test location" />
+        <kendo-textbox
+          formControlName="testLocation"
+          #testLocation
+          required
+          placeholder="Enter Location"
+        ></kendo-textbox>
+        <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+      </kendo-formfield>
+
+      <kendo-formfield>
+        <kendo-label labelCssClass="k-form-label" text="Report Number" />
+        <kendo-textbox
+          formControlName="reportNum"
+          #reportNum
+          required
+          placeholder="Enter Report Number"
+        ></kendo-textbox>
+        <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+      </kendo-formfield>
+
+      <kendo-formfield>
+        <kendo-label labelCssClass="k-form-label" text="Lot Number" />
+        <kendo-textbox
+          formControlName="lotNum"
+          #reportNum
+          required
+          placeholder="Lot Number"
+        ></kendo-textbox>
+        <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+      </kendo-formfield>
+
+      <kendo-formfield>
+        <kendo-label labelCssClass="k-form-label" text="Customer Name" />
+        <kendo-textbox
+          formControlName="customerName"
+          #customerName
+          required
+          placeholder="Customer Name"
+        ></kendo-textbox>
+        <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+      </kendo-formfield>
+
+      <kendo-formfield>
+        <kendo-label labelCssClass="k-form-label" text="Origin" />
+        <kendo-textbox
+          formControlName="origin"
+          #origin
+          required
+          placeholder="Origin"
+        ></kendo-textbox>
+        <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+      </kendo-formfield>
+
+      <kendo-formfield>
+        <kendo-label labelCssClass="k-form-label" text="stations" />
+        <kendo-textbox
+          formControlName="stations"
+          #stations
+          required
+          placeholder="Stations"
+        ></kendo-textbox>
+        <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+      </kendo-formfield>
+
+      <kendo-formfield>
+        <kendo-label labelCssClass="k-form-label" text="variety" />
+        <kendo-textbox
+          formControlName="variety"
+          #variety
+          required
+          placeholder="Variety"
+        ></kendo-textbox>
+        <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+      </kendo-formfield>
+
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 example-col">
+          <p>Upload</p>
+          <kendo-fileselect
+            formControlName="attachmentUrl"
+            (select)="onFileChange($event)"
+          ></kendo-fileselect>
+        </div>
+      </div>
+
+      <div class="k-form-buttons">
+        <button
+          kendoButton
+          [size]="'large'"
+          [rounded]="'medium'"
+          [fillMode]="'solid'"
+          [themeColor]="'success'"
+          type="submit"
+        >
+          Submit
+        </button>
+      </div>
+    </fieldset>
+  </form>
+  <p class="alert alert-danger" *ngIf="error" role="alert">{{ error }}</p>
 </div>
