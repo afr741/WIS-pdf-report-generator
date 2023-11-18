@@ -1,0 +1,44 @@
+.pdf-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.k-listview {
+  font-family: sans-serif;
+  width: 400px;
+  margin: auto;
+}
+.header,
+.footer {
+  color: #a0a0a0;
+  font-size: 16px;
+  padding: 6px 10px;
+}
+.footer {
+  font-size: 14px;
+}
+.contact {
+  width: 100%;
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 -10px;
+}
+.example-item {
+  flex: 0 0 33%;
+  padding: 10px;
+}
+.example-item-title {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 20px;
+}
+.k-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+}

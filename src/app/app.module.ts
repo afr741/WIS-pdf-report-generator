@@ -14,11 +14,13 @@ import { AuthorizeGuard } from './auth.guard';
 import { ResetComponent } from './reset/reset.component';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { IndicatorsModule } from '@progress/kendo-angular-indicators';
 import { NavigationModule } from '@progress/kendo-angular-navigation';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { UploadsModule } from '@progress/kendo-angular-upload';
+import { LayoutModule } from '@progress/kendo-angular-layout';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -39,8 +41,10 @@ import { HttpClientModule } from '@angular/common/http';
     InputsModule,
     LabelModule,
     ButtonsModule,
+    LayoutModule,
     UploadsModule,
     HttpClientModule,
+    IndicatorsModule,
 
     RouterModule.forRoot([
       { path: 'login', component: LoginComponent },

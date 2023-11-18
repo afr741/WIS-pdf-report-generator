@@ -1,13 +1,52 @@
-<div *ngIf="!isLoading; else loading">
-  <p>pdf works!</p>
-  <div *ngFor="let report of reports">
-    <div>{{ report?.name }}</div>
-    <div>{{ report?.testLocation }}</div>
-    <div>{{ report?.reportNum }}</div>
+<div class="pdf-wrapper">
+  <div *ngIf="!isLoading; else loading">
+    <kendo-grid
+      [kendoGridBinding]="gridData"
+      [filterable]="true"
+      [height]="350"
+    >
+      <kendo-grid-column field="id" title="Report ID" [filterable]="false">
+      </kendo-grid-column>
+      <kendo-grid-column field="name" title="Report Name"> </kendo-grid-column>
+      <kendo-grid-column field="origin" title="Origin" filter="text">
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="testLocation"
+        title="Test Location"
+        filter="text"
+      >
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="updatedAt"
+        title="Date"
+        format="MM/dd/yyyy"
+        filter="date"
+      >
+      </kendo-grid-column>
+      <kendo-grid-command-column title="Actions">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button (click)="openPDF(dataItem)">Open</button>
+          <button (click)="downloadPDF(dataItem)">Download</button>
+        </ng-template>
+      </kendo-grid-command-column>
+    </kendo-grid>
   </div>
-  <button (click)="openPDF()">open your pdf</button>
-  <button (click)="downloadPDF()">download your pdf</button>
+  <ng-template #loading>
+    <div class="wrap">
+      <div class="example-item">
+        <div class="example-item-title">loading...</div>
+        <div class="k-block">
+          <kendo-loader
+            [type]="loader.type"
+            [themeColor]="loader.themeColor"
+            [size]="loader.size"
+          >
+          </kendo-loader>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div>
+    <p class="alert alert-danger" *ngIf="error" role="alert">{{ error }}</p>
+  </div>
 </div>
-<ng-template #loading>
-  <p>Loading...</p>
-</ng-template>
