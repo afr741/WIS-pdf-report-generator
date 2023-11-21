@@ -1,9 +1,37 @@
 <div class="pdf-wrapper">
   <div *ngIf="!isLoading; else loading">
+    <div class="pdf-ready-section">
+      <h2>You report is ready!</h2>
+      <div class="button-section">
+        <button
+          type="button"
+          kendoButton
+          [size]="'large'"
+          [rounded]="'medium'"
+          [fillMode]="'solid'"
+          [themeColor]="'success'"
+          (click)="openPDF(pdfData)"
+        >
+          Open
+        </button>
+        <button
+          type="button"
+          kendoButton
+          [size]="'large'"
+          [rounded]="'medium'"
+          [fillMode]="'solid'"
+          [themeColor]="'warning'"
+          (click)="downloadPDF(pdfData)"
+        >
+          Download
+        </button>
+      </div>
+    </div>
+    <h3>Previous Reports:</h3>
     <kendo-grid
-      [kendoGridBinding]="gridData"
+      [kendoGridBinding]="listOfReports"
       [filterable]="true"
-      [height]="350"
+      [height]="800"
     >
       <kendo-grid-column field="id" title="Report ID" [filterable]="false">
       </kendo-grid-column>
@@ -25,8 +53,29 @@
       </kendo-grid-column>
       <kendo-grid-command-column title="Actions">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button (click)="openPDF(dataItem)">Open</button>
-          <button (click)="downloadPDF(dataItem)">Download</button>
+          <button
+            button
+            type="button"
+            kendoButton
+            [size]="'small'"
+            [rounded]="'small'"
+            [fillMode]="'solid'"
+            [themeColor]="'success'"
+            (click)="openPDF(dataItem)"
+          >
+            Open
+          </button>
+          <button
+            type="button"
+            kendoButton
+            [size]="'small'"
+            [rounded]="'small'"
+            [fillMode]="'solid'"
+            [themeColor]="'warning'"
+            (click)="downloadPDF(dataItem)"
+          >
+            Download
+          </button>
         </ng-template>
       </kendo-grid-command-column>
     </kendo-grid>

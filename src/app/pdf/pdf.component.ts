@@ -21,7 +21,7 @@ import {
 })
 export class PdfComponent implements OnInit {
   public reports: Array<Report> = [];
-  public gridData: Report[] = [];
+  public listOfReports: Report[] = [];
   public pdfData: any = null;
   private secretKey: string = 'wis';
   public isLoading: boolean = true;
@@ -50,7 +50,7 @@ export class PdfComponent implements OnInit {
           });
         })
         .then(() => {
-          this.gridData = this.reports;
+          this.listOfReports = this.reports;
         })
         .catch((err) => {
           console.log(err);
@@ -69,6 +69,7 @@ export class PdfComponent implements OnInit {
         }
       } else {
         this.isLoading = false;
+        console.log(await this.processPDFData(this.reports[0]));
         // this.processPDFData();
       }
     };
@@ -126,11 +127,63 @@ export class PdfComponent implements OnInit {
 
   async processPDFData(report: Report) {
     // let data = this.reports[index].dataRows;
-    let { dataRows, name } = report;
+    let {
+      dataRows,
+      name,
+      testLocation,
+      reportNum,
+      lotNum,
+      customerName,
+      origin,
+      stations,
+      variety,
+      createdAt,
+    } = report;
+
+    let formatedDate = new Date(createdAt).toDateString();
+    console.log('formated date', formatedDate);
     let data = dataRows;
     if (!data || data[0] === null) return;
-    let extractedRows = JSON.parse(data[0]).slice(12, 36); //rework this to extract rows inteligently
+    let parsedRawData = JSON.parse(data[0]);
+    let removedEmptyArraysData = parsedRawData.filter(
+      (array: []) => array.length !== 0
+    );
+    console.log('raw ALL', removedEmptyArraysData);
+    // to find the start of data extraction
+    let timeIndex = removedEmptyArraysData.findIndex((array: any) =>
+      array.includes('Time')
+    );
 
+    // to find the end of data extraction
+    let averageIndex = removedEmptyArraysData.findIndex((array: any) =>
+      array.some(
+        (element: any) =>
+          typeof element === 'string' && element.includes('Average')
+      )
+    );
+    console.log('time', timeIndex, 'average', averageIndex);
+    let extractedRows = removedEmptyArraysData.slice(
+      timeIndex + 1,
+      averageIndex + 2
+    );
+    const lastTwoArrays = extractedRows.slice(-2);
+    const mainArr = [null]
+      .concat(lastTwoArrays[0])
+      .concat([null])
+      .concat(lastTwoArrays[1].toSpliced(0, 3));
+
+    const combinedArray = mainArr;
+    extractedRows.splice(-2);
+    extractedRows.push(combinedArray);
+
+    console.log(
+      'lastTwoArrays:',
+      lastTwoArrays,
+      'mainArr:',
+      mainArr,
+      'extracted rows',
+      extractedRows
+    );
     let arrayedRows = [];
     for (let i = 0; i < extractedRows.length; i++) {
       let innerArray = extractedRows[i];
@@ -152,43 +205,65 @@ export class PdfComponent implements OnInit {
 
     console.log('arrayedRows', arrayedRows);
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
+    let columnWidth = arrayedRows[0].length;
+    let columnWidthArray = new Array(columnWidth).fill(10);
+    console.log('columnWidthArray', columnWidthArray);
     let docDefinition = {
       content: [
         {
+          width: 520,
+          margin: [0, 10],
           image: await this.getBase64ImageFromURL(
             '../../assets/images/letterhead.png'
           ),
         },
-        { text: name },
         {
           table: {
-            widths: ['*', 'auto', 100, '*'],
-
+            // widths: ['*', 'auto', 100, '*'],
+            style: 'header',
             body: [
-              ['Test Location', 'VALUE', 'Recepient', 'VALUE'],
-              ['CI Number', 'Value', 'ORIGIN', 'Value'],
-              ['CI Report Number', 'Value', 'Station(As advised)', 'Value'],
-              ['Date', 'Value', 'Variety(As advised)', 'Value'],
+              ['Test Location', testLocation, 'Recepient', customerName],
+              ['CI Number', reportNum, 'ORIGIN', origin],
+              ['CI Report Number', reportNum, 'Station(As advised)', stations],
+              ['Date', formatedDate, 'Variety(As advised)', variety],
               [
                 'Lot number',
-                'Value',
+                lotNum,
                 { text: 'Sample drawn by customer', bold: true },
-                'Value',
+                '24',
               ],
             ],
           },
         },
         {
+          style: 'dataTable',
+          layout: 'lightHorizontalLines',
+
           table: {
+            margin: [-40, 10],
+            widths: columnWidthArray,
             body: arrayedRows,
           },
         },
-        { image: qrImage },
+        { image: qrImage, width: 100 },
         {
+          style: 'qrCodeText',
           text: 'Scan the QR Code or click here',
           link: qrURL,
         },
       ],
+      styles: {
+        header: {
+          fontSize: 8,
+          bold: true,
+        },
+        dataTable: {
+          fontSize: 6,
+        },
+        qrCodeText: {
+          fontSize: 8,
+        },
+      },
     };
 
     this.pdfData = docDefinition;
