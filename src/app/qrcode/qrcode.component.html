@@ -1,18 +1,50 @@
-<div *ngIf="dbEntryData != null; else notfound">
-  <div>WIS LOGO</div>
-  <p>qrcode works!</p>
-  <table>
-    <!-- <thead>
-    <tr>
-      <th *ngFor="let key of dataRows[10]">{{ key }}</th>
-    </tr>
-  </thead> -->
-    <tbody>
-      <tr *ngFor="let item of dataRows">
-        <td *ngFor="let value of item">{{ value }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div *ngIf="dbEntryData[0] != null; else notfound">
+  <div>
+    <img
+      src="http://54.191.144.145/wp-content/themes/max-magazine/images/banner.jpg"
+      alt="wis-banner"
+      class="wis-banner"
+    />
+  </div>
+
+  <kendo-listview
+    [data]="dbEntryData"
+    containerClass="k-d-flex k-flex-col k-flex-nowrap"
+  >
+    <ng-template kendoListViewHeaderTemplate>
+      <div class="header">REPORT INFORMATION</div>
+    </ng-template>
+    <ng-template
+      kendoListViewItemTemplate
+      let-dataItem="dataItem"
+      let-isFirst="isFirst"
+    >
+      <div class="contact" [class.border-top]="10">
+        <div class="contact-details">
+          <div class="contact-name">
+            customer name: {{ dbEntryData[0].customerName }}
+          </div>
+          <div class="contact-name">
+            lot number: {{ dbEntryData[0].lotNum }}
+          </div>
+          <div class="contact-name">
+            location: {{ dbEntryData[0].testLocation }}
+          </div>
+          <div class="contact-name">Origin: {{ dbEntryData[0].origin }}</div>
+          <div class="contact-name">
+            Stations: {{ dbEntryData[0].stations }}
+          </div>
+          <div class="contact-email">date created: {{ dateCreated }}</div>
+        </div>
+      </div>
+    </ng-template>
+  </kendo-listview>
+
+  <kendo-grid [kendoGridBinding]="dataRows">
+    <ng-container *ngFor="let column of dataColumnNames">
+      <kendo-grid-column [field]="column" [title]="column"></kendo-grid-column>
+    </ng-container>
+  </kendo-grid>
 </div>
 
 <ng-template #notfound>

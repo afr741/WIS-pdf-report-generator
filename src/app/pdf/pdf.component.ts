@@ -32,7 +32,6 @@ import {
   LoaderThemeColor,
   LoaderSize,
 } from '@progress/kendo-angular-indicators';
-import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-pdf',
@@ -232,6 +231,7 @@ export class PdfComponent implements OnInit {
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
     let columnWidth = arrayedRows[0].length;
     let columnWidthArray = new Array(columnWidth).fill(15);
+    let columnHeightArray = new Array(columnWidth).fill(3);
     console.log('columnWidthArray', columnWidthArray);
     let docDefinition = {
       content: [

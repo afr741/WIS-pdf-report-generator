@@ -1,0 +1,19 @@
+.wis-banner {
+  width: 100%;
+}
+.k-listview {
+  font-family: sans-serif;
+  width: 400px;
+}
+.header,
+.footer {
+  color: #a0a0a0;
+  font-size: 16px;
+  padding: 6px 10px;
+}
+.footer {
+  font-size: 14px;
+}
+.contact {
+  width: 100%;
+}

@@ -22,6 +22,7 @@ import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { UploadsModule } from '@progress/kendo-angular-upload';
 import { LayoutModule } from '@progress/kendo-angular-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { ListViewModule } from '@progress/kendo-angular-listview';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { HttpClientModule } from '@angular/common/http';
     UploadsModule,
     HttpClientModule,
     IndicatorsModule,
+    ListViewModule,
 
     RouterModule.forRoot([
       { path: 'login', component: LoginComponent },
