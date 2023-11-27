@@ -9,6 +9,17 @@
           [size]="'large'"
           [rounded]="'medium'"
           [fillMode]="'solid'"
+          [themeColor]="'error'"
+          (click)="handlBackButton()"
+        >
+          Create new
+        </button>
+        <button
+          type="button"
+          kendoButton
+          [size]="'large'"
+          [rounded]="'medium'"
+          [fillMode]="'solid'"
           [themeColor]="'success'"
           (click)="openPDF(pdfData)"
         >

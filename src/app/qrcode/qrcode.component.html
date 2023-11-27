@@ -39,12 +39,20 @@
       </div>
     </ng-template>
   </kendo-listview>
-
-  <kendo-grid [kendoGridBinding]="dataRows">
-    <ng-container *ngFor="let column of dataColumnNames">
-      <kendo-grid-column [field]="column" [title]="column"></kendo-grid-column>
-    </ng-container>
-  </kendo-grid>
+  <div class="data-grid-wrapper">
+    <kendo-grid
+      [kendoGridBinding]="dataRows"
+      scrollable="scrollable"
+      class="qr-data-grid"
+    >
+      <ng-container *ngFor="let column of dataColumnNames">
+        <kendo-grid-column
+          [field]="column"
+          [title]="column"
+        ></kendo-grid-column>
+      </ng-container>
+    </kendo-grid>
+  </div>
 </div>
 
 <ng-template #notfound>

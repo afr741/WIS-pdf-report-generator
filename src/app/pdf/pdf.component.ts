@@ -230,9 +230,8 @@ export class PdfComponent implements OnInit {
     console.log('arrayedRows', arrayedRows);
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
     let columnWidth = arrayedRows[0].length;
-    let columnWidthArray = new Array(columnWidth).fill(15);
-    let columnHeightArray = new Array(columnWidth).fill(3);
-    console.log('columnWidthArray', columnWidthArray);
+    let columnWidthArray = new Array(columnWidth).fill(17);
+    // let columnHeightArray = new Array(columnWidth).fill(3);
     let docDefinition = {
       content: [
         {
@@ -243,9 +242,10 @@ export class PdfComponent implements OnInit {
           ),
         },
         {
+          style: 'header',
+          layout: 'noBorders',
           table: {
-            // widths: ['*', 'auto', 100, '*'],
-            style: 'header',
+            widths: [140, 140, 140, 140, 140],
             body: [
               ['Test Location', testLocation, 'Recepient', customerName],
               ['CI Number', reportNum, 'ORIGIN', origin],
@@ -262,9 +262,19 @@ export class PdfComponent implements OnInit {
         },
         {
           style: 'dataTable',
-          layout: 'lightHorizontalLines',
+          layout: {
+            hLineWidth: function (i: any, node: any) {
+              if (i === 0 || i === node.table.body.length) {
+                return 0;
+              }
+              return i === node.table.headerRows ? 2 : 1;
+            },
+            vLineWidth: () => 0,
+          },
           table: {
-            widths: columnWidthArray,
+            headerRows: 1,
+            // widths: columnWidthArray,
+            // heights: 1,
             body: arrayedRows,
           },
         },
@@ -274,15 +284,24 @@ export class PdfComponent implements OnInit {
           text: 'Scan the QR Code or click here',
           link: qrURL,
         },
+        { text: '\n\nRemarks', style: 'header' },
+        {
+          ol: REMARKS.part1,
+        },
+        {
+          text: REMARKS.part2,
+        },
+        {
+          ol: REMARKS.part3,
+        },
       ],
       styles: {
         header: {
           fontSize: 8,
-          bold: true,
         },
         dataTable: {
-          margin: [-25, 10],
-          fontSize: 5,
+          margin: [10, 10],
+          fontSize: 6,
         },
         qrCodeText: {
           fontSize: 8,
@@ -291,6 +310,9 @@ export class PdfComponent implements OnInit {
     };
 
     this.pdfData = docDefinition;
+  }
+  handlBackButton() {
+    this.router.navigate(['/upload']);
   }
 
   async openAndDownloadCallBack(dataItem: any) {

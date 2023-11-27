@@ -1,3 +1,10 @@
+.data-grid-wrapper {
+  overflow-x: auto;
+}
+.qr-data-grid {
+  min-width: 1200px;
+}
+
 .wis-banner {
   width: 100%;
 }
