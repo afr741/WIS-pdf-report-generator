@@ -1,5 +1,62 @@
 # this is an auto generated file. This will be overwritten
 
+subscription OnCreateReportTemplate(
+  $filter: ModelSubscriptionReportTemplateFilterInput
+) {
+  onCreateReportTemplate(filter: $filter) {
+    templateId
+    localCompanyName
+    letterHeadImageName
+    stampImageName
+    address
+    phone
+    fax
+    email
+    id
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnUpdateReportTemplate(
+  $filter: ModelSubscriptionReportTemplateFilterInput
+) {
+  onUpdateReportTemplate(filter: $filter) {
+    templateId
+    localCompanyName
+    letterHeadImageName
+    stampImageName
+    address
+    phone
+    fax
+    email
+    id
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnDeleteReportTemplate(
+  $filter: ModelSubscriptionReportTemplateFilterInput
+) {
+  onDeleteReportTemplate(filter: $filter) {
+    templateId
+    localCompanyName
+    letterHeadImageName
+    stampImageName
+    address
+    phone
+    fax
+    email
+    id
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
 subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
   onCreateReport(filter: $filter) {
     id
@@ -13,6 +70,20 @@ subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
     variety
     attachmentUrl
     dataRows
+    reportTemplate {
+      templateId
+      localCompanyName
+      letterHeadImageName
+      stampImageName
+      address
+      phone
+      fax
+      email
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -32,6 +103,20 @@ subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput) {
     variety
     attachmentUrl
     dataRows
+    reportTemplate {
+      templateId
+      localCompanyName
+      letterHeadImageName
+      stampImageName
+      address
+      phone
+      fax
+      email
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -51,6 +136,20 @@ subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput) {
     variety
     attachmentUrl
     dataRows
+    reportTemplate {
+      templateId
+      localCompanyName
+      letterHeadImageName
+      stampImageName
+      address
+      phone
+      fax
+      email
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename

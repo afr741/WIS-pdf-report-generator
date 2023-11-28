@@ -1,5 +1,65 @@
 # this is an auto generated file. This will be overwritten
 
+mutation CreateReportTemplate(
+  $input: CreateReportTemplateInput!
+  $condition: ModelReportTemplateConditionInput
+) {
+  createReportTemplate(input: $input, condition: $condition) {
+    templateId
+    localCompanyName
+    letterHeadImageName
+    stampImageName
+    address
+    phone
+    fax
+    email
+    id
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation UpdateReportTemplate(
+  $input: UpdateReportTemplateInput!
+  $condition: ModelReportTemplateConditionInput
+) {
+  updateReportTemplate(input: $input, condition: $condition) {
+    templateId
+    localCompanyName
+    letterHeadImageName
+    stampImageName
+    address
+    phone
+    fax
+    email
+    id
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation DeleteReportTemplate(
+  $input: DeleteReportTemplateInput!
+  $condition: ModelReportTemplateConditionInput
+) {
+  deleteReportTemplate(input: $input, condition: $condition) {
+    templateId
+    localCompanyName
+    letterHeadImageName
+    stampImageName
+    address
+    phone
+    fax
+    email
+    id
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
 mutation CreateReport(
   $input: CreateReportInput!
   $condition: ModelReportConditionInput
@@ -16,6 +76,20 @@ mutation CreateReport(
     variety
     attachmentUrl
     dataRows
+    reportTemplate {
+      templateId
+      localCompanyName
+      letterHeadImageName
+      stampImageName
+      address
+      phone
+      fax
+      email
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -38,6 +112,20 @@ mutation UpdateReport(
     variety
     attachmentUrl
     dataRows
+    reportTemplate {
+      templateId
+      localCompanyName
+      letterHeadImageName
+      stampImageName
+      address
+      phone
+      fax
+      email
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -60,6 +148,20 @@ mutation DeleteReport(
     variety
     attachmentUrl
     dataRows
+    reportTemplate {
+      templateId
+      localCompanyName
+      letterHeadImageName
+      stampImageName
+      address
+      phone
+      fax
+      email
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename

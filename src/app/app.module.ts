@@ -23,6 +23,7 @@ import { UploadsModule } from '@progress/kendo-angular-upload';
 import { LayoutModule } from '@progress/kendo-angular-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { ListViewModule } from '@progress/kendo-angular-listview';
+import { EditComponent } from './edit/edit.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ListViewModule } from '@progress/kendo-angular-listview';
     PdfComponent,
     QrcodeComponent,
     ResetComponent,
+    EditComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,6 +55,7 @@ import { ListViewModule } from '@progress/kendo-angular-listview';
       { path: 'reset', component: ResetComponent },
       { path: 'qrcode', component: QrcodeComponent },
       { path: 'pdf', component: PdfComponent, canActivate: [AuthorizeGuard] },
+      { path: 'edit', component: EditComponent, canActivate: [AuthorizeGuard] },
 
       {
         path: 'upload',

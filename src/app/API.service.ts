@@ -10,42 +10,41 @@ export interface SubscriptionResponse<T> {
 }
 
 export type __SubscriptionContainer = {
+  onCreateReportTemplate: OnCreateReportTemplateSubscription;
+  onUpdateReportTemplate: OnUpdateReportTemplateSubscription;
+  onDeleteReportTemplate: OnDeleteReportTemplateSubscription;
   onCreateReport: OnCreateReportSubscription;
   onUpdateReport: OnUpdateReportSubscription;
   onDeleteReport: OnDeleteReportSubscription;
 };
 
-export type CreateReportInput = {
+export type CreateReportTemplateInput = {
+  templateId: string;
+  localCompanyName?: string | null;
+  letterHeadImageName?: string | null;
+  stampImageName?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  email?: string | null;
   id?: string | null;
-  name: string;
-  testLocation: string;
-  reportNum: string;
-  lotNum: string;
-  customerName: string;
-  origin: string;
-  stations: string;
-  variety: string;
-  attachmentUrl: string;
-  dataRows?: Array<string | null> | null;
 };
 
-export type ModelReportConditionInput = {
-  name?: ModelStringInput | null;
-  testLocation?: ModelStringInput | null;
-  reportNum?: ModelStringInput | null;
-  lotNum?: ModelStringInput | null;
-  customerName?: ModelStringInput | null;
-  origin?: ModelStringInput | null;
-  stations?: ModelStringInput | null;
-  variety?: ModelStringInput | null;
-  attachmentUrl?: ModelStringInput | null;
-  dataRows?: ModelStringInput | null;
-  and?: Array<ModelReportConditionInput | null> | null;
-  or?: Array<ModelReportConditionInput | null> | null;
-  not?: ModelReportConditionInput | null;
+export type ModelReportTemplateConditionInput = {
+  templateId?: ModelIDInput | null;
+  localCompanyName?: ModelStringInput | null;
+  letterHeadImageName?: ModelStringInput | null;
+  stampImageName?: ModelStringInput | null;
+  address?: ModelStringInput | null;
+  phone?: ModelStringInput | null;
+  fax?: ModelStringInput | null;
+  email?: ModelStringInput | null;
+  and?: Array<ModelReportTemplateConditionInput | null> | null;
+  or?: Array<ModelReportTemplateConditionInput | null> | null;
+  not?: ModelReportTemplateConditionInput | null;
 };
 
-export type ModelStringInput = {
+export type ModelIDInput = {
   ne?: string | null;
   eq?: string | null;
   le?: string | null;
@@ -84,6 +83,83 @@ export type ModelSizeInput = {
   between?: Array<number | null> | null;
 };
 
+export type ModelStringInput = {
+  ne?: string | null;
+  eq?: string | null;
+  le?: string | null;
+  lt?: string | null;
+  ge?: string | null;
+  gt?: string | null;
+  contains?: string | null;
+  notContains?: string | null;
+  between?: Array<string | null> | null;
+  beginsWith?: string | null;
+  attributeExists?: boolean | null;
+  attributeType?: ModelAttributeTypes | null;
+  size?: ModelSizeInput | null;
+};
+
+export type ReportTemplate = {
+  __typename: "ReportTemplate";
+  templateId: string;
+  localCompanyName?: string | null;
+  letterHeadImageName?: string | null;
+  stampImageName?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  email?: string | null;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateReportTemplateInput = {
+  templateId?: string | null;
+  localCompanyName?: string | null;
+  letterHeadImageName?: string | null;
+  stampImageName?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  email?: string | null;
+  id: string;
+};
+
+export type DeleteReportTemplateInput = {
+  id: string;
+};
+
+export type CreateReportInput = {
+  id?: string | null;
+  name: string;
+  testLocation: string;
+  reportNum: string;
+  lotNum: string;
+  customerName: string;
+  origin: string;
+  stations: string;
+  variety: string;
+  attachmentUrl: string;
+  dataRows?: Array<string | null> | null;
+};
+
+export type ModelReportConditionInput = {
+  name?: ModelStringInput | null;
+  testLocation?: ModelStringInput | null;
+  reportNum?: ModelStringInput | null;
+  lotNum?: ModelStringInput | null;
+  customerName?: ModelStringInput | null;
+  origin?: ModelStringInput | null;
+  stations?: ModelStringInput | null;
+  variety?: ModelStringInput | null;
+  attachmentUrl?: ModelStringInput | null;
+  dataRows?: ModelStringInput | null;
+  and?: Array<ModelReportConditionInput | null> | null;
+  or?: Array<ModelReportConditionInput | null> | null;
+  not?: ModelReportConditionInput | null;
+};
+
 export type Report = {
   __typename: "Report";
   id: string;
@@ -97,6 +173,7 @@ export type Report = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
+  reportTemplate?: ReportTemplate | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -119,6 +196,26 @@ export type DeleteReportInput = {
   id: string;
 };
 
+export type ModelReportTemplateFilterInput = {
+  templateId?: ModelIDInput | null;
+  localCompanyName?: ModelStringInput | null;
+  letterHeadImageName?: ModelStringInput | null;
+  stampImageName?: ModelStringInput | null;
+  address?: ModelStringInput | null;
+  phone?: ModelStringInput | null;
+  fax?: ModelStringInput | null;
+  email?: ModelStringInput | null;
+  and?: Array<ModelReportTemplateFilterInput | null> | null;
+  or?: Array<ModelReportTemplateFilterInput | null> | null;
+  not?: ModelReportTemplateFilterInput | null;
+};
+
+export type ModelReportTemplateConnection = {
+  __typename: "ModelReportTemplateConnection";
+  items: Array<ReportTemplate | null>;
+  nextToken?: string | null;
+};
+
 export type ModelReportFilterInput = {
   id?: ModelIDInput | null;
   name?: ModelStringInput | null;
@@ -134,22 +231,6 @@ export type ModelReportFilterInput = {
   and?: Array<ModelReportFilterInput | null> | null;
   or?: Array<ModelReportFilterInput | null> | null;
   not?: ModelReportFilterInput | null;
-};
-
-export type ModelIDInput = {
-  ne?: string | null;
-  eq?: string | null;
-  le?: string | null;
-  lt?: string | null;
-  ge?: string | null;
-  gt?: string | null;
-  contains?: string | null;
-  notContains?: string | null;
-  between?: Array<string | null> | null;
-  beginsWith?: string | null;
-  attributeExists?: boolean | null;
-  attributeType?: ModelAttributeTypes | null;
-  size?: ModelSizeInput | null;
 };
 
 export type ModelReportConnection = {
@@ -173,20 +254,17 @@ export enum ModelSortDirection {
   DESC = "DESC"
 }
 
-export type ModelSubscriptionReportFilterInput = {
-  id?: ModelSubscriptionIDInput | null;
-  name?: ModelSubscriptionStringInput | null;
-  testLocation?: ModelSubscriptionStringInput | null;
-  reportNum?: ModelSubscriptionStringInput | null;
-  lotNum?: ModelSubscriptionStringInput | null;
-  customerName?: ModelSubscriptionStringInput | null;
-  origin?: ModelSubscriptionStringInput | null;
-  stations?: ModelSubscriptionStringInput | null;
-  variety?: ModelSubscriptionStringInput | null;
-  attachmentUrl?: ModelSubscriptionStringInput | null;
-  dataRows?: ModelSubscriptionStringInput | null;
-  and?: Array<ModelSubscriptionReportFilterInput | null> | null;
-  or?: Array<ModelSubscriptionReportFilterInput | null> | null;
+export type ModelSubscriptionReportTemplateFilterInput = {
+  templateId?: ModelSubscriptionIDInput | null;
+  localCompanyName?: ModelSubscriptionStringInput | null;
+  letterHeadImageName?: ModelSubscriptionStringInput | null;
+  stampImageName?: ModelSubscriptionStringInput | null;
+  address?: ModelSubscriptionStringInput | null;
+  phone?: ModelSubscriptionStringInput | null;
+  fax?: ModelSubscriptionStringInput | null;
+  email?: ModelSubscriptionStringInput | null;
+  and?: Array<ModelSubscriptionReportTemplateFilterInput | null> | null;
+  or?: Array<ModelSubscriptionReportTemplateFilterInput | null> | null;
 };
 
 export type ModelSubscriptionIDInput = {
@@ -219,6 +297,67 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array<string | null> | null;
 };
 
+export type ModelSubscriptionReportFilterInput = {
+  id?: ModelSubscriptionIDInput | null;
+  name?: ModelSubscriptionStringInput | null;
+  testLocation?: ModelSubscriptionStringInput | null;
+  reportNum?: ModelSubscriptionStringInput | null;
+  lotNum?: ModelSubscriptionStringInput | null;
+  customerName?: ModelSubscriptionStringInput | null;
+  origin?: ModelSubscriptionStringInput | null;
+  stations?: ModelSubscriptionStringInput | null;
+  variety?: ModelSubscriptionStringInput | null;
+  attachmentUrl?: ModelSubscriptionStringInput | null;
+  dataRows?: ModelSubscriptionStringInput | null;
+  and?: Array<ModelSubscriptionReportFilterInput | null> | null;
+  or?: Array<ModelSubscriptionReportFilterInput | null> | null;
+};
+
+export type CreateReportTemplateMutation = {
+  __typename: "ReportTemplate";
+  templateId: string;
+  localCompanyName?: string | null;
+  letterHeadImageName?: string | null;
+  stampImageName?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  email?: string | null;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateReportTemplateMutation = {
+  __typename: "ReportTemplate";
+  templateId: string;
+  localCompanyName?: string | null;
+  letterHeadImageName?: string | null;
+  stampImageName?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  email?: string | null;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DeleteReportTemplateMutation = {
+  __typename: "ReportTemplate";
+  templateId: string;
+  localCompanyName?: string | null;
+  letterHeadImageName?: string | null;
+  stampImageName?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  email?: string | null;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type CreateReportMutation = {
   __typename: "Report";
   id: string;
@@ -232,6 +371,20 @@ export type CreateReportMutation = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
+  reportTemplate?: {
+    __typename: "ReportTemplate";
+    templateId: string;
+    localCompanyName?: string | null;
+    letterHeadImageName?: string | null;
+    stampImageName?: string | null;
+    address?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    email?: string | null;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -249,6 +402,20 @@ export type UpdateReportMutation = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
+  reportTemplate?: {
+    __typename: "ReportTemplate";
+    templateId: string;
+    localCompanyName?: string | null;
+    letterHeadImageName?: string | null;
+    stampImageName?: string | null;
+    address?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    email?: string | null;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -266,8 +433,56 @@ export type DeleteReportMutation = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
+  reportTemplate?: {
+    __typename: "ReportTemplate";
+    templateId: string;
+    localCompanyName?: string | null;
+    letterHeadImageName?: string | null;
+    stampImageName?: string | null;
+    address?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    email?: string | null;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
+};
+
+export type GetReportTemplateQuery = {
+  __typename: "ReportTemplate";
+  templateId: string;
+  localCompanyName?: string | null;
+  letterHeadImageName?: string | null;
+  stampImageName?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  email?: string | null;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ListReportTemplatesQuery = {
+  __typename: "ModelReportTemplateConnection";
+  items: Array<{
+    __typename: "ReportTemplate";
+    templateId: string;
+    localCompanyName?: string | null;
+    letterHeadImageName?: string | null;
+    stampImageName?: string | null;
+    address?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    email?: string | null;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null>;
+  nextToken?: string | null;
 };
 
 export type GetReportQuery = {
@@ -283,6 +498,20 @@ export type GetReportQuery = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
+  reportTemplate?: {
+    __typename: "ReportTemplate";
+    templateId: string;
+    localCompanyName?: string | null;
+    letterHeadImageName?: string | null;
+    stampImageName?: string | null;
+    address?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    email?: string | null;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -329,6 +558,51 @@ export type ReportsByAttachmentUrlAndNameQuery = {
   nextToken?: string | null;
 };
 
+export type OnCreateReportTemplateSubscription = {
+  __typename: "ReportTemplate";
+  templateId: string;
+  localCompanyName?: string | null;
+  letterHeadImageName?: string | null;
+  stampImageName?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  email?: string | null;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OnUpdateReportTemplateSubscription = {
+  __typename: "ReportTemplate";
+  templateId: string;
+  localCompanyName?: string | null;
+  letterHeadImageName?: string | null;
+  stampImageName?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  email?: string | null;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OnDeleteReportTemplateSubscription = {
+  __typename: "ReportTemplate";
+  templateId: string;
+  localCompanyName?: string | null;
+  letterHeadImageName?: string | null;
+  stampImageName?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  fax?: string | null;
+  email?: string | null;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type OnCreateReportSubscription = {
   __typename: "Report";
   id: string;
@@ -342,6 +616,20 @@ export type OnCreateReportSubscription = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
+  reportTemplate?: {
+    __typename: "ReportTemplate";
+    templateId: string;
+    localCompanyName?: string | null;
+    letterHeadImageName?: string | null;
+    stampImageName?: string | null;
+    address?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    email?: string | null;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -359,6 +647,20 @@ export type OnUpdateReportSubscription = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
+  reportTemplate?: {
+    __typename: "ReportTemplate";
+    templateId: string;
+    localCompanyName?: string | null;
+    letterHeadImageName?: string | null;
+    stampImageName?: string | null;
+    address?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    email?: string | null;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -376,6 +678,20 @@ export type OnDeleteReportSubscription = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
+  reportTemplate?: {
+    __typename: "ReportTemplate";
+    templateId: string;
+    localCompanyName?: string | null;
+    letterHeadImageName?: string | null;
+    stampImageName?: string | null;
+    address?: string | null;
+    phone?: string | null;
+    fax?: string | null;
+    email?: string | null;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -384,6 +700,99 @@ export type OnDeleteReportSubscription = {
   providedIn: "root"
 })
 export class APIService {
+  async CreateReportTemplate(
+    input: CreateReportTemplateInput,
+    condition?: ModelReportTemplateConditionInput
+  ): Promise<CreateReportTemplateMutation> {
+    const statement = `mutation CreateReportTemplate($input: CreateReportTemplateInput!, $condition: ModelReportTemplateConditionInput) {
+        createReportTemplate(input: $input, condition: $condition) {
+          __typename
+          templateId
+          localCompanyName
+          letterHeadImageName
+          stampImageName
+          address
+          phone
+          fax
+          email
+          id
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <CreateReportTemplateMutation>response.data.createReportTemplate;
+  }
+  async UpdateReportTemplate(
+    input: UpdateReportTemplateInput,
+    condition?: ModelReportTemplateConditionInput
+  ): Promise<UpdateReportTemplateMutation> {
+    const statement = `mutation UpdateReportTemplate($input: UpdateReportTemplateInput!, $condition: ModelReportTemplateConditionInput) {
+        updateReportTemplate(input: $input, condition: $condition) {
+          __typename
+          templateId
+          localCompanyName
+          letterHeadImageName
+          stampImageName
+          address
+          phone
+          fax
+          email
+          id
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <UpdateReportTemplateMutation>response.data.updateReportTemplate;
+  }
+  async DeleteReportTemplate(
+    input: DeleteReportTemplateInput,
+    condition?: ModelReportTemplateConditionInput
+  ): Promise<DeleteReportTemplateMutation> {
+    const statement = `mutation DeleteReportTemplate($input: DeleteReportTemplateInput!, $condition: ModelReportTemplateConditionInput) {
+        deleteReportTemplate(input: $input, condition: $condition) {
+          __typename
+          templateId
+          localCompanyName
+          letterHeadImageName
+          stampImageName
+          address
+          phone
+          fax
+          email
+          id
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <DeleteReportTemplateMutation>response.data.deleteReportTemplate;
+  }
   async CreateReport(
     input: CreateReportInput,
     condition?: ModelReportConditionInput
@@ -402,6 +811,20 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
+          reportTemplate {
+            __typename
+            templateId
+            localCompanyName
+            letterHeadImageName
+            stampImageName
+            address
+            phone
+            fax
+            email
+            id
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -435,6 +858,20 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
+          reportTemplate {
+            __typename
+            templateId
+            localCompanyName
+            letterHeadImageName
+            stampImageName
+            address
+            phone
+            fax
+            email
+            id
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -468,6 +905,20 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
+          reportTemplate {
+            __typename
+            templateId
+            localCompanyName
+            letterHeadImageName
+            stampImageName
+            address
+            phone
+            fax
+            email
+            id
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -482,6 +933,71 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
     return <DeleteReportMutation>response.data.deleteReport;
+  }
+  async GetReportTemplate(id: string): Promise<GetReportTemplateQuery> {
+    const statement = `query GetReportTemplate($id: ID!) {
+        getReportTemplate(id: $id) {
+          __typename
+          templateId
+          localCompanyName
+          letterHeadImageName
+          stampImageName
+          address
+          phone
+          fax
+          email
+          id
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      id
+    };
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <GetReportTemplateQuery>response.data.getReportTemplate;
+  }
+  async ListReportTemplates(
+    filter?: ModelReportTemplateFilterInput,
+    limit?: number,
+    nextToken?: string
+  ): Promise<ListReportTemplatesQuery> {
+    const statement = `query ListReportTemplates($filter: ModelReportTemplateFilterInput, $limit: Int, $nextToken: String) {
+        listReportTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+          __typename
+          items {
+            __typename
+            templateId
+            localCompanyName
+            letterHeadImageName
+            stampImageName
+            address
+            phone
+            fax
+            email
+            id
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (limit) {
+      gqlAPIServiceArguments.limit = limit;
+    }
+    if (nextToken) {
+      gqlAPIServiceArguments.nextToken = nextToken;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <ListReportTemplatesQuery>response.data.listReportTemplates;
   }
   async GetReport(id: string): Promise<GetReportQuery> {
     const statement = `query GetReport($id: ID!) {
@@ -498,6 +1014,20 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
+          reportTemplate {
+            __typename
+            templateId
+            localCompanyName
+            letterHeadImageName
+            stampImageName
+            address
+            phone
+            fax
+            email
+            id
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -614,6 +1144,114 @@ export class APIService {
       response.data.reportsByAttachmentUrlAndName
     );
   }
+  OnCreateReportTemplateListener(
+    filter?: ModelSubscriptionReportTemplateFilterInput
+  ): Observable<
+    SubscriptionResponse<
+      Pick<__SubscriptionContainer, "onCreateReportTemplate">
+    >
+  > {
+    const statement = `subscription OnCreateReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput) {
+        onCreateReportTemplate(filter: $filter) {
+          __typename
+          templateId
+          localCompanyName
+          letterHeadImageName
+          stampImageName
+          address
+          phone
+          fax
+          email
+          id
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    return API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    ) as Observable<
+      SubscriptionResponse<
+        Pick<__SubscriptionContainer, "onCreateReportTemplate">
+      >
+    >;
+  }
+
+  OnUpdateReportTemplateListener(
+    filter?: ModelSubscriptionReportTemplateFilterInput
+  ): Observable<
+    SubscriptionResponse<
+      Pick<__SubscriptionContainer, "onUpdateReportTemplate">
+    >
+  > {
+    const statement = `subscription OnUpdateReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput) {
+        onUpdateReportTemplate(filter: $filter) {
+          __typename
+          templateId
+          localCompanyName
+          letterHeadImageName
+          stampImageName
+          address
+          phone
+          fax
+          email
+          id
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    return API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    ) as Observable<
+      SubscriptionResponse<
+        Pick<__SubscriptionContainer, "onUpdateReportTemplate">
+      >
+    >;
+  }
+
+  OnDeleteReportTemplateListener(
+    filter?: ModelSubscriptionReportTemplateFilterInput
+  ): Observable<
+    SubscriptionResponse<
+      Pick<__SubscriptionContainer, "onDeleteReportTemplate">
+    >
+  > {
+    const statement = `subscription OnDeleteReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput) {
+        onDeleteReportTemplate(filter: $filter) {
+          __typename
+          templateId
+          localCompanyName
+          letterHeadImageName
+          stampImageName
+          address
+          phone
+          fax
+          email
+          id
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    return API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    ) as Observable<
+      SubscriptionResponse<
+        Pick<__SubscriptionContainer, "onDeleteReportTemplate">
+      >
+    >;
+  }
+
   OnCreateReportListener(
     filter?: ModelSubscriptionReportFilterInput
   ): Observable<
@@ -633,6 +1271,20 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
+          reportTemplate {
+            __typename
+            templateId
+            localCompanyName
+            letterHeadImageName
+            stampImageName
+            address
+            phone
+            fax
+            email
+            id
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -667,6 +1319,20 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
+          reportTemplate {
+            __typename
+            templateId
+            localCompanyName
+            letterHeadImageName
+            stampImageName
+            address
+            phone
+            fax
+            email
+            id
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -701,6 +1367,20 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
+          reportTemplate {
+            __typename
+            templateId
+            localCompanyName
+            letterHeadImageName
+            stampImageName
+            address
+            phone
+            fax
+            email
+            id
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }

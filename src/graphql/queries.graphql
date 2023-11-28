@@ -1,5 +1,47 @@
 # this is an auto generated file. This will be overwritten
 
+query GetReportTemplate($id: ID!) {
+  getReportTemplate(id: $id) {
+    templateId
+    localCompanyName
+    letterHeadImageName
+    stampImageName
+    address
+    phone
+    fax
+    email
+    id
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+query ListReportTemplates(
+  $filter: ModelReportTemplateFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listReportTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      templateId
+      localCompanyName
+      letterHeadImageName
+      stampImageName
+      address
+      phone
+      fax
+      email
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
 query GetReport($id: ID!) {
   getReport(id: $id) {
     id
@@ -13,6 +55,20 @@ query GetReport($id: ID!) {
     variety
     attachmentUrl
     dataRows
+    reportTemplate {
+      templateId
+      localCompanyName
+      letterHeadImageName
+      stampImageName
+      address
+      phone
+      fax
+      email
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename

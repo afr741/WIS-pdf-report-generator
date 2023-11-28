@@ -1,0 +1,137 @@
+<p>Template edit</p>
+<div class="edit-page-wrapper">
+  <div class="example-wrap" *ngIf="!isLoading; else loading">
+    <form
+      class="k-form k-form-md"
+      [formGroup]="createForm"
+      (ngSubmit)="onCreate(createForm.value)"
+    >
+      <fieldset class="k-form-fieldset">
+        <legend class="k-form-legend">Upload file and fill details</legend>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Local Company Name" />
+          <kendo-textbox
+            formControlName="localCompanyName"
+            #name
+            placeholder="Enter company name"
+          ></kendo-textbox>
+          <kendo-formerror> name is required</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Address" />
+          <kendo-textbox
+            formControlName="address"
+            #name
+            placeholder="Enter the address"
+          ></kendo-textbox>
+          <kendo-formerror> address is required</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="phone" />
+          <kendo-textbox
+            formControlName="phone"
+            #phone
+            placeholder="Enter the phone"
+          ></kendo-textbox>
+          <kendo-formerror> phone is required</kendo-formerror>
+        </kendo-formfield>
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="fax" />
+          <kendo-textbox
+            formControlName="fax"
+            #fax
+            placeholder="Enter the fax number"
+          ></kendo-textbox>
+          <kendo-formerror> fax is required</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="fax" />
+          <kendo-textbox
+            formControlName="fax"
+            #fax
+            placeholder="Enter the fax number"
+          ></kendo-textbox>
+          <kendo-formerror> fax is required</kendo-formerror>
+        </kendo-formfield>
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="email" />
+          <kendo-textbox
+            formControlName="email"
+            #email
+            placeholder="Enter the email number"
+          ></kendo-textbox>
+          <kendo-formerror> email is required</kendo-formerror>
+        </kendo-formfield>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 example-col">
+            <p>LetterHead image upload</p>
+            <kendo-fileselect
+              formControlName="letterHeadImage"
+              (select)="onFileChangeLetterhead($event)"
+              [multiple]="false"
+            ></kendo-fileselect>
+          </div>
+          <div *ngIf="letterHeadPreviewUrl">
+            <img
+              [src]="letterHeadPreviewUrl"
+              alt="Preview Image"
+              style="max-width: 300px; height: auto"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 example-col">
+            <p>Stamp Image upload</p>
+            <kendo-fileselect
+              formControlName="letterHeadImage"
+              (select)="onFileChangeStamp($event)"
+              [multiple]="false"
+            ></kendo-fileselect>
+          </div>
+          <div *ngIf="stampPreviewUrl">
+            <img
+              [src]="stampPreviewUrl"
+              alt="Preview Image"
+              style="max-width: 300px; height: auto"
+            />
+          </div>
+        </div>
+
+        <div class="k-form-buttons">
+          <button
+            kendoButton
+            [size]="'large'"
+            [rounded]="'medium'"
+            [fillMode]="'solid'"
+            [themeColor]="'success'"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </fieldset>
+    </form>
+    <p class="alert alert-danger" *ngIf="error" role="alert">{{ error }}</p>
+  </div>
+  <ng-template #loading>
+    <div class="wrap">
+      <div class="example-item">
+        <div class="example-item-title">loading...</div>
+        <div class="k-block">
+          <kendo-loader
+            [type]="loader.type"
+            [themeColor]="loader.themeColor"
+            [size]="loader.size"
+          >
+          </kendo-loader>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
