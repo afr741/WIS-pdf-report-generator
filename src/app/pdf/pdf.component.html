@@ -39,11 +39,7 @@
       </div>
     </div>
     <h3>Previous Reports:</h3>
-    <kendo-grid
-      [kendoGridBinding]="listOfReports"
-      [filterable]="true"
-      [height]="800"
-    >
+    <kendo-grid [kendoGridBinding]="reports" [filterable]="true" [height]="800">
       <kendo-grid-column field="id" title="Report ID" [filterable]="false">
       </kendo-grid-column>
       <kendo-grid-column field="name" title="Report Name"> </kendo-grid-column>
@@ -58,8 +54,8 @@
       <kendo-grid-column
         field="updatedAt"
         title="Date"
-        format="MM/dd/yyyy"
-        filter="date"
+        format=" dd/MM/yyyy"
+        filter="text"
       >
       </kendo-grid-column>
       <kendo-grid-command-column title="Actions">

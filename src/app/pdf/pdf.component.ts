@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import * as CryptoJS from 'crypto-js';
-import { APIService, Report } from '../API.service';
+import { APIService, Report, ReportTemplate } from '../API.service';
 import { Router } from '@angular/router';
 import * as QRCode from 'qrcode';
+import { Storage } from 'aws-amplify';
 // import letterHead from '../../assets/images/letterhead.png';
 // const logo = require('../../assets/images/letterhead.png').default as string;
 const REMARKS = {
@@ -40,13 +41,18 @@ import {
 })
 export class PdfComponent implements OnInit {
   public reports: Array<Report> = [];
-  public listOfReports: Report[] = [];
+  public templateInfo: ReportTemplate[] = [];
   public pdfData: any = null;
   private secretKey: string = 'wis';
   public isLoading: boolean = true;
   public qrImage: any = null;
   public qrImageURL: string = '';
   public error: string | null = null;
+  public letterHeadPreviewUrl: string = '';
+  public stampPreviewUrl: string = '';
+  public letterHeadImage: any = null;
+  public stampImage: any = null;
+
   public loader = {
     type: <LoaderType>'converging-spinner',
     themeColor: <LoaderThemeColor>'info',
@@ -56,7 +62,6 @@ export class PdfComponent implements OnInit {
 
   async ngOnInit() {
     let pollingAttempts = 0;
-
     const fetchData = async () => {
       await this.api
         .ListReports()
@@ -67,9 +72,14 @@ export class PdfComponent implements OnInit {
             let dateB: any = new Date(b.updatedAt);
             return dateB - dateA;
           });
-        })
-        .then(() => {
-          this.listOfReports = this.reports;
+
+          this.reports = this.reports.map(
+            (report, index) =>
+              (report = {
+                ...report,
+                updatedAt: new Date(report.updatedAt).toDateString(),
+              })
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -83,17 +93,46 @@ export class PdfComponent implements OnInit {
           setTimeout(fetchData, 3000);
         } else {
           console.log('Data not available after 10 polling attempts.');
-          this.isLoading = false;
-          // Handle the case where data is not available.
         }
-      } else {
-        this.isLoading = false;
-        console.log(await this.processPDFData(this.reports[0]));
-        // this.processPDFData();
+      }
+    };
+    const fetchTemplateData = async () => {
+      await this.api
+        .ListReportTemplates()
+        .then((event) => {
+          this.templateInfo = event.items as ReportTemplate[];
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      console.log('template info', this.templateInfo);
+      if (this.templateInfo[0].letterHeadImageName) {
+        this.letterHeadPreviewUrl = await Storage.get(
+          this.templateInfo[0].letterHeadImageName
+        );
+        this.letterHeadImage = await this.getBase64ImageFromURL(
+          this.letterHeadPreviewUrl
+        );
+      }
+      if (this.templateInfo[0].stampImageName) {
+        this.stampPreviewUrl = await Storage.get(
+          this.templateInfo[0].stampImageName
+        );
+        this.stampImage = await this.getBase64ImageFromURL(
+          this.stampPreviewUrl
+        );
       }
     };
 
-    fetchData(); // Start the initial data fetch.
+    try {
+      await Promise.all([fetchData(), fetchTemplateData()])
+        .then(() => this.processPDFData(this.reports[0]))
+        .then(() => (this.isLoading = false));
+    } catch (error) {
+      // Handle errors if any of the async functions fail
+    }
+    // fetchData(); // Start the initial data fetch.
+    // fetchTemplateData(); // Start the initial template data fetch.
   }
 
   makeUrlFriendly(encryptedText: string): string {
@@ -112,13 +151,13 @@ export class PdfComponent implements OnInit {
     ).toString();
     const ecnryptedURLParam: string = this.makeUrlFriendly(encryptedText);
     const appURL = window.location.origin;
-    console.log('encrypted url', ecnryptedURLParam, ' current url', appURL);
+    // console.log('encrypted url', ecnryptedURLParam, ' current url', appURL);
     this.qrImageURL = `${appURL}/qrcode?code=${ecnryptedURLParam}`;
     this.qrImage = await QRCode.toDataURL(this.qrImageURL);
     return { qrImage: this.qrImage, qrURL: this.qrImageURL };
   }
 
-  getBase64ImageFromURL(url: string) {
+  getBase64ImageFromURL(url: string = '../../assets/images/letterhead.png') {
     return new Promise((resolve, reject) => {
       var img = new Image();
       img.setAttribute('crossOrigin', 'anonymous');
@@ -132,7 +171,6 @@ export class PdfComponent implements OnInit {
         ctx!.drawImage(img, 0, 0);
 
         var dataURL = canvas.toDataURL('image/png');
-
         resolve(dataURL);
       };
 
@@ -160,14 +198,14 @@ export class PdfComponent implements OnInit {
     } = report;
 
     let formatedDate = new Date(createdAt).toDateString();
-    console.log('formated date', formatedDate);
+
     let data = dataRows;
     if (!data || data[0] === null) return;
     let parsedRawData = JSON.parse(data[0]);
     let removedEmptyArraysData = parsedRawData.filter(
       (array: []) => array.length !== 0
     );
-    console.log('raw ALL', removedEmptyArraysData);
+    // console.log('raw ALL', removedEmptyArraysData);
     // to find the start of data extraction
     let timeIndex = removedEmptyArraysData.findIndex((array: any) =>
       array.includes('Time')
@@ -180,7 +218,7 @@ export class PdfComponent implements OnInit {
           typeof element === 'string' && element.includes('Average')
       )
     );
-    console.log('time', timeIndex, 'average', averageIndex);
+    // console.log('time', timeIndex, 'average', averageIndex);
     let extractedRows = removedEmptyArraysData.slice(
       timeIndex + 1,
       averageIndex + 2
@@ -227,7 +265,7 @@ export class PdfComponent implements OnInit {
       arrayedRows.push(filteredArray);
     }
 
-    console.log('arrayedRows', arrayedRows);
+    // console.log('arrayedRows', arrayedRows);
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
     let columnWidth = arrayedRows[0].length;
     let columnWidthArray = new Array(columnWidth).fill(17);
@@ -237,9 +275,7 @@ export class PdfComponent implements OnInit {
         {
           width: 520,
           margin: [0, 10],
-          image: await this.getBase64ImageFromURL(
-            '../../assets/images/letterhead.png'
-          ),
+          image: await this.letterHeadImage,
         },
         {
           style: 'header',
@@ -278,21 +314,52 @@ export class PdfComponent implements OnInit {
             body: arrayedRows,
           },
         },
-        { image: qrImage, width: 100 },
+
+        { text: '\n\nRemarks', style: 'remarks' },
         {
-          style: 'qrCodeText',
-          text: 'Scan the QR Code or click here',
-          link: qrURL,
-        },
-        { text: '\n\nRemarks', style: 'header' },
-        {
+          style: 'remarksBullets',
           ol: REMARKS.part1,
         },
         {
+          style: 'remarksBullets',
           text: REMARKS.part2,
         },
         {
+          style: 'remarksBullets',
           ol: REMARKS.part3,
+        },
+        { text: this.templateInfo[0].address, style: 'contactsHeader' },
+        {
+          table: {
+            widths: [170, 140, 140],
+            body: [
+              [
+                {
+                  style: 'contactsColumns',
+                  columns: [
+                    {
+                      width: 70,
+                      text: `${this.templateInfo[0].address}, \n${this.templateInfo[0].phone} \n${this.templateInfo[0].fax}\n${this.templateInfo[0].email}\n www.wiscontrol.com`,
+                    },
+                    {
+                      width: 70,
+                      text: `${this.templateInfo[0].address}, \n${this.templateInfo[0].phone} \n${this.templateInfo[0].fax}\n${this.templateInfo[0].email}\n www.wiscontrol.com`,
+                    },
+                  ],
+                },
+                {
+                  link: qrURL,
+                  image: qrImage,
+                  fit: [90, 90],
+                },
+                {
+                  image: await this.stampImage,
+                  fit: [80, 80],
+                },
+              ],
+            ],
+          },
+          layout: 'noBorders',
         },
       ],
       styles: {
@@ -306,10 +373,25 @@ export class PdfComponent implements OnInit {
         qrCodeText: {
           fontSize: 8,
         },
+        remarks: {
+          fontSize: 6,
+        },
+        remarksBullets: {
+          fontSize: 6,
+        },
+        contactsHeader: {
+          fontSize: 7,
+          bold: true,
+          margin: [0, 10, 0, 3],
+        },
+        contactsColumns: {
+          fontSize: 6,
+        },
       },
     };
 
     this.pdfData = docDefinition;
+    console.log('this.pdfData', this.pdfData);
   }
   handlBackButton() {
     this.router.navigate(['/upload']);
