@@ -3,6 +3,12 @@ import { OnInit } from '@angular/core';
 import { APIService, Report } from '../API.service';
 import { ActivatedRoute } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
+import { Storage } from 'aws-amplify';
+import {
+  LoaderType,
+  LoaderThemeColor,
+  LoaderSize,
+} from '@progress/kendo-angular-indicators';
 
 @Component({
   selector: 'app-qrcode',
@@ -17,6 +23,14 @@ export class QrcodeComponent implements OnInit {
   public rawDataRows: any[] = [];
   public dataColumnNames: string[] = [];
   public dateCreated: string = '';
+  public isLoading: boolean = true;
+  public loader = {
+    type: <LoaderType>'converging-spinner',
+    themeColor: <LoaderThemeColor>'info',
+    size: <LoaderSize>'large',
+  };
+  letterHeadPreviewUrl: string | ArrayBuffer | null | undefined = null;
+
   // when pinging this page
   // take the query param from page URL
   // decode the query param, get page id(attachementurlname)
@@ -145,6 +159,9 @@ export class QrcodeComponent implements OnInit {
 
       console.log('dbEntryData', this.dbEntryData[0]);
       this.parseData(this.dbEntryData[0].dataRows);
+      this.isLoading = false;
     });
+    const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
+    this.letterHeadPreviewUrl = letterHeadImageFromS3;
   }
 }

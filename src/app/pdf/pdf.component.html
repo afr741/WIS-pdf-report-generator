@@ -1,7 +1,7 @@
 <div class="pdf-wrapper">
   <div *ngIf="!isLoading; else loading">
     <div class="pdf-ready-section">
-      <h2>You report is ready!</h2>
+      <h1>Your report is ready!</h1>
       <div class="button-section">
         <button
           type="button"
@@ -99,9 +99,9 @@
     </kendo-grid>
   </div>
   <ng-template #loading>
-    <div class="wrap">
-      <div class="example-item">
-        <div class="example-item-title">loading...</div>
+    <div class="loader-wrapper">
+      <div class="loader">
+        <div class="loader-title">loading...</div>
         <div class="k-block">
           <kendo-loader
             [type]="loader.type"

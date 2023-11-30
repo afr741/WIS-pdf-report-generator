@@ -11,14 +11,9 @@ import {
   LoaderSize,
 } from '@progress/kendo-angular-indicators';
 
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Storage, Auth } from 'aws-amplify';
+import { Storage } from 'aws-amplify';
 import { NotificationService } from '@progress/kendo-angular-notification';
 
 @Component({

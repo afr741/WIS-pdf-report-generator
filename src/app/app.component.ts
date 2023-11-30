@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Router, NavigationEnd } from '@angular/router';
+
 import { AuthService } from './AuthService';
 
 @Component({
@@ -9,19 +11,25 @@ import { AuthService } from './AuthService';
 })
 export class AppComponent implements OnInit {
   title = 'authdemo';
-  public isAuthenticated: boolean = false;
+  public shouldRenderLogout: boolean = false;
 
-  email: string | null = null;
-  password: string | null = null;
-  userName: string | null = null;
-  mobile?: number | null = null;
-  error?: string | null = null;
-  code?: string | null = null;
+  constructor(private authService: AuthService, private router: Router) {}
 
-  constructor(private authService: AuthService) {}
-
-  ngOnInit() {
-    this.isAuthenticated = this.authService.isAuthenticated();
-    console.log('is authenticated', this.isAuthenticated);
+  ngOnInit(): void {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        const currentRoute = this.router.url;
+        if (currentRoute === '/login' || currentRoute.startsWith('/qrcode')) {
+          this.shouldRenderLogout = false;
+        } else {
+          this.shouldRenderLogout = true;
+        }
+      }
+    });
+  }
+  async handleLogOut() {
+    await this.authService
+      .onSignOut()
+      .then(() => this.router.navigate(['/login']));
   }
 }

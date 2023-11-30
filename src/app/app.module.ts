@@ -24,7 +24,6 @@ import { LayoutModule } from '@progress/kendo-angular-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { ListViewModule } from '@progress/kendo-angular-listview';
 import { EditComponent } from './edit/edit.component';
-import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 
 @NgModule({
@@ -36,7 +35,6 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
     QrcodeComponent,
     ResetComponent,
     EditComponent,
-    NavBarComponent,
   ],
   imports: [
     BrowserModule,

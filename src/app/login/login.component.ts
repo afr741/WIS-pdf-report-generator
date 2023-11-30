@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../AuthService';
+import { Auth } from 'aws-amplify';
+
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {
   ButtonSize,
@@ -31,7 +33,13 @@ export class LoginComponent implements OnInit {
   public isLoading: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    Auth.currentAuthenticatedUser()
+      .then(() => {
+        return this.router.navigate(['/upload']);
+      })
+      .catch(() => console.log('Not signed in'));
+  }
 
   public registerForm: FormGroup = new FormGroup({
     password: new FormControl('', Validators.required),

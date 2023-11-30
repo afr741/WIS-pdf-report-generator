@@ -1,10 +1,18 @@
+.qrcode-wrapper {
+  display: block;
+}
 .data-grid-wrapper {
   overflow-x: auto;
 }
 .qr-data-grid {
-  min-width: 1200px;
+  min-width: 1300px;
 }
-
+.contact-details.contact-field {
+  font-weight: bold;
+  span {
+    font-weight: 400;
+  }
+}
 .wis-banner {
   width: 100%;
 }
@@ -23,4 +31,38 @@
 }
 .contact {
   width: 100%;
+}
+
+.k-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+
+  -webkit-animation: spin 2s linear infinite;
+  -moz-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+.k-block,
+.k-panel {
+  border: none;
+  background: none;
+}
+
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotate(-360deg);
+  }
+}
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(-360deg);
+  }
+}
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(-360deg);
+    transform: rotate(-360deg);
+  }
 }

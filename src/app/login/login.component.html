@@ -1,12 +1,12 @@
 <div class="login-section">
   <form class="k-form k-form-md" [formGroup]="registerForm">
     <fieldset class="k-form-fieldset">
-      <legend class="k-form-legend">Login to WIS PDF Generator</legend>
+      <h1 class="k-form-legend">WIS PDF GENERATOR - LOGIN</h1>
       <kendo-formfield>
         <kendo-label
           labelCssClass="k-form-label"
           [for]="email"
-          text="email"
+          text="Email"
         ></kendo-label>
         <kendo-textbox
           formControlName="email"
@@ -50,8 +50,8 @@
       </div>
     </fieldset>
   </form>
-  <div class="wrap" *ngIf="isLoading">
-    <div class="example-item">
+  <div class="loader-wrapper" *ngIf="isLoading">
+    <div class="loader">
       <div class="k-block">
         <kendo-loader
           [type]="loader.type"

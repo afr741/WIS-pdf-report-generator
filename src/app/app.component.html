@@ -1,4 +1,18 @@
-<ng-container *ngIf="isAuthenticated">
+<ng-container>
   <!-- <app-nav-bar></app-nav-bar> -->
+  <div class="k-form-buttons" *ngIf="shouldRenderLogout">
+    <button
+      type="button"
+      kendoButton
+      [size]="'large'"
+      [rounded]="'medium'"
+      [fillMode]="'solid'"
+      [themeColor]="'error'"
+      class="logout-button"
+      (click)="handleLogOut()"
+    >
+      Logout
+    </button>
+  </div>
 </ng-container>
 <router-outlet></router-outlet>

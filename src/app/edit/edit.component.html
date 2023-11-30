@@ -1,13 +1,13 @@
-<p>Template edit</p>
 <div class="edit-page-wrapper">
   <div class="example-wrap" *ngIf="!isLoading; else loading">
+    <h1>Edit template</h1>
     <form
       class="k-form k-form-md"
       [formGroup]="createForm"
       (ngSubmit)="onCreate(createForm.value)"
     >
       <fieldset class="k-form-fieldset">
-        <legend class="k-form-legend">Upload file and fill details</legend>
+        <!-- <legend class="k-form-legend">Uploa</legend> -->
 
         <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="Local Company Name" />
@@ -137,8 +137,8 @@
     <p class="alert alert-danger" *ngIf="error" role="alert">{{ error }}</p>
   </div>
   <ng-template #loading>
-    <div class="wrap">
-      <div class="example-item">
+    <div class="loader-wrapper">
+      <div class="loader">
         <div class="k-block">
           <kendo-loader
             [type]="loader.type"

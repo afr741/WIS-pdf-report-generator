@@ -1,29 +1,28 @@
-<div class="example-wrap">
+<div class="upload-wrap">
   <form
     class="k-form k-form-md"
     [formGroup]="createForm"
     (ngSubmit)="onCreate(createForm.value)"
   >
     <fieldset class="k-form-fieldset">
-      <legend class="k-form-legend">Upload file and fill details</legend>
+      <h1>WIS PDF GENERATOR - Fill details and Upload the excel file</h1>
 
       <kendo-formfield>
-        <kendo-label labelCssClass="k-form-label" text="name" />
+        <kendo-label labelCssClass="k-form-label" text="Report/File name" />
         <kendo-textbox
           formControlName="name"
           #name
           required
-          placeholder="Enter name"
+          placeholder="Enter a name for you report"
         ></kendo-textbox>
         <kendo-formerror> name is required</kendo-formerror>
       </kendo-formfield>
 
       <kendo-formfield>
-        <kendo-label labelCssClass="k-form-label" text="test location" />
+        <kendo-label labelCssClass="k-form-label" text="Test location" />
         <kendo-textbox
           formControlName="testLocation"
           #testLocation
-          required
           placeholder="Enter Location"
         ></kendo-textbox>
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
@@ -34,7 +33,6 @@
         <kendo-textbox
           formControlName="reportNum"
           #reportNum
-          required
           placeholder="Enter Report Number"
         ></kendo-textbox>
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
@@ -45,7 +43,6 @@
         <kendo-textbox
           formControlName="lotNum"
           #reportNum
-          required
           placeholder="Lot Number"
         ></kendo-textbox>
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
@@ -56,7 +53,6 @@
         <kendo-textbox
           formControlName="customerName"
           #customerName
-          required
           placeholder="Customer Name"
         ></kendo-textbox>
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
@@ -67,29 +63,26 @@
         <kendo-textbox
           formControlName="origin"
           #origin
-          required
           placeholder="Origin"
         ></kendo-textbox>
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
       </kendo-formfield>
 
       <kendo-formfield>
-        <kendo-label labelCssClass="k-form-label" text="stations" />
+        <kendo-label labelCssClass="k-form-label" text="Stations" />
         <kendo-textbox
           formControlName="stations"
           #stations
-          required
           placeholder="Stations"
         ></kendo-textbox>
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
       </kendo-formfield>
 
       <kendo-formfield>
-        <kendo-label labelCssClass="k-form-label" text="variety" />
+        <kendo-label labelCssClass="k-form-label" text="Variety" />
         <kendo-textbox
           formControlName="variety"
           #variety
-          required
           placeholder="Variety"
         ></kendo-textbox>
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
@@ -119,9 +112,9 @@
       </div>
     </fieldset>
   </form>
-  <div class="wrap" *ngIf="isLoading">
-    <div class="example-item">
-      <div class="example-item-title">Processing...</div>
+  <div class="loader-wrapper" *ngIf="isLoading">
+    <div class="loader">
+      <div class="loader-title">Processing...</div>
       <div class="k-block">
         <kendo-loader
           [type]="loader.type"

@@ -6,17 +6,17 @@
   height: 100%;
 }
 
-.wrap {
+.loader-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 -10px;
 }
-.example-item {
+.loader {
   flex: 0 0 33%;
   padding: 10px;
 }
-.example-item-title {
+.loader-title {
   margin-bottom: 10px;
   text-align: center;
   font-size: 20px;
