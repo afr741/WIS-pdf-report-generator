@@ -119,5 +119,18 @@
       </div>
     </fieldset>
   </form>
+  <div class="wrap" *ngIf="isLoading">
+    <div class="example-item">
+      <div class="example-item-title">Processing...</div>
+      <div class="k-block">
+        <kendo-loader
+          [type]="loader.type"
+          [themeColor]="loader.themeColor"
+          [size]="loader.size"
+        >
+        </kendo-loader>
+      </div>
+    </div>
+  </div>
   <p class="alert alert-danger" *ngIf="error" role="alert">{{ error }}</p>
 </div>

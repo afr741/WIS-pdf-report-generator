@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Auth } from 'aws-amplify';
 import { jwtDecode } from 'jwt-decode';
+import { Observable, from, switchMap, catchError, throwError } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -56,6 +57,10 @@ export class AuthService {
     } else {
       return true;
     }
+  }
+
+  public isAuthenticated(): boolean {
+    return Auth.currentAuthenticatedUser() !== null;
   }
 
   public async onSignOut() {

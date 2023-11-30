@@ -6,6 +6,12 @@ import { APIService, Report, ReportTemplate } from '../API.service';
 import { Router } from '@angular/router';
 import * as QRCode from 'qrcode';
 import { Storage } from 'aws-amplify';
+import {
+  LoaderType,
+  LoaderThemeColor,
+  LoaderSize,
+} from '@progress/kendo-angular-indicators';
+
 // import letterHead from '../../assets/images/letterhead.png';
 // const logo = require('../../assets/images/letterhead.png').default as string;
 const REMARKS = {
@@ -28,11 +34,6 @@ const REMARKS = {
   part4: 'ЧСП "Точикистон-ВИС (Санчиши мустакили пахта)"',
   part5: 'JSC "Tajikistan-WIS (Independent inspection 0f cotton)"',
 };
-import {
-  LoaderType,
-  LoaderThemeColor,
-  LoaderSize,
-} from '@progress/kendo-angular-indicators';
 
 @Component({
   selector: 'app-pdf',
@@ -80,21 +81,20 @@ export class PdfComponent implements OnInit {
                 updatedAt: new Date(report.updatedAt).toDateString(),
               })
           );
+          if (this.reports[0].dataRows == null) {
+            if (pollingAttempts < 10) {
+              // Limit the number of polling attempts
+              pollingAttempts++;
+              setTimeout(fetchData, 3000);
+            } else {
+              console.log('Data not available after 10 polling attempts.');
+            }
+          }
         })
         .catch((err) => {
           console.log(err);
         });
       console.log('sorted reports', this.reports);
-
-      if (this.reports[0].dataRows == null) {
-        if (pollingAttempts < 10) {
-          // Limit the number of polling attempts
-          pollingAttempts++;
-          setTimeout(fetchData, 3000);
-        } else {
-          console.log('Data not available after 10 polling attempts.');
-        }
-      }
     };
     const fetchTemplateData = async () => {
       await this.api
@@ -125,9 +125,9 @@ export class PdfComponent implements OnInit {
     };
 
     try {
-      await Promise.all([fetchData(), fetchTemplateData()])
-        .then(() => this.processPDFData(this.reports[0]))
-        .then(() => (this.isLoading = false));
+      await Promise.all([fetchData(), fetchTemplateData()]);
+      this.processPDFData(this.reports[0]);
+      this.isLoading = false;
     } catch (error) {
       // Handle errors if any of the async functions fail
     }
@@ -184,214 +184,223 @@ export class PdfComponent implements OnInit {
 
   async processPDFData(report: Report) {
     // let data = this.reports[index].dataRows;
-    let {
-      dataRows,
-      name,
-      testLocation,
-      reportNum,
-      lotNum,
-      customerName,
-      origin,
-      stations,
-      variety,
-      createdAt,
-    } = report;
+    try {
+      let {
+        dataRows,
+        name,
+        testLocation,
+        reportNum,
+        lotNum,
+        customerName,
+        origin,
+        stations,
+        variety,
+        createdAt,
+      } = report;
+      let formatedDate = new Date(createdAt).toDateString();
 
-    let formatedDate = new Date(createdAt).toDateString();
-
-    let data = dataRows;
-    if (!data || data[0] === null) return;
-    let parsedRawData = JSON.parse(data[0]);
-    let removedEmptyArraysData = parsedRawData.filter(
-      (array: []) => array.length !== 0
-    );
-    // console.log('raw ALL', removedEmptyArraysData);
-    // to find the start of data extraction
-    let timeIndex = removedEmptyArraysData.findIndex((array: any) =>
-      array.includes('Time')
-    );
-
-    // to find the end of data extraction
-    let averageIndex = removedEmptyArraysData.findIndex((array: any) =>
-      array.some(
-        (element: any) =>
-          typeof element === 'string' && element.includes('Average')
-      )
-    );
-    // console.log('time', timeIndex, 'average', averageIndex);
-    let extractedRows = removedEmptyArraysData.slice(
-      timeIndex + 1,
-      averageIndex + 2
-    );
-    const lastTwoArrays = extractedRows.slice(-2);
-    const mainArr = [null]
-      .concat(lastTwoArrays[0])
-      .concat([null])
-      .concat(lastTwoArrays[1].toSpliced(0, 3));
-
-    const combinedArray = mainArr;
-    extractedRows.splice(-2);
-    extractedRows.push(combinedArray);
-
-    console.log(
-      'lastTwoArrays:',
-      lastTwoArrays,
-      'mainArr:',
-      mainArr,
-      'extracted rows',
-      extractedRows
-    );
-    let arrayedRows = [];
-    let firstRow = extractedRows[0];
-    for (let i = 0; i < extractedRows.length; i++) {
-      let innerArray = extractedRows[i];
-
-      let filteredArray = [];
-      for (let j = 0; j < innerArray.length; j++) {
-        if (firstRow[j] !== null) {
-          if (innerArray[j] === null || innerArray[j] === undefined) {
-            // Replace null with an empty string
-            innerArray[j] = '';
-          } else {
-            innerArray[j] = isNaN(Number(innerArray[j]))
-              ? innerArray[j].toString()
-              : Number(innerArray[j]).toFixed(2).toString();
-          }
-
-          filteredArray.push(innerArray[j]);
-        }
+      let data = dataRows;
+      if (!data || data[0] === null) {
+        this.error = 'Faied to extract data rows!';
+        return;
       }
 
-      arrayedRows.push(filteredArray);
-    }
+      let parsedRawData = JSON.parse(data[0]);
+      let removedEmptyArraysData = parsedRawData.filter(
+        (array: []) => array.length !== 0
+      );
+      // console.log('raw ALL', removedEmptyArraysData);
+      // to find the start of data extraction
+      let timeIndex = removedEmptyArraysData.findIndex((array: any) =>
+        array.includes('Time')
+      );
 
-    // console.log('arrayedRows', arrayedRows);
-    const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
-    let columnWidth = arrayedRows[0].length;
-    let columnWidthArray = new Array(columnWidth).fill(17);
-    // let columnHeightArray = new Array(columnWidth).fill(3);
-    let docDefinition = {
-      content: [
-        {
-          width: 520,
-          margin: [0, 10],
-          image: await this.letterHeadImage,
-        },
-        {
-          style: 'header',
-          layout: 'noBorders',
-          table: {
-            widths: [140, 140, 140, 140, 140],
-            body: [
-              ['Test Location', testLocation, 'Recepient', customerName],
-              ['CI Number', reportNum, 'ORIGIN', origin],
-              ['CI Report Number', reportNum, 'Station(As advised)', stations],
-              ['Date', formatedDate, 'Variety(As advised)', variety],
-              [
-                'Lot number',
-                lotNum,
-                { text: 'Sample drawn by customer', bold: true },
-                '24',
-              ],
-            ],
+      // to find the end of data extraction
+      let averageIndex = removedEmptyArraysData.findIndex((array: any) =>
+        array.some(
+          (element: any) =>
+            typeof element === 'string' && element.includes('Average')
+        )
+      );
+      // console.log('time', timeIndex, 'average', averageIndex);
+      let extractedRows = removedEmptyArraysData.slice(
+        timeIndex + 1,
+        averageIndex + 2
+      );
+      const lastTwoArrays = extractedRows.slice(-2);
+      const mainArr = [null]
+        .concat(lastTwoArrays[0])
+        .concat([null])
+        .concat(lastTwoArrays[1].toSpliced(0, 3));
+
+      const combinedArray = mainArr;
+      extractedRows.splice(-2);
+      extractedRows.push(combinedArray);
+
+      console.log('mainArr:', mainArr, 'extracted rows', extractedRows);
+      let arrayedRows = [];
+      let firstRow = extractedRows[0];
+      for (let i = 0; i < extractedRows.length; i++) {
+        let innerArray = extractedRows[i];
+
+        let filteredArray = [];
+        for (let j = 0; j < innerArray.length; j++) {
+          if (firstRow[j] !== null) {
+            if (innerArray[j] === null || innerArray[j] === undefined) {
+              // Replace null with an empty string
+              innerArray[j] = '';
+            } else {
+              innerArray[j] = isNaN(Number(innerArray[j]))
+                ? innerArray[j].toString()
+                : Number(innerArray[j]).toFixed(2).toString();
+            }
+
+            filteredArray.push(innerArray[j]);
+          }
+        }
+
+        arrayedRows.push(filteredArray);
+      }
+
+      // console.log('arrayedRows', arrayedRows);
+      const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
+      let columnWidth = arrayedRows[0].length;
+      let columnWidthArray = new Array(columnWidth).fill(17);
+      // let columnHeightArray = new Array(columnWidth).fill(3);
+      let docDefinition = {
+        content: [
+          {
+            width: 520,
+            margin: [0, 10],
+            image: await this.letterHeadImage,
           },
-        },
-        {
-          style: 'dataTable',
-          layout: {
-            hLineWidth: function (i: any, node: any) {
-              if (i === 0 || i === node.table.body.length) {
-                return 0;
-              }
-              return i === node.table.headerRows ? 2 : 1;
+          {
+            style: 'header',
+            layout: 'noBorders',
+            table: {
+              widths: [140, 140, 140, 140, 140],
+              body: [
+                ['Test Location', testLocation, 'Recepient', customerName],
+                ['CI Number', reportNum, 'ORIGIN', origin],
+                [
+                  'CI Report Number',
+                  reportNum,
+                  'Station(As advised)',
+                  stations,
+                ],
+                ['Date', formatedDate, 'Variety(As advised)', variety],
+                [
+                  'Lot number',
+                  lotNum,
+                  { text: 'Sample drawn by customer', bold: true },
+                  '24',
+                ],
+              ],
             },
-            vLineWidth: () => 0,
           },
-          table: {
-            headerRows: 1,
-            // widths: columnWidthArray,
-            // heights: 1,
-            body: arrayedRows,
+          {
+            style: 'dataTable',
+            layout: {
+              hLineWidth: function (i: any, node: any) {
+                if (i === 0 || i === node.table.body.length) {
+                  return 0;
+                }
+                return i === node.table.headerRows ? 2 : 1;
+              },
+              vLineWidth: () => 0,
+            },
+            table: {
+              headerRows: 1,
+              // widths: columnWidthArray,
+              // heights: 1,
+              body: arrayedRows,
+            },
           },
-        },
 
-        { text: '\n\nRemarks', style: 'remarks' },
-        {
-          style: 'remarksBullets',
-          ol: REMARKS.part1,
-        },
-        {
-          style: 'remarksBullets',
-          text: REMARKS.part2,
-        },
-        {
-          style: 'remarksBullets',
-          ol: REMARKS.part3,
-        },
-        { text: this.templateInfo[0].address, style: 'contactsHeader' },
-        {
-          table: {
-            widths: [170, 140, 140],
-            body: [
-              [
-                {
-                  style: 'contactsColumns',
-                  columns: [
-                    {
-                      width: 70,
-                      text: `${this.templateInfo[0].address}, \n${this.templateInfo[0].phone} \n${this.templateInfo[0].fax}\n${this.templateInfo[0].email}\n www.wiscontrol.com`,
-                    },
-                    {
-                      width: 70,
-                      text: `${this.templateInfo[0].address}, \n${this.templateInfo[0].phone} \n${this.templateInfo[0].fax}\n${this.templateInfo[0].email}\n www.wiscontrol.com`,
-                    },
-                  ],
-                },
-                {
-                  link: qrURL,
-                  image: qrImage,
-                  fit: [90, 90],
-                },
-                {
-                  image: await this.stampImage,
-                  fit: [80, 80],
-                },
+          { text: '\n\nRemarks', style: 'remarks' },
+          {
+            style: 'remarksBullets',
+            ol: REMARKS.part1,
+          },
+          {
+            style: 'remarksBullets',
+            text: REMARKS.part2,
+          },
+          {
+            style: 'remarksBullets',
+            ol: REMARKS.part3,
+          },
+          {
+            text: this.templateInfo[0].localCompanyName,
+            style: 'contactsHeader',
+          },
+          {
+            table: {
+              widths: [170, 140, 140],
+              body: [
+                [
+                  {
+                    style: 'contactsColumns',
+                    columns: [
+                      {
+                        width: 80,
+                        text: `${this.templateInfo[0].address}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
+                      },
+                      {
+                        width: 80,
+                        text: `${this.templateInfo[0].address}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
+                      },
+                    ],
+                  },
+
+                  {
+                    image: await this.stampImage,
+                    fit: [80, 80],
+                  },
+                  {
+                    link: qrURL,
+                    image: qrImage,
+                    fit: [90, 90],
+                  },
+                ],
               ],
-            ],
+            },
+            layout: 'noBorders',
           },
-          layout: 'noBorders',
+        ],
+        styles: {
+          header: {
+            fontSize: 8,
+          },
+          dataTable: {
+            margin: [10, 10],
+            fontSize: 6,
+          },
+          qrCodeText: {
+            fontSize: 8,
+          },
+          remarks: {
+            fontSize: 6,
+          },
+          remarksBullets: {
+            fontSize: 6,
+          },
+          contactsHeader: {
+            fontSize: 7,
+            bold: true,
+            margin: [0, 10, 0, 3],
+          },
+          contactsColumns: {
+            fontSize: 6,
+          },
         },
-      ],
-      styles: {
-        header: {
-          fontSize: 8,
-        },
-        dataTable: {
-          margin: [10, 10],
-          fontSize: 6,
-        },
-        qrCodeText: {
-          fontSize: 8,
-        },
-        remarks: {
-          fontSize: 6,
-        },
-        remarksBullets: {
-          fontSize: 6,
-        },
-        contactsHeader: {
-          fontSize: 7,
-          bold: true,
-          margin: [0, 10, 0, 3],
-        },
-        contactsColumns: {
-          fontSize: 6,
-        },
-      },
-    };
+      };
 
-    this.pdfData = docDefinition;
-    console.log('this.pdfData', this.pdfData);
+      this.pdfData = docDefinition;
+      console.log('this.pdfData', this.pdfData);
+    } catch (error) {
+      this.error = `${error}`;
+    }
   }
   handlBackButton() {
     this.router.navigate(['/upload']);
@@ -425,5 +434,8 @@ export class PdfComponent implements OnInit {
     );
 
     // this.pdfData = null;
+  }
+  handleEditTemplate(): void {
+    this.router.navigate(['/edit']);
   }
 }

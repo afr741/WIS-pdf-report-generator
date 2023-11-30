@@ -19,6 +19,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Storage, Auth } from 'aws-amplify';
+import { NotificationService } from '@progress/kendo-angular-notification';
 
 @Component({
   selector: 'app-edit',
@@ -44,7 +45,8 @@ export class EditComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private api: APIService,
-    public router: Router
+    public router: Router,
+    private notificationService: NotificationService
   ) {
     this.createForm = this.fb.group({
       localCompanyName: ['', Validators.required],
@@ -172,11 +174,25 @@ export class EditComponent implements OnInit {
       .UpdateReportTemplate(reportTemplate)
       .then(() => {
         console.log('Item updated!', reportTemplate);
+        this.displayStatus(true);
       })
       .catch((e) => {
+        this.displayStatus(false);
         console.log('Error updating report...', e);
         this.error = 'Error updating report';
       });
     // }
+  }
+  public displayStatus(isUpdated: boolean): void {
+    this.notificationService.show({
+      content: isUpdated
+        ? 'The template is updated!'
+        : 'Update failed, try again',
+      cssClass: 'button-notification',
+      animation: { type: 'slide', duration: 400 },
+      position: { horizontal: 'center', vertical: 'bottom' },
+      type: { style: isUpdated ? 'success' : 'error', icon: true },
+      closable: true,
+    });
   }
 }

@@ -49,15 +49,6 @@
         </kendo-formfield>
 
         <kendo-formfield>
-          <kendo-label labelCssClass="k-form-label" text="fax" />
-          <kendo-textbox
-            formControlName="fax"
-            #fax
-            placeholder="Enter the fax number"
-          ></kendo-textbox>
-          <kendo-formerror> fax is required</kendo-formerror>
-        </kendo-formfield>
-        <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="email" />
           <kendo-textbox
             formControlName="email"
@@ -122,7 +113,6 @@
   <ng-template #loading>
     <div class="wrap">
       <div class="example-item">
-        <div class="example-item-title">loading...</div>
         <div class="k-block">
           <kendo-loader
             [type]="loader.type"

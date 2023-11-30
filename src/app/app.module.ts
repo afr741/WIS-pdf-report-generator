@@ -24,6 +24,8 @@ import { LayoutModule } from '@progress/kendo-angular-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { ListViewModule } from '@progress/kendo-angular-listview';
 import { EditComponent } from './edit/edit.component';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { NotificationModule } from '@progress/kendo-angular-notification';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { EditComponent } from './edit/edit.component';
     QrcodeComponent,
     ResetComponent,
     EditComponent,
+    NavBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,6 +52,7 @@ import { EditComponent } from './edit/edit.component';
     HttpClientModule,
     IndicatorsModule,
     ListViewModule,
+    NotificationModule,
 
     RouterModule.forRoot([
       { path: 'login', component: LoginComponent },

@@ -10,6 +10,11 @@ import {
 import { ZenObservable } from 'zen-observable-ts';
 import { Storage } from 'aws-amplify';
 import { Router } from '@angular/router';
+import {
+  LoaderType,
+  LoaderThemeColor,
+  LoaderSize,
+} from '@progress/kendo-angular-indicators';
 
 @Component({
   selector: 'app-upload',
@@ -21,6 +26,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   public reports: Array<Report> = [];
   private selectedFile: File | null = null; // Store the selected file
   public error?: string | null = null;
+  public isLoading: boolean = false;
   private currentReport: Report | null = null;
   constructor(
     private api: APIService,
@@ -40,6 +46,11 @@ export class UploadComponent implements OnInit, OnDestroy {
       attachmentUrl: [null, Validators.required],
     });
   }
+  public loader = {
+    type: <LoaderType>'converging-spinner',
+    themeColor: <LoaderThemeColor>'info',
+    size: <LoaderSize>'large',
+  };
 
   private createSubscription: ZenObservable.Subscription | null = null;
   private modifySubscription: ZenObservable.Subscription | null = null;
@@ -68,6 +79,7 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   public async onCreate(report: Report) {
     if (this.selectedFile) {
+      this.isLoading = true;
       const uniqueIdentifier = new Date().getTime();
       const fileNameWithoutSpaces = this.selectedFile.name.replace(/ /g, '');
       const key = `${report.name}_${uniqueIdentifier}_${fileNameWithoutSpaces}`;
@@ -83,6 +95,7 @@ export class UploadComponent implements OnInit, OnDestroy {
         report.dataRows = null;
         this.createReportWithAttachment(report);
       } catch (error: any) {
+        this.isLoading = false;
         console.log('Error uploading file locally: ', error);
         this.error = error;
       }
@@ -109,10 +122,12 @@ export class UploadComponent implements OnInit, OnDestroy {
       this.api
         .CreateReport(report)
         .then(() => {
+          this.isLoading = false;
           console.log('Item created!', report);
           this.router.navigate(['/pdf']);
         })
         .catch((e) => {
+          this.isLoading = false;
           console.log('Error creating report...', e);
           this.error = 'Error creating report';
         });

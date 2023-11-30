@@ -9,6 +9,12 @@ import {
   ButtonThemeColor,
 } from '@progress/kendo-angular-buttons';
 
+import {
+  LoaderType,
+  LoaderThemeColor,
+  LoaderSize,
+} from '@progress/kendo-angular-indicators';
+
 export type Option = {
   type: string;
   data: string[];
@@ -22,6 +28,8 @@ export type Option = {
 })
 export class LoginComponent implements OnInit {
   public error: string | null = null;
+  public isLoading: boolean = false;
+
   constructor(private authService: AuthService, private router: Router) {}
   ngOnInit(): void {}
 
@@ -31,11 +39,17 @@ export class LoginComponent implements OnInit {
     error: new FormControl(''),
   });
 
+  public loader = {
+    type: <LoaderType>'converging-spinner',
+    themeColor: <LoaderThemeColor>'info',
+    size: <LoaderSize>'large',
+  };
+
   public async onSignIn() {
     this.registerForm.markAllAsTouched();
     const { email, password, error, code } = this.registerForm.value;
     console.log(email, password, error, code);
-
+    this.isLoading = true;
     try {
       if (email && password) {
         const user = await this.authService.login(
@@ -49,9 +63,11 @@ export class LoginComponent implements OnInit {
           return this.router.navigate(['upload']);
         }
       } else {
+        this.isLoading = false;
         this.error = "email or password can't be empty";
       }
     } catch (error: any) {
+      this.isLoading = false;
       if (error.code == 'UserNotConfirmedException') {
         this.error = 'Validate your email Id';
       }
