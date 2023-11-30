@@ -21,9 +21,11 @@ export type __SubscriptionContainer = {
 export type CreateReportTemplateInput = {
   templateId: string;
   localCompanyName?: string | null;
+  localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
   address?: string | null;
+  addressTranslation?: string | null;
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
@@ -33,9 +35,11 @@ export type CreateReportTemplateInput = {
 export type ModelReportTemplateConditionInput = {
   templateId?: ModelIDInput | null;
   localCompanyName?: ModelStringInput | null;
+  localCompanyNameTranslation?: ModelStringInput | null;
   letterHeadImageName?: ModelStringInput | null;
   stampImageName?: ModelStringInput | null;
   address?: ModelStringInput | null;
+  addressTranslation?: ModelStringInput | null;
   phone?: ModelStringInput | null;
   fax?: ModelStringInput | null;
   email?: ModelStringInput | null;
@@ -103,9 +107,11 @@ export type ReportTemplate = {
   __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
+  localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
   address?: string | null;
+  addressTranslation?: string | null;
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
@@ -117,9 +123,11 @@ export type ReportTemplate = {
 export type UpdateReportTemplateInput = {
   templateId?: string | null;
   localCompanyName?: string | null;
+  localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
   address?: string | null;
+  addressTranslation?: string | null;
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
@@ -199,9 +207,11 @@ export type DeleteReportInput = {
 export type ModelReportTemplateFilterInput = {
   templateId?: ModelIDInput | null;
   localCompanyName?: ModelStringInput | null;
+  localCompanyNameTranslation?: ModelStringInput | null;
   letterHeadImageName?: ModelStringInput | null;
   stampImageName?: ModelStringInput | null;
   address?: ModelStringInput | null;
+  addressTranslation?: ModelStringInput | null;
   phone?: ModelStringInput | null;
   fax?: ModelStringInput | null;
   email?: ModelStringInput | null;
@@ -257,9 +267,11 @@ export enum ModelSortDirection {
 export type ModelSubscriptionReportTemplateFilterInput = {
   templateId?: ModelSubscriptionIDInput | null;
   localCompanyName?: ModelSubscriptionStringInput | null;
+  localCompanyNameTranslation?: ModelSubscriptionStringInput | null;
   letterHeadImageName?: ModelSubscriptionStringInput | null;
   stampImageName?: ModelSubscriptionStringInput | null;
   address?: ModelSubscriptionStringInput | null;
+  addressTranslation?: ModelSubscriptionStringInput | null;
   phone?: ModelSubscriptionStringInput | null;
   fax?: ModelSubscriptionStringInput | null;
   email?: ModelSubscriptionStringInput | null;
@@ -317,9 +329,11 @@ export type CreateReportTemplateMutation = {
   __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
+  localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
   address?: string | null;
+  addressTranslation?: string | null;
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
@@ -332,9 +346,11 @@ export type UpdateReportTemplateMutation = {
   __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
+  localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
   address?: string | null;
+  addressTranslation?: string | null;
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
@@ -347,9 +363,11 @@ export type DeleteReportTemplateMutation = {
   __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
+  localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
   address?: string | null;
+  addressTranslation?: string | null;
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
@@ -375,9 +393,11 @@ export type CreateReportMutation = {
     __typename: "ReportTemplate";
     templateId: string;
     localCompanyName?: string | null;
+    localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
     stampImageName?: string | null;
     address?: string | null;
+    addressTranslation?: string | null;
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
@@ -406,9 +426,11 @@ export type UpdateReportMutation = {
     __typename: "ReportTemplate";
     templateId: string;
     localCompanyName?: string | null;
+    localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
     stampImageName?: string | null;
     address?: string | null;
+    addressTranslation?: string | null;
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
@@ -437,9 +459,11 @@ export type DeleteReportMutation = {
     __typename: "ReportTemplate";
     templateId: string;
     localCompanyName?: string | null;
+    localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
     stampImageName?: string | null;
     address?: string | null;
+    addressTranslation?: string | null;
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
@@ -455,9 +479,11 @@ export type GetReportTemplateQuery = {
   __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
+  localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
   address?: string | null;
+  addressTranslation?: string | null;
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
@@ -472,9 +498,11 @@ export type ListReportTemplatesQuery = {
     __typename: "ReportTemplate";
     templateId: string;
     localCompanyName?: string | null;
+    localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
     stampImageName?: string | null;
     address?: string | null;
+    addressTranslation?: string | null;
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
@@ -502,9 +530,11 @@ export type GetReportQuery = {
     __typename: "ReportTemplate";
     templateId: string;
     localCompanyName?: string | null;
+    localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
     stampImageName?: string | null;
     address?: string | null;
+    addressTranslation?: string | null;
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
@@ -562,9 +592,11 @@ export type OnCreateReportTemplateSubscription = {
   __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
+  localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
   address?: string | null;
+  addressTranslation?: string | null;
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
@@ -577,9 +609,11 @@ export type OnUpdateReportTemplateSubscription = {
   __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
+  localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
   address?: string | null;
+  addressTranslation?: string | null;
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
@@ -592,9 +626,11 @@ export type OnDeleteReportTemplateSubscription = {
   __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
+  localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
   address?: string | null;
+  addressTranslation?: string | null;
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
@@ -620,9 +656,11 @@ export type OnCreateReportSubscription = {
     __typename: "ReportTemplate";
     templateId: string;
     localCompanyName?: string | null;
+    localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
     stampImageName?: string | null;
     address?: string | null;
+    addressTranslation?: string | null;
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
@@ -651,9 +689,11 @@ export type OnUpdateReportSubscription = {
     __typename: "ReportTemplate";
     templateId: string;
     localCompanyName?: string | null;
+    localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
     stampImageName?: string | null;
     address?: string | null;
+    addressTranslation?: string | null;
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
@@ -682,9 +722,11 @@ export type OnDeleteReportSubscription = {
     __typename: "ReportTemplate";
     templateId: string;
     localCompanyName?: string | null;
+    localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
     stampImageName?: string | null;
     address?: string | null;
+    addressTranslation?: string | null;
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
@@ -709,9 +751,11 @@ export class APIService {
           __typename
           templateId
           localCompanyName
+          localCompanyNameTranslation
           letterHeadImageName
           stampImageName
           address
+          addressTranslation
           phone
           fax
           email
@@ -740,9 +784,11 @@ export class APIService {
           __typename
           templateId
           localCompanyName
+          localCompanyNameTranslation
           letterHeadImageName
           stampImageName
           address
+          addressTranslation
           phone
           fax
           email
@@ -771,9 +817,11 @@ export class APIService {
           __typename
           templateId
           localCompanyName
+          localCompanyNameTranslation
           letterHeadImageName
           stampImageName
           address
+          addressTranslation
           phone
           fax
           email
@@ -815,9 +863,11 @@ export class APIService {
             __typename
             templateId
             localCompanyName
+            localCompanyNameTranslation
             letterHeadImageName
             stampImageName
             address
+            addressTranslation
             phone
             fax
             email
@@ -862,9 +912,11 @@ export class APIService {
             __typename
             templateId
             localCompanyName
+            localCompanyNameTranslation
             letterHeadImageName
             stampImageName
             address
+            addressTranslation
             phone
             fax
             email
@@ -909,9 +961,11 @@ export class APIService {
             __typename
             templateId
             localCompanyName
+            localCompanyNameTranslation
             letterHeadImageName
             stampImageName
             address
+            addressTranslation
             phone
             fax
             email
@@ -940,9 +994,11 @@ export class APIService {
           __typename
           templateId
           localCompanyName
+          localCompanyNameTranslation
           letterHeadImageName
           stampImageName
           address
+          addressTranslation
           phone
           fax
           email
@@ -971,9 +1027,11 @@ export class APIService {
             __typename
             templateId
             localCompanyName
+            localCompanyNameTranslation
             letterHeadImageName
             stampImageName
             address
+            addressTranslation
             phone
             fax
             email
@@ -1018,9 +1076,11 @@ export class APIService {
             __typename
             templateId
             localCompanyName
+            localCompanyNameTranslation
             letterHeadImageName
             stampImageName
             address
+            addressTranslation
             phone
             fax
             email
@@ -1156,9 +1216,11 @@ export class APIService {
           __typename
           templateId
           localCompanyName
+          localCompanyNameTranslation
           letterHeadImageName
           stampImageName
           address
+          addressTranslation
           phone
           fax
           email
@@ -1192,9 +1254,11 @@ export class APIService {
           __typename
           templateId
           localCompanyName
+          localCompanyNameTranslation
           letterHeadImageName
           stampImageName
           address
+          addressTranslation
           phone
           fax
           email
@@ -1228,9 +1292,11 @@ export class APIService {
           __typename
           templateId
           localCompanyName
+          localCompanyNameTranslation
           letterHeadImageName
           stampImageName
           address
+          addressTranslation
           phone
           fax
           email
@@ -1275,9 +1341,11 @@ export class APIService {
             __typename
             templateId
             localCompanyName
+            localCompanyNameTranslation
             letterHeadImageName
             stampImageName
             address
+            addressTranslation
             phone
             fax
             email
@@ -1323,9 +1391,11 @@ export class APIService {
             __typename
             templateId
             localCompanyName
+            localCompanyNameTranslation
             letterHeadImageName
             stampImageName
             address
+            addressTranslation
             phone
             fax
             email
@@ -1371,9 +1441,11 @@ export class APIService {
             __typename
             templateId
             localCompanyName
+            localCompanyNameTranslation
             letterHeadImageName
             stampImageName
             address
+            addressTranslation
             phone
             fax
             email

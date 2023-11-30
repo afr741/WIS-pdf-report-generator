@@ -18,15 +18,41 @@
           ></kendo-textbox>
           <kendo-formerror> name is required</kendo-formerror>
         </kendo-formfield>
+        <kendo-formfield>
+          <kendo-label
+            labelCssClass="k-form-label"
+            text="Local Company Name Translation"
+          />
+          <kendo-textbox
+            formControlName="localCompanyNameTranslation"
+            #localCompanyNameTranslation
+            placeholder="Enter company name translation"
+          ></kendo-textbox>
+          <kendo-formerror>
+            company name translation is required</kendo-formerror
+          >
+        </kendo-formfield>
 
         <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="Address" />
           <kendo-textbox
             formControlName="address"
-            #name
+            #address
             placeholder="Enter the address"
           ></kendo-textbox>
           <kendo-formerror> address is required</kendo-formerror>
+        </kendo-formfield>
+        <kendo-formfield>
+          <kendo-label
+            labelCssClass="k-form-label"
+            text="Address translation"
+          />
+          <kendo-textbox
+            formControlName="addressTranslation"
+            #translation
+            placeholder="Enter the address translation"
+          ></kendo-textbox>
+          <kendo-formerror> address translation is required</kendo-formerror>
         </kendo-formfield>
 
         <kendo-formfield>

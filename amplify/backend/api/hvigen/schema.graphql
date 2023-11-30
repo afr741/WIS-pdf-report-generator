@@ -6,9 +6,11 @@ input AMPLIFY {
 type ReportTemplate @model @auth(rules: [{ allow: public }]) {
   templateId: ID!
   localCompanyName: String
+  localCompanyNameTranslation: String
   letterHeadImageName: String
   stampImageName: String
   address: String
+  addressTranslation: String
   phone: String
   fax: String
   email: String

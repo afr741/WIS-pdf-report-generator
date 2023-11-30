@@ -6,9 +6,11 @@ subscription OnCreateReportTemplate(
   onCreateReportTemplate(filter: $filter) {
     templateId
     localCompanyName
+    localCompanyNameTranslation
     letterHeadImageName
     stampImageName
     address
+    addressTranslation
     phone
     fax
     email
@@ -25,9 +27,11 @@ subscription OnUpdateReportTemplate(
   onUpdateReportTemplate(filter: $filter) {
     templateId
     localCompanyName
+    localCompanyNameTranslation
     letterHeadImageName
     stampImageName
     address
+    addressTranslation
     phone
     fax
     email
@@ -44,9 +48,11 @@ subscription OnDeleteReportTemplate(
   onDeleteReportTemplate(filter: $filter) {
     templateId
     localCompanyName
+    localCompanyNameTranslation
     letterHeadImageName
     stampImageName
     address
+    addressTranslation
     phone
     fax
     email
@@ -73,9 +79,11 @@ subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
     reportTemplate {
       templateId
       localCompanyName
+      localCompanyNameTranslation
       letterHeadImageName
       stampImageName
       address
+      addressTranslation
       phone
       fax
       email
@@ -106,9 +114,11 @@ subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput) {
     reportTemplate {
       templateId
       localCompanyName
+      localCompanyNameTranslation
       letterHeadImageName
       stampImageName
       address
+      addressTranslation
       phone
       fax
       email
@@ -139,9 +149,11 @@ subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput) {
     reportTemplate {
       templateId
       localCompanyName
+      localCompanyNameTranslation
       letterHeadImageName
       stampImageName
       address
+      addressTranslation
       phone
       fax
       email

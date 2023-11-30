@@ -331,9 +331,10 @@ export class PdfComponent implements OnInit {
             ol: REMARKS.part3,
           },
           {
-            text: this.templateInfo[0].localCompanyName,
+            text: `${this.templateInfo[0].localCompanyName}\n ${this.templateInfo[0].localCompanyNameTranslation}`,
             style: 'contactsHeader',
           },
+
           {
             table: {
               widths: [170, 140, 140],
@@ -348,7 +349,7 @@ export class PdfComponent implements OnInit {
                       },
                       {
                         width: 80,
-                        text: `${this.templateInfo[0].address}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
+                        text: `${this.templateInfo[0].addressTranslation}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
                       },
                     ],
                   },
@@ -373,7 +374,7 @@ export class PdfComponent implements OnInit {
             fontSize: 8,
           },
           dataTable: {
-            margin: [10, 10],
+            margin: [10, 5],
             fontSize: 6,
           },
           qrCodeText: {

@@ -7,9 +7,11 @@ mutation CreateReportTemplate(
   createReportTemplate(input: $input, condition: $condition) {
     templateId
     localCompanyName
+    localCompanyNameTranslation
     letterHeadImageName
     stampImageName
     address
+    addressTranslation
     phone
     fax
     email
@@ -27,9 +29,11 @@ mutation UpdateReportTemplate(
   updateReportTemplate(input: $input, condition: $condition) {
     templateId
     localCompanyName
+    localCompanyNameTranslation
     letterHeadImageName
     stampImageName
     address
+    addressTranslation
     phone
     fax
     email
@@ -47,9 +51,11 @@ mutation DeleteReportTemplate(
   deleteReportTemplate(input: $input, condition: $condition) {
     templateId
     localCompanyName
+    localCompanyNameTranslation
     letterHeadImageName
     stampImageName
     address
+    addressTranslation
     phone
     fax
     email
@@ -79,9 +85,11 @@ mutation CreateReport(
     reportTemplate {
       templateId
       localCompanyName
+      localCompanyNameTranslation
       letterHeadImageName
       stampImageName
       address
+      addressTranslation
       phone
       fax
       email
@@ -115,9 +123,11 @@ mutation UpdateReport(
     reportTemplate {
       templateId
       localCompanyName
+      localCompanyNameTranslation
       letterHeadImageName
       stampImageName
       address
+      addressTranslation
       phone
       fax
       email
@@ -151,9 +161,11 @@ mutation DeleteReport(
     reportTemplate {
       templateId
       localCompanyName
+      localCompanyNameTranslation
       letterHeadImageName
       stampImageName
       address
+      addressTranslation
       phone
       fax
       email

@@ -50,9 +50,11 @@ export class EditComponent implements OnInit {
   ) {
     this.createForm = this.fb.group({
       localCompanyName: ['', Validators.required],
+      localCompanyNameTranslation: ['', Validators.required],
       letterHeadImage: [null, Validators.required],
       stampImage: [null, Validators.required],
       address: ['', Validators.required],
+      addressTranslation: ['', Validators.required],
       phone: ['', Validators.required],
       fax: ['', Validators.required],
       email: ['', Validators.required],

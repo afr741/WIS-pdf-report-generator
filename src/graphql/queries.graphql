@@ -4,9 +4,11 @@ query GetReportTemplate($id: ID!) {
   getReportTemplate(id: $id) {
     templateId
     localCompanyName
+    localCompanyNameTranslation
     letterHeadImageName
     stampImageName
     address
+    addressTranslation
     phone
     fax
     email
@@ -26,9 +28,11 @@ query ListReportTemplates(
     items {
       templateId
       localCompanyName
+      localCompanyNameTranslation
       letterHeadImageName
       stampImageName
       address
+      addressTranslation
       phone
       fax
       email
@@ -58,9 +62,11 @@ query GetReport($id: ID!) {
     reportTemplate {
       templateId
       localCompanyName
+      localCompanyNameTranslation
       letterHeadImageName
       stampImageName
       address
+      addressTranslation
       phone
       fax
       email
