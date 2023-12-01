@@ -16,17 +16,6 @@ import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 const GRAPHQL_ENDPOINT = process.env.API_HVIGEN_GRAPHQLAPIENDPOINTOUTPUT;
 const GRAPHQL_API_KEY = process.env.API_HVIGEN_GRAPHQLAPIKEYOUTPUT;
 
-// const query = /* GraphQL */ `
-//   query LIST_REPORTS {
-//     listReports {
-//       items {
-//         id
-//         attachmentUrl
-//         dataRows
-//       }
-//     }
-//   }
-// `;
 const query2 = /* GraphQL */ `
   mutation MODIFY_REPORT($id: ID!, $dataRows:[AWSJSON]) {
     updateReport(input: { id: $id, dataRows: $dataRows }); {
@@ -85,7 +74,7 @@ export const handler = async (event) => {
       const sheet = workbook.Sheets[sheetName];
       let rawRows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
       dataRows = JSON.stringify(rawRows);
-      // console.log("dataRows: " + dataRows);
+      console.log("dataRows: " + dataRows);
     } catch (err) {
       console.log(err);
       return { statusCode: 500, body: "Error retrieving object" };

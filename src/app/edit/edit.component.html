@@ -84,8 +84,8 @@
           <kendo-formerror> email is required</kendo-formerror>
         </kendo-formfield>
 
-        <div class="row">
-          <div class="col-xs-12 col-sm-6 example-col">
+        <div class="asset-wrapper">
+          <div class="select-wrapper">
             <p>LetterHead image upload</p>
             <kendo-fileselect
               formControlName="letterHeadImage"
@@ -102,11 +102,11 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-xs-12 col-sm-6 example-col">
+        <div class="asset-wrapper">
+          <div class="select-wrapper">
             <p>Stamp Image upload</p>
             <kendo-fileselect
-              formControlName="letterHeadImage"
+              formControlName="stampImage"
               (select)="onFileChangeStamp($event)"
               [multiple]="false"
             ></kendo-fileselect>

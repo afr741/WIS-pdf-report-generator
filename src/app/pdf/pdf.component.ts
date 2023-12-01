@@ -82,12 +82,14 @@ export class PdfComponent implements OnInit {
               })
           );
           if (this.reports[0].dataRows == null) {
-            if (pollingAttempts < 10) {
+            if (pollingAttempts < 5) {
               // Limit the number of polling attempts
               pollingAttempts++;
               setTimeout(fetchData, 3000);
             } else {
-              console.log('Data not available after 10 polling attempts.');
+              console.log('Data not available after 5 polling attempts.');
+              this.isLoading = false;
+              this.error = 'Sorry, unable to extract data, please try again';
             }
           }
         })
@@ -125,9 +127,11 @@ export class PdfComponent implements OnInit {
     };
 
     try {
-      await Promise.all([fetchData(), fetchTemplateData()]);
-      this.processPDFData(this.reports[0]);
-      this.isLoading = false;
+      await Promise.all([fetchData(), fetchTemplateData()]).then(() => {
+        if (this.reports[0].dataRows !== null) {
+          this.processPDFData(this.reports[0]);
+        }
+      });
     } catch (error) {
       // Handle errors if any of the async functions fail
     }
@@ -398,6 +402,7 @@ export class PdfComponent implements OnInit {
       };
 
       this.pdfData = docDefinition;
+      this.isLoading = false;
       console.log('this.pdfData', this.pdfData);
     } catch (error) {
       this.error = `${error}`;

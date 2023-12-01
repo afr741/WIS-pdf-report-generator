@@ -1,5 +1,5 @@
 <div class="pdf-wrapper">
-  <div *ngIf="!isLoading; else loading">
+  <div *ngIf="!isLoading && error == null">
     <div class="pdf-ready-section">
       <h1>Your report is ready!</h1>
       <div class="button-section">
@@ -98,22 +98,33 @@
       </kendo-grid-command-column>
     </kendo-grid>
   </div>
-  <ng-template #loading>
-    <div class="loader-wrapper">
-      <div class="loader">
-        <div class="loader-title">loading...</div>
-        <div class="k-block">
-          <kendo-loader
-            [type]="loader.type"
-            [themeColor]="loader.themeColor"
-            [size]="loader.size"
-          >
-          </kendo-loader>
-        </div>
+  <!-- <ng-template #loading> -->
+  <div class="loader-wrapper" *ngIf="isLoading && error == null">
+    <div class="loader">
+      <div class="loader-title">loading...</div>
+      <div class="k-block">
+        <kendo-loader
+          [type]="loader.type"
+          [themeColor]="loader.themeColor"
+          [size]="loader.size"
+        >
+        </kendo-loader>
       </div>
     </div>
-  </ng-template>
-  <div>
-    <p class="alert alert-danger" *ngIf="error" role="alert">{{ error }}</p>
+  </div>
+  <!-- </ng-template> -->
+  <div class="error-section" *ngIf="error">
+    <p class="alert alert-danger" role="alert">{{ error }}</p>
+    <button
+      type="button"
+      kendoButton
+      [size]="'large'"
+      [rounded]="'medium'"
+      [fillMode]="'solid'"
+      [themeColor]="'warning'"
+      (click)="handlBackButton()"
+    >
+      Try again
+    </button>
   </div>
 </div>

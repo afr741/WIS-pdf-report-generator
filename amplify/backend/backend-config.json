@@ -83,24 +83,6 @@
       "service": "Lambda"
     }
   },
-  "parameters": {
-    "AMPLIFY_function_s3triggerfileprocessing_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "s3triggerfileprocessing"
-        }
-      ]
-    },
-    "AMPLIFY_function_s3triggerfileprocessing_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "s3triggerfileprocessing"
-        }
-      ]
-    }
-  },
   "storage": {
     "hvi8gen8assets": {
       "dependsOn": [

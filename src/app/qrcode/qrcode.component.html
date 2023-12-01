@@ -1,7 +1,9 @@
 <div class="qrcode-wrapper">
   <div *ngIf="!isLoading && dbEntryData[0] != null; else loading">
     <div>
-      <img [src]="letterHeadPreviewUrl" alt="wis-banner" class="wis-banner" />
+      <a href="http://www.wiscontrol.com/">
+        <img [src]="letterHeadPreviewUrl" alt="wis-banner" class="wis-banner" />
+      </a>
     </div>
 
     <kendo-listview
