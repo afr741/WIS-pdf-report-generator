@@ -82,7 +82,11 @@ export class UploadComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       const uniqueIdentifier = new Date().getTime();
       const fileNameWithoutSpaces = this.selectedFile.name.replace(/ /g, '');
-      const key = `${report.name}_${uniqueIdentifier}_${fileNameWithoutSpaces}`;
+
+      const key = `${report.name.replace(
+        / /g,
+        ''
+      )}_${uniqueIdentifier}_${fileNameWithoutSpaces}`;
 
       try {
         const uploadResponse = await Storage.put(key, this.selectedFile, {
