@@ -91,6 +91,10 @@ export class PdfComponent implements OnInit {
               this.isLoading = false;
               this.error = 'Sorry, unable to extract data, please try again';
             }
+          } else {
+            if (this.reports[0].dataRows !== null) {
+              this.processPDFData(this.reports[0]);
+            }
           }
         })
         .catch((err) => {
@@ -127,13 +131,16 @@ export class PdfComponent implements OnInit {
     };
 
     try {
-      await Promise.all([fetchData(), fetchTemplateData()]).then(() => {
-        if (this.reports[0].dataRows !== null) {
-          this.processPDFData(this.reports[0]);
-        }
-      });
+      // await Promise.all([fetchData(), fetchTemplateData()]).then((data) => {
+      //   console.log("promise data", data)
+      //   if (this.reports[0].dataRows !== null) {
+      //     this.processPDFData(this.reports[0]);
+      //   }
+      // });
+      fetchTemplateData().then(() => fetchData());
     } catch (error) {
       // Handle errors if any of the async functions fail
+      this.error = 'Error fetching, try again';
     }
     // fetchData(); // Start the initial data fetch.
     // fetchTemplateData(); // Start the initial template data fetch.
@@ -187,11 +194,9 @@ export class PdfComponent implements OnInit {
   }
 
   async processPDFData(report: Report) {
-    // let data = this.reports[index].dataRows;
     try {
       let {
         dataRows,
-        name,
         testLocation,
         reportNum,
         lotNum,
@@ -203,17 +208,16 @@ export class PdfComponent implements OnInit {
       } = report;
       let formatedDate = new Date(createdAt).toDateString();
 
-      let data = dataRows;
-      if (!data || data[0] === null) {
-        this.error = 'Faied to extract data rows!';
+      if (!dataRows || dataRows[0] === null) {
+        // this.error = 'Faied to extract data rows!';
         return;
       }
+      console.log('raw ALL', dataRows);
 
-      let parsedRawData = JSON.parse(data[0]);
+      let parsedRawData = JSON.parse(dataRows[0]);
       let removedEmptyArraysData = parsedRawData.filter(
         (array: []) => array.length !== 0
       );
-      // console.log('raw ALL', removedEmptyArraysData);
       // to find the start of data extraction
       let timeIndex = removedEmptyArraysData.findIndex((array: any) =>
         array.includes('Time')
