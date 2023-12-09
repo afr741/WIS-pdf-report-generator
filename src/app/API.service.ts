@@ -29,6 +29,8 @@ export type CreateReportTemplateInput = {
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
+  testLocation?: string | null;
+  origin?: string | null;
   id?: string | null;
 };
 
@@ -43,6 +45,8 @@ export type ModelReportTemplateConditionInput = {
   phone?: ModelStringInput | null;
   fax?: ModelStringInput | null;
   email?: ModelStringInput | null;
+  testLocation?: ModelStringInput | null;
+  origin?: ModelStringInput | null;
   and?: Array<ModelReportTemplateConditionInput | null> | null;
   or?: Array<ModelReportTemplateConditionInput | null> | null;
   not?: ModelReportTemplateConditionInput | null;
@@ -115,6 +119,8 @@ export type ReportTemplate = {
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
+  testLocation?: string | null;
+  origin?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -131,6 +137,8 @@ export type UpdateReportTemplateInput = {
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
+  testLocation?: string | null;
+  origin?: string | null;
   id: string;
 };
 
@@ -215,6 +223,8 @@ export type ModelReportTemplateFilterInput = {
   phone?: ModelStringInput | null;
   fax?: ModelStringInput | null;
   email?: ModelStringInput | null;
+  testLocation?: ModelStringInput | null;
+  origin?: ModelStringInput | null;
   and?: Array<ModelReportTemplateFilterInput | null> | null;
   or?: Array<ModelReportTemplateFilterInput | null> | null;
   not?: ModelReportTemplateFilterInput | null;
@@ -275,6 +285,8 @@ export type ModelSubscriptionReportTemplateFilterInput = {
   phone?: ModelSubscriptionStringInput | null;
   fax?: ModelSubscriptionStringInput | null;
   email?: ModelSubscriptionStringInput | null;
+  testLocation?: ModelSubscriptionStringInput | null;
+  origin?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionReportTemplateFilterInput | null> | null;
   or?: Array<ModelSubscriptionReportTemplateFilterInput | null> | null;
 };
@@ -337,6 +349,8 @@ export type CreateReportTemplateMutation = {
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
+  testLocation?: string | null;
+  origin?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -354,6 +368,8 @@ export type UpdateReportTemplateMutation = {
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
+  testLocation?: string | null;
+  origin?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -371,6 +387,8 @@ export type DeleteReportTemplateMutation = {
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
+  testLocation?: string | null;
+  origin?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -401,6 +419,8 @@ export type CreateReportMutation = {
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
+    testLocation?: string | null;
+    origin?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -434,6 +454,8 @@ export type UpdateReportMutation = {
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
+    testLocation?: string | null;
+    origin?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -467,6 +489,8 @@ export type DeleteReportMutation = {
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
+    testLocation?: string | null;
+    origin?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -487,6 +511,8 @@ export type GetReportTemplateQuery = {
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
+  testLocation?: string | null;
+  origin?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -506,6 +532,8 @@ export type ListReportTemplatesQuery = {
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
+    testLocation?: string | null;
+    origin?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -538,6 +566,8 @@ export type GetReportQuery = {
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
+    testLocation?: string | null;
+    origin?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -600,6 +630,8 @@ export type OnCreateReportTemplateSubscription = {
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
+  testLocation?: string | null;
+  origin?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -617,6 +649,8 @@ export type OnUpdateReportTemplateSubscription = {
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
+  testLocation?: string | null;
+  origin?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -634,6 +668,8 @@ export type OnDeleteReportTemplateSubscription = {
   phone?: string | null;
   fax?: string | null;
   email?: string | null;
+  testLocation?: string | null;
+  origin?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -664,6 +700,8 @@ export type OnCreateReportSubscription = {
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
+    testLocation?: string | null;
+    origin?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -697,6 +735,8 @@ export type OnUpdateReportSubscription = {
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
+    testLocation?: string | null;
+    origin?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -730,6 +770,8 @@ export type OnDeleteReportSubscription = {
     phone?: string | null;
     fax?: string | null;
     email?: string | null;
+    testLocation?: string | null;
+    origin?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -759,6 +801,8 @@ export class APIService {
           phone
           fax
           email
+          testLocation
+          origin
           id
           createdAt
           updatedAt
@@ -792,6 +836,8 @@ export class APIService {
           phone
           fax
           email
+          testLocation
+          origin
           id
           createdAt
           updatedAt
@@ -825,6 +871,8 @@ export class APIService {
           phone
           fax
           email
+          testLocation
+          origin
           id
           createdAt
           updatedAt
@@ -871,6 +919,8 @@ export class APIService {
             phone
             fax
             email
+            testLocation
+            origin
             id
             createdAt
             updatedAt
@@ -920,6 +970,8 @@ export class APIService {
             phone
             fax
             email
+            testLocation
+            origin
             id
             createdAt
             updatedAt
@@ -969,6 +1021,8 @@ export class APIService {
             phone
             fax
             email
+            testLocation
+            origin
             id
             createdAt
             updatedAt
@@ -1002,6 +1056,8 @@ export class APIService {
           phone
           fax
           email
+          testLocation
+          origin
           id
           createdAt
           updatedAt
@@ -1035,6 +1091,8 @@ export class APIService {
             phone
             fax
             email
+            testLocation
+            origin
             id
             createdAt
             updatedAt
@@ -1084,6 +1142,8 @@ export class APIService {
             phone
             fax
             email
+            testLocation
+            origin
             id
             createdAt
             updatedAt
@@ -1224,6 +1284,8 @@ export class APIService {
           phone
           fax
           email
+          testLocation
+          origin
           id
           createdAt
           updatedAt
@@ -1262,6 +1324,8 @@ export class APIService {
           phone
           fax
           email
+          testLocation
+          origin
           id
           createdAt
           updatedAt
@@ -1300,6 +1364,8 @@ export class APIService {
           phone
           fax
           email
+          testLocation
+          origin
           id
           createdAt
           updatedAt
@@ -1349,6 +1415,8 @@ export class APIService {
             phone
             fax
             email
+            testLocation
+            origin
             id
             createdAt
             updatedAt
@@ -1399,6 +1467,8 @@ export class APIService {
             phone
             fax
             email
+            testLocation
+            origin
             id
             createdAt
             updatedAt
@@ -1449,6 +1519,8 @@ export class APIService {
             phone
             fax
             email
+            testLocation
+            origin
             id
             createdAt
             updatedAt

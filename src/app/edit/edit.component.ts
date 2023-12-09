@@ -53,6 +53,8 @@ export class EditComponent implements OnInit {
       phone: ['', Validators.required],
       fax: ['', Validators.required],
       email: ['', Validators.required],
+      origin: ['', Validators.required],
+      testLocation: ['', Validators.required],
     });
   }
 
@@ -191,5 +193,9 @@ export class EditComponent implements OnInit {
       type: { style: isUpdated ? 'success' : 'error', icon: true },
       closable: true,
     });
+  }
+
+  backToUpload(): void {
+    this.router.navigate(['/upload']);
   }
 }

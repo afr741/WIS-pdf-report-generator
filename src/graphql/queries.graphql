@@ -12,6 +12,8 @@ query GetReportTemplate($id: ID!) {
     phone
     fax
     email
+    testLocation
+    origin
     id
     createdAt
     updatedAt
@@ -36,6 +38,8 @@ query ListReportTemplates(
       phone
       fax
       email
+      testLocation
+      origin
       id
       createdAt
       updatedAt
@@ -70,6 +74,8 @@ query GetReport($id: ID!) {
       phone
       fax
       email
+      testLocation
+      origin
       id
       createdAt
       updatedAt

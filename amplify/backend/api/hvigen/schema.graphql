@@ -14,6 +14,8 @@ type ReportTemplate @model @auth(rules: [{ allow: public }]) {
   phone: String
   fax: String
   email: String
+  testLocation: String
+  origin: String
 }
 
 type Report @model @auth(rules: [{ allow: public }]) {

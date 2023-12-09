@@ -197,27 +197,33 @@ export class PdfComponent implements OnInit {
     try {
       let {
         dataRows,
-        testLocation,
         reportNum,
         lotNum,
         customerName,
-        origin,
         stations,
         variety,
         createdAt,
       } = report;
-      let formatedDate = new Date(createdAt).toDateString();
+      let { testLocation, origin } = this.templateInfo[0];
+
+      let formatedDate = () => {
+        let createdDate = new Date(createdAt);
+        return `${createdDate.getFullYear()}.${createdDate.getMonth()}.${
+          createdDate.getDate() < 10 ? 0 : ''
+        }${createdDate.getDate()}.`;
+      };
 
       if (!dataRows || dataRows[0] === null) {
         // this.error = 'Faied to extract data rows!';
         return;
       }
-      console.log('raw ALL', dataRows);
 
       let parsedRawData = JSON.parse(dataRows[0]);
+
       let removedEmptyArraysData = parsedRawData.filter(
         (array: []) => array.length !== 0
       );
+
       // to find the start of data extraction
       let timeIndex = removedEmptyArraysData.findIndex((array: any) =>
         array.includes('Time')
@@ -230,7 +236,9 @@ export class PdfComponent implements OnInit {
             typeof element === 'string' && element.includes('Average')
         )
       );
-      // console.log('time', timeIndex, 'average', averageIndex);
+      console.log('parsed raw ALL', removedEmptyArraysData);
+      console.log('time', timeIndex, 'average', averageIndex);
+
       let extractedRows = removedEmptyArraysData.slice(
         timeIndex + 1,
         averageIndex + 2
@@ -246,6 +254,8 @@ export class PdfComponent implements OnInit {
       extractedRows.push(combinedArray);
 
       console.log('mainArr:', mainArr, 'extracted rows', extractedRows);
+      let numberOfSamples = extractedRows.length - 3;
+
       let arrayedRows = [];
       let firstRow = extractedRows[0];
       for (let i = 0; i < extractedRows.length; i++) {
@@ -296,12 +306,12 @@ export class PdfComponent implements OnInit {
                   'Station(As advised)',
                   stations,
                 ],
-                ['Date', formatedDate, 'Variety(As advised)', variety],
+                ['Date', formatedDate(), 'Variety(As advised)', variety],
                 [
                   'Lot number',
                   lotNum,
-                  { text: 'Sample drawn by customer', bold: true },
-                  '24',
+                  { text: 'Samples drawn by customer', bold: true },
+                  `${numberOfSamples} samples`,
                 ],
               ],
             },
@@ -364,7 +374,7 @@ export class PdfComponent implements OnInit {
 
                   {
                     image: await this.stampImage,
-                    fit: [80, 80],
+                    fit: [150, 150],
                   },
                   {
                     link: qrURL,

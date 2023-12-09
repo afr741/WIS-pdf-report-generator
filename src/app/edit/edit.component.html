@@ -10,6 +10,24 @@
         <!-- <legend class="k-form-legend">Uploa</legend> -->
 
         <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Origin" />
+          <kendo-textbox
+            formControlName="origin"
+            #origin
+            placeholder="Origin"
+          ></kendo-textbox>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Test location" />
+          <kendo-textbox
+            formControlName="testLocation"
+            #testLocation
+            placeholder="Enter Location"
+          ></kendo-textbox>
+        </kendo-formfield>
+
+        <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="Local Company Name" />
           <kendo-textbox
             formControlName="localCompanyName"
@@ -151,3 +169,14 @@
     </div>
   </ng-template>
 </div>
+<button
+  type="button"
+  kendoButton
+  [size]="'large'"
+  [rounded]="'medium'"
+  [fillMode]="'solid'"
+  [themeColor]="'warning'"
+  (click)="backToUpload()"
+>
+  Back To Upload
+</button>

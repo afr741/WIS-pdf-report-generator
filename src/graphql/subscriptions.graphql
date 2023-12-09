@@ -14,6 +14,8 @@ subscription OnCreateReportTemplate(
     phone
     fax
     email
+    testLocation
+    origin
     id
     createdAt
     updatedAt
@@ -35,6 +37,8 @@ subscription OnUpdateReportTemplate(
     phone
     fax
     email
+    testLocation
+    origin
     id
     createdAt
     updatedAt
@@ -56,6 +60,8 @@ subscription OnDeleteReportTemplate(
     phone
     fax
     email
+    testLocation
+    origin
     id
     createdAt
     updatedAt
@@ -87,6 +93,8 @@ subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
       phone
       fax
       email
+      testLocation
+      origin
       id
       createdAt
       updatedAt
@@ -122,6 +130,8 @@ subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput) {
       phone
       fax
       email
+      testLocation
+      origin
       id
       createdAt
       updatedAt
@@ -157,6 +167,8 @@ subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput) {
       phone
       fax
       email
+      testLocation
+      origin
       id
       createdAt
       updatedAt
