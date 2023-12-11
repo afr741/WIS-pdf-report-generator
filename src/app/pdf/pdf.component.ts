@@ -81,6 +81,7 @@ export class PdfComponent implements OnInit {
                 updatedAt: new Date(report.updatedAt).toDateString(),
               })
           );
+          // this.openPDF(this.reports[0]);
           if (this.reports[0].dataRows == null) {
             if (pollingAttempts < 5) {
               // Limit the number of polling attempts
@@ -286,6 +287,14 @@ export class PdfComponent implements OnInit {
       let columnWidthArray = new Array(columnWidth).fill(17);
       // let columnHeightArray = new Array(columnWidth).fill(3);
       let docDefinition = {
+        pageSize: 'A4',
+        background: [
+          {
+            image: await this.stampImage,
+            fit: [150, 150],
+            absolutePosition: { x: 380, y: 660 },
+          },
+        ],
         content: [
           {
             width: 520,
@@ -372,10 +381,6 @@ export class PdfComponent implements OnInit {
                     ],
                   },
 
-                  {
-                    image: await this.stampImage,
-                    fit: [150, 150],
-                  },
                   {
                     link: qrURL,
                     image: qrImage,
