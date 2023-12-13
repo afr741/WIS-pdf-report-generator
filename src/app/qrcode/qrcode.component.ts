@@ -88,20 +88,12 @@ export class QrcodeComponent implements OnInit {
     const mainArr = [null]
       .concat(lastTwoArrays[0])
       .concat([null])
-      .concat(lastTwoArrays[1].toSpliced(0, 3));
+      .concat(lastTwoArrays[1].slice(3));
 
     const combinedArray = mainArr;
     extractedRows.splice(-2);
     extractedRows.push(combinedArray);
 
-    // console.log(
-    //   'lastTwoArrays:',
-    //   lastTwoArrays,
-    //   'mainArr:',
-    //   mainArr,
-    //   'extracted rows',
-    //   extractedRows
-    // );
     let arrayedRows = [];
     let firstRow = extractedRows[0];
     for (let i = 0; i < extractedRows.length; i++) {

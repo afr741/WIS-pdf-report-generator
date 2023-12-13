@@ -244,18 +244,26 @@ export class PdfComponent implements OnInit {
         timeIndex + 1,
         averageIndex + 2
       );
+      let numberOfSamples = extractedRows.length - 3;
+
       const lastTwoArrays = extractedRows.slice(-2);
       const mainArr = [null]
         .concat(lastTwoArrays[0])
         .concat([null])
-        .concat(lastTwoArrays[1].toSpliced(0, 3));
+        .concat(lastTwoArrays[1].slice(3));
 
       const combinedArray = mainArr;
       extractedRows.splice(-2);
       extractedRows.push(combinedArray);
 
-      console.log('mainArr:', mainArr, 'extracted rows', extractedRows);
-      let numberOfSamples = extractedRows.length - 3;
+      console.log(
+        'lastTwoArrays',
+        lastTwoArrays,
+        'mainArr:',
+        mainArr,
+        'extracted rows',
+        extractedRows
+      );
 
       let arrayedRows = [];
       let firstRow = extractedRows[0];
