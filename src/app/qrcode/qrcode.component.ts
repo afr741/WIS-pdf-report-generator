@@ -66,8 +66,10 @@ export class QrcodeComponent implements OnInit {
     let removedEmptyArraysData = parsedRawData.filter(
       (array: []) => array.length !== 0
     );
+
     console.log('raw ALL', removedEmptyArraysData);
     // to find the start of data extraction
+
     let timeIndex = removedEmptyArraysData.findIndex((array: any) =>
       array.includes('Time')
     );
@@ -84,31 +86,59 @@ export class QrcodeComponent implements OnInit {
       timeIndex + 1,
       averageIndex + 2
     );
+
+    let numberOfSamples = extractedRows.length - 4;
+
     const lastTwoArrays = extractedRows.slice(-2);
-    const mainArr = [null]
-      .concat(lastTwoArrays[0])
-      .concat([null])
-      .concat(lastTwoArrays[1].slice(3));
+    let summaryChanged = lastTwoArrays[0];
+    summaryChanged.push(numberOfSamples.toFixed(0));
+    let slicedSummary = lastTwoArrays[1].slice(2);
+    const mainArr: any = [null].concat(summaryChanged).concat(slicedSummary);
 
     const combinedArray = mainArr;
     extractedRows.splice(-2);
     extractedRows.push(combinedArray);
 
+    console.log(
+      'lastTwoArrays',
+      lastTwoArrays,
+      'mainArr:',
+      mainArr,
+      'extractedRows prior: ',
+      extractedRows
+    );
+
     let arrayedRows = [];
     let firstRow = extractedRows[0];
     for (let i = 0; i < extractedRows.length; i++) {
       let innerArray = extractedRows[i];
-
+      if (i < extractedRows.length - 1) {
+        innerArray.splice(2, 0, '');
+      }
       let filteredArray = [];
+
       for (let j = 0; j < innerArray.length; j++) {
+        let isNoDecs = [1, 5, 6, 28];
+        let isOneDec = [9, 14, 18, 19, 21, 22, 26];
+        let isThreeDec = [13];
+
         if (firstRow[j] !== null) {
           if (innerArray[j] === null || innerArray[j] === undefined) {
             // Replace null with an empty string
             innerArray[j] = '';
           } else {
-            innerArray[j] = isNaN(Number(innerArray[j]))
-              ? innerArray[j].toString()
-              : Number(innerArray[j]).toFixed(2).toString();
+            innerArray[j] =
+              typeof innerArray[j] == 'string'
+                ? innerArray[j]
+                : Number(innerArray[j]).toFixed(
+                    isNoDecs.includes(j)
+                      ? 0
+                      : isOneDec.includes(j)
+                      ? 1
+                      : isThreeDec.includes(j)
+                      ? 3
+                      : 2
+                  ); //
           }
 
           filteredArray.push(innerArray[j]);

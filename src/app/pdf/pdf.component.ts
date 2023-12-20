@@ -237,20 +237,22 @@ export class PdfComponent implements OnInit {
             typeof element === 'string' && element.includes('Average')
         )
       );
+      // console.log('NOT PARSED raw ALL', dataRows[0]);
+
       console.log('parsed raw ALL', removedEmptyArraysData);
-      console.log('time', timeIndex, 'average', averageIndex);
+      // console.log('time', timeIndex, 'average', averageIndex);
 
       let extractedRows = removedEmptyArraysData.slice(
         timeIndex + 1,
         averageIndex + 2
       );
-      let numberOfSamples = extractedRows.length - 3;
+      let numberOfSamples = extractedRows.length - 4;
 
       const lastTwoArrays = extractedRows.slice(-2);
-      const mainArr = [null]
-        .concat(lastTwoArrays[0])
-        .concat([null])
-        .concat(lastTwoArrays[1].slice(3));
+      let summaryChanged = lastTwoArrays[0];
+      summaryChanged.push(numberOfSamples.toFixed(0));
+      let slicedSummary = lastTwoArrays[1].slice(2);
+      const mainArr: any = [null].concat(summaryChanged).concat(slicedSummary);
 
       const combinedArray = mainArr;
       extractedRows.splice(-2);
@@ -261,7 +263,7 @@ export class PdfComponent implements OnInit {
         lastTwoArrays,
         'mainArr:',
         mainArr,
-        'extracted rows',
+        'extractedRows prior: ',
         extractedRows
       );
 
@@ -269,17 +271,33 @@ export class PdfComponent implements OnInit {
       let firstRow = extractedRows[0];
       for (let i = 0; i < extractedRows.length; i++) {
         let innerArray = extractedRows[i];
-
+        if (i < extractedRows.length - 1) {
+          innerArray.splice(2, 0, '');
+        }
         let filteredArray = [];
+
         for (let j = 0; j < innerArray.length; j++) {
+          let isNoDecs = [1, 5, 6, 28];
+          let isOneDec = [9, 14, 18, 19, 21, 22, 26];
+          let isThreeDec = [13];
+
           if (firstRow[j] !== null) {
             if (innerArray[j] === null || innerArray[j] === undefined) {
               // Replace null with an empty string
               innerArray[j] = '';
             } else {
-              innerArray[j] = isNaN(Number(innerArray[j]))
-                ? innerArray[j].toString()
-                : Number(innerArray[j]).toFixed(2).toString();
+              innerArray[j] =
+                typeof innerArray[j] == 'string'
+                  ? innerArray[j]
+                  : Number(innerArray[j]).toFixed(
+                      isNoDecs.includes(j)
+                        ? 0
+                        : isOneDec.includes(j)
+                        ? 1
+                        : isThreeDec.includes(j)
+                        ? 3
+                        : 2
+                    ); //
             }
 
             filteredArray.push(innerArray[j]);
@@ -289,7 +307,7 @@ export class PdfComponent implements OnInit {
         arrayedRows.push(filteredArray);
       }
 
-      // console.log('arrayedRows', arrayedRows);
+      console.log('arrayedRows', arrayedRows);
       const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
       let columnWidth = arrayedRows[0].length;
       let columnWidthArray = new Array(columnWidth).fill(17);
@@ -405,7 +423,7 @@ export class PdfComponent implements OnInit {
             fontSize: 8,
           },
           dataTable: {
-            margin: [10, 5],
+            margin: [15, 5],
             fontSize: 6,
           },
           qrCodeText: {
@@ -430,7 +448,7 @@ export class PdfComponent implements OnInit {
 
       this.pdfData = docDefinition;
       this.isLoading = false;
-      console.log('this.pdfData', this.pdfData);
+      // console.log('this.pdfData', this.pdfData);
     } catch (error) {
       this.error = `${error}`;
     }

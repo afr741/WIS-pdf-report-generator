@@ -163,11 +163,6 @@ export class EditComponent implements OnInit {
   private createReportWithAttachment(
     reportTemplate: UpdateReportTemplateInput
   ) {
-    // this.currentReport = report;
-    // if (this.currentReport.name === '') {
-    //   this.error = 'name is required';
-    // } else {
-    //   console.log('currentreport', this.currentReport);
     console.log('reportTemplate', reportTemplate);
     this.api
       .UpdateReportTemplate(reportTemplate)
