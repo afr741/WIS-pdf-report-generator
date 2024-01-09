@@ -209,9 +209,12 @@ export class PdfComponent implements OnInit {
 
       let formatedDate = () => {
         let createdDate = new Date(createdAt);
-        return `${createdDate.getFullYear()}.${createdDate.getMonth()}.${
+        const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
+        let date = `${createdDate.getFullYear()}.${month}.${
           createdDate.getDate() < 10 ? 0 : ''
         }${createdDate.getDate()}.`;
+
+        return date;
       };
 
       if (!dataRows || dataRows[0] === null) {
