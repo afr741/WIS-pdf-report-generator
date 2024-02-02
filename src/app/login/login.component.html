@@ -1,5 +1,9 @@
 <div class="login-section">
-  <form class="k-form k-form-md" [formGroup]="registerForm">
+  <form
+    class="k-form k-form-md"
+    [formGroup]="registerForm"
+    (keydown)="onKeyDown($event)"
+  >
     <fieldset class="k-form-fieldset">
       <h1 class="k-form-legend">WIS PDF GENERATOR - LOGIN</h1>
       <kendo-formfield>

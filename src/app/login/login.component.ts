@@ -52,6 +52,11 @@ export class LoginComponent implements OnInit {
     themeColor: <LoaderThemeColor>'info',
     size: <LoaderSize>'large',
   };
+  onKeyDown(pressedKey: any) {
+    if (pressedKey.key === 'Enter') {
+      this.onSignIn();
+    }
+  }
 
   public async onSignIn() {
     this.registerForm.markAllAsTouched();
