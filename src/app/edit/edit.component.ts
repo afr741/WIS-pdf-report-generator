@@ -26,7 +26,7 @@ export class EditComponent implements OnInit {
   private selectedFileLetterHead: File | null = null;
   private selectedStamp: File | null = null; // Store the selected file
   public error?: string | null = null;
-  public isLoading: boolean = true;
+  public isLoading: boolean = false;
   public templateInfos: Array<ReportTemplate> = [];
   letterHeadPreviewUrl: string | ArrayBuffer | null | undefined = null;
   stampPreviewUrl: string | ArrayBuffer | null | undefined = null;
@@ -60,31 +60,51 @@ export class EditComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
-      const stampImageFromS3 = await Storage.get('wis-stamp');
-      this.letterHeadPreviewUrl = letterHeadImageFromS3;
-      this.stampPreviewUrl = stampImageFromS3;
+      // const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
+      // const stampImageFromS3 = await Storage.get('wis-stamp');
+      // this.letterHeadPreviewUrl = letterHeadImageFromS3;
+      // this.stampPreviewUrl = stampImageFromS3;
+      this.api.CreateReportTemplate({
+        countryCode: 'TJK',
+        templateId: '324234923423',
+        localCompanyName: 'local company name',
+        localCompanyNameTranslation: '',
+        letterHeadImageName: '',
+        stampImageName: '',
+        address: '',
+        addressTranslation: '',
+        phone: '',
+        fax: '',
+        email: '',
+        testLocation: '',
+        origin: '',
+      });
     } catch (err) {
       console.log(err);
     }
 
     const fetchData = async () => {
+      // await this.api
+      //   .GetReportTemplate('4e353648-aa38-4799-8e5e-ccaaac97e6e3')
+      await this.api.ListReportTemplates().then((response) => {
+        console.log('response', response);
+      });
       await this.api
         .ListReportTemplates()
         .then((event) => {
           this.templateInfos = event.items as ReportTemplate[];
-          console.log(this.templateInfos);
-          const {
-            id,
-            createdAt,
-            updatedAt,
-            __typename,
-            templateId,
-            ...fieldsToPrefill
-          } = this.templateInfos[0];
+          console.log('this.templateInfos', this.templateInfos);
+          // const {
+          //   id,
+          //   createdAt,
+          //   updatedAt,
+          //   __typename,
+          //   templateId,
+          //   ...fieldsToPrefill
+          // } = this.templateInfos[0];
 
-          this.createForm.patchValue(fieldsToPrefill);
-          this.isLoading = false;
+          // this.createForm.patchValue(fieldsToPrefill);
+          // this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);

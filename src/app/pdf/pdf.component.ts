@@ -132,19 +132,13 @@ export class PdfComponent implements OnInit {
     };
 
     try {
-      // await Promise.all([fetchData(), fetchTemplateData()]).then((data) => {
-      //   console.log("promise data", data)
-      //   if (this.reports[0].dataRows !== null) {
-      //     this.processPDFData(this.reports[0]);
-      //   }
-      // });
-      fetchTemplateData().then(() => fetchData());
+      // fetchTemplateData().then(() => fetchData());
+      fetchData();
     } catch (error) {
       // Handle errors if any of the async functions fail
       this.error = 'Error fetching, try again';
     }
     // fetchData(); // Start the initial data fetch.
-    // fetchTemplateData(); // Start the initial template data fetch.
   }
 
   makeUrlFriendly(encryptedText: string): string {

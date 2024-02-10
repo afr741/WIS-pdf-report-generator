@@ -1,5 +1,6 @@
 <ng-container>
   <!-- <app-nav-bar></app-nav-bar> -->
+  <app-navbar *ngIf="shouldRenderLogout == true"></app-navbar>
   <div class="k-form-buttons" *ngIf="shouldRenderLogout">
     <button
       type="button"

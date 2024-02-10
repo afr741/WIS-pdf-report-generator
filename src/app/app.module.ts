@@ -15,6 +15,8 @@ import { ResetComponent } from './reset/reset.component';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IndicatorsModule } from '@progress/kendo-angular-indicators';
+import { IconsModule, SVGIcon } from '@progress/kendo-angular-icons';
+
 import { NavigationModule } from '@progress/kendo-angular-navigation';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
@@ -25,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ListViewModule } from '@progress/kendo-angular-listview';
 import { EditComponent } from './edit/edit.component';
 import { NotificationModule } from '@progress/kendo-angular-notification';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +38,7 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
     QrcodeComponent,
     ResetComponent,
     EditComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,7 +52,9 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
     LayoutModule,
     UploadsModule,
     HttpClientModule,
+    IconsModule,
     IndicatorsModule,
+    IconsModule,
     ListViewModule,
     NotificationModule,
 

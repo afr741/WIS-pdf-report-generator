@@ -35,6 +35,8 @@ export class UploadComponent implements OnInit, OnDestroy {
   ) {
     // (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
     this.createForm = this.fb.group({
+      countryCode: ['', Validators.required],
+      machineType: ['', Validators.required],
       name: ['', Validators.required],
       testLocation: ['', Validators.required],
       reportNum: ['', Validators.required],
