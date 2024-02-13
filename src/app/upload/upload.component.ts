@@ -28,6 +28,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   public error?: string | null = null;
   public isLoading: boolean = false;
   private currentReport: Report | null = null;
+
   constructor(
     private api: APIService,
     private fb: FormBuilder,

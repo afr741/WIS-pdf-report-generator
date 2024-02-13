@@ -8,7 +8,6 @@ import { UploadComponent } from './upload/upload.component';
 import { PdfComponent } from './pdf/pdf.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QrcodeComponent } from './qrcode/qrcode.component';
-import { AuthService } from './AuthService';
 import { RouterModule } from '@angular/router';
 import { AuthorizeGuard } from './auth.guard';
 import { ResetComponent } from './reset/reset.component';
@@ -16,6 +15,7 @@ import { GridModule } from '@progress/kendo-angular-grid';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IndicatorsModule } from '@progress/kendo-angular-indicators';
 import { IconsModule, SVGIcon } from '@progress/kendo-angular-icons';
+import { DialogsModule } from '@progress/kendo-angular-dialog';
 
 import { NavigationModule } from '@progress/kendo-angular-navigation';
 import { InputsModule } from '@progress/kendo-angular-inputs';
@@ -28,7 +28,10 @@ import { ListViewModule } from '@progress/kendo-angular-listview';
 import { EditComponent } from './edit/edit.component';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 import { NavbarComponent } from './navbar/navbar.component';
-
+import { UserOptionsModalComponent } from './user-options-modal/user-options-modal.component';
+import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
+import { AuthService } from './AuthService';
+import { UserPreferencesService } from './UserPreferencesService';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,6 +42,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     ResetComponent,
     EditComponent,
     NavbarComponent,
+    UserOptionsModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,7 +61,11 @@ import { NavbarComponent } from './navbar/navbar.component';
     IconsModule,
     ListViewModule,
     NotificationModule,
-
+    DialogsModule,
+    GridModule,
+    BrowserAnimationsModule,
+    NavigationModule,
+    DropDownsModule,
     RouterModule.forRoot([
       { path: 'login', component: LoginComponent },
       { path: 'reset', component: ResetComponent },
@@ -72,11 +80,8 @@ import { NavbarComponent } from './navbar/navbar.component';
       },
       { path: '', redirectTo: 'upload', pathMatch: 'full' },
     ]),
-    GridModule,
-    BrowserAnimationsModule,
-    NavigationModule,
   ],
-  providers: [AuthService],
+  providers: [AuthService, UserPreferencesService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

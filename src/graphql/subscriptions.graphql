@@ -2,9 +2,11 @@
 
 subscription OnCreateReportTemplate(
   $filter: ModelSubscriptionReportTemplateFilterInput
+  $owner: String
 ) {
-  onCreateReportTemplate(filter: $filter) {
+  onCreateReportTemplate(filter: $filter, owner: $owner) {
     templateId
+    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -19,15 +21,18 @@ subscription OnCreateReportTemplate(
     id
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
 
 subscription OnUpdateReportTemplate(
   $filter: ModelSubscriptionReportTemplateFilterInput
+  $owner: String
 ) {
-  onUpdateReportTemplate(filter: $filter) {
+  onUpdateReportTemplate(filter: $filter, owner: $owner) {
     templateId
+    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -42,15 +47,18 @@ subscription OnUpdateReportTemplate(
     id
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
 
 subscription OnDeleteReportTemplate(
   $filter: ModelSubscriptionReportTemplateFilterInput
+  $owner: String
 ) {
-  onDeleteReportTemplate(filter: $filter) {
+  onDeleteReportTemplate(filter: $filter, owner: $owner) {
     templateId
+    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -65,12 +73,16 @@ subscription OnDeleteReportTemplate(
     id
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
 
-subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
-  onCreateReport(filter: $filter) {
+subscription OnCreateReport(
+  $filter: ModelSubscriptionReportFilterInput
+  $owner: String
+) {
+  onCreateReport(filter: $filter, owner: $owner) {
     id
     name
     testLocation
@@ -82,32 +94,18 @@ subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
     variety
     attachmentUrl
     dataRows
-    reportTemplate {
-      templateId
-      localCompanyName
-      localCompanyNameTranslation
-      letterHeadImageName
-      stampImageName
-      address
-      addressTranslation
-      phone
-      fax
-      email
-      testLocation
-      origin
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
 
-subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput) {
-  onUpdateReport(filter: $filter) {
+subscription OnUpdateReport(
+  $filter: ModelSubscriptionReportFilterInput
+  $owner: String
+) {
+  onUpdateReport(filter: $filter, owner: $owner) {
     id
     name
     testLocation
@@ -119,32 +117,18 @@ subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput) {
     variety
     attachmentUrl
     dataRows
-    reportTemplate {
-      templateId
-      localCompanyName
-      localCompanyNameTranslation
-      letterHeadImageName
-      stampImageName
-      address
-      addressTranslation
-      phone
-      fax
-      email
-      testLocation
-      origin
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
 
-subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput) {
-  onDeleteReport(filter: $filter) {
+subscription OnDeleteReport(
+  $filter: ModelSubscriptionReportFilterInput
+  $owner: String
+) {
+  onDeleteReport(filter: $filter, owner: $owner) {
     id
     name
     testLocation
@@ -156,26 +140,54 @@ subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput) {
     variety
     attachmentUrl
     dataRows
-    reportTemplate {
-      templateId
-      localCompanyName
-      localCompanyNameTranslation
-      letterHeadImageName
-      stampImageName
-      address
-      addressTranslation
-      phone
-      fax
-      email
-      testLocation
-      origin
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     createdAt
     updatedAt
+    owner
+    __typename
+  }
+}
+
+subscription OnCreateUserInfo(
+  $filter: ModelSubscriptionUserInfoFilterInput
+  $owner: String
+) {
+  onCreateUserInfo(filter: $filter, owner: $owner) {
+    id
+    labLocation
+    countryCode
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+subscription OnUpdateUserInfo(
+  $filter: ModelSubscriptionUserInfoFilterInput
+  $owner: String
+) {
+  onUpdateUserInfo(filter: $filter, owner: $owner) {
+    id
+    labLocation
+    countryCode
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+subscription OnDeleteUserInfo(
+  $filter: ModelSubscriptionUserInfoFilterInput
+  $owner: String
+) {
+  onDeleteUserInfo(filter: $filter, owner: $owner) {
+    id
+    labLocation
+    countryCode
+    createdAt
+    updatedAt
+    owner
     __typename
   }
 }

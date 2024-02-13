@@ -4,16 +4,16 @@
     "apiName": "hvigen",
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "API_KEY",
-      "expirationTime": 365,
-      "apiKeyExpirationDate": "2024-11-01T11:51:58.205Z",
-      "keyDescription": "reportkey"
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authhvigend8bb609a"
     },
     "conflictResolution": {},
     "additionalAuthTypes": [
       {
-        "mode": "AMAZON_COGNITO_USER_POOLS",
-        "cognitoUserPoolId": "authhvigend8bb609a"
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "apiKeyExpirationDate": "2025-02-01T19:20:27.585Z",
+        "keyDescription": "hvigen-dev_api_key"
       },
       {
         "mode": "AWS_IAM"

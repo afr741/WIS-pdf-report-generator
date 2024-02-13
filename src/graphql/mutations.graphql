@@ -6,6 +6,7 @@ mutation CreateReportTemplate(
 ) {
   createReportTemplate(input: $input, condition: $condition) {
     templateId
+    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -20,6 +21,7 @@ mutation CreateReportTemplate(
     id
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -30,6 +32,7 @@ mutation UpdateReportTemplate(
 ) {
   updateReportTemplate(input: $input, condition: $condition) {
     templateId
+    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -44,6 +47,7 @@ mutation UpdateReportTemplate(
     id
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -54,6 +58,7 @@ mutation DeleteReportTemplate(
 ) {
   deleteReportTemplate(input: $input, condition: $condition) {
     templateId
+    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -68,6 +73,7 @@ mutation DeleteReportTemplate(
     id
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -88,26 +94,9 @@ mutation CreateReport(
     variety
     attachmentUrl
     dataRows
-    reportTemplate {
-      templateId
-      localCompanyName
-      localCompanyNameTranslation
-      letterHeadImageName
-      stampImageName
-      address
-      addressTranslation
-      phone
-      fax
-      email
-      testLocation
-      origin
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -128,26 +117,9 @@ mutation UpdateReport(
     variety
     attachmentUrl
     dataRows
-    reportTemplate {
-      templateId
-      localCompanyName
-      localCompanyNameTranslation
-      letterHeadImageName
-      stampImageName
-      address
-      addressTranslation
-      phone
-      fax
-      email
-      testLocation
-      origin
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -168,26 +140,54 @@ mutation DeleteReport(
     variety
     attachmentUrl
     dataRows
-    reportTemplate {
-      templateId
-      localCompanyName
-      localCompanyNameTranslation
-      letterHeadImageName
-      stampImageName
-      address
-      addressTranslation
-      phone
-      fax
-      email
-      testLocation
-      origin
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     createdAt
     updatedAt
+    owner
+    __typename
+  }
+}
+
+mutation CreateUserInfo(
+  $input: CreateUserInfoInput!
+  $condition: ModelUserInfoConditionInput
+) {
+  createUserInfo(input: $input, condition: $condition) {
+    id
+    labLocation
+    countryCode
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+mutation UpdateUserInfo(
+  $input: UpdateUserInfoInput!
+  $condition: ModelUserInfoConditionInput
+) {
+  updateUserInfo(input: $input, condition: $condition) {
+    id
+    labLocation
+    countryCode
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+mutation DeleteUserInfo(
+  $input: DeleteUserInfoInput!
+  $condition: ModelUserInfoConditionInput
+) {
+  deleteUserInfo(input: $input, condition: $condition) {
+    id
+    labLocation
+    countryCode
+    createdAt
+    updatedAt
+    owner
     __typename
   }
 }

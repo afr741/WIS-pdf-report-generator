@@ -1,4 +1,58 @@
 <div class="appbar-container">
+  <kendo-dialog
+    title="User Preferences"
+    *ngIf="isModalOpen"
+    (close)="closeModal()"
+    [minWidth]="250"
+    [width]="450"
+    [height]="300"
+  >
+    <kendo-dialog-messages>
+      <!-- <kendo-dropdownbutton [data]="userData" fillMode="outline">
+        User Settings
+      </kendo-dropdownbutton> -->
+      <div class="col-xs-12 col-sm-6 example-col">
+        <kendo-label class="k-form" text="User email:">
+          <kendo-textbox
+            [disabled]="true"
+            placeholder="user email"
+            [value]="userEmail"
+          ></kendo-textbox>
+        </kendo-label>
+      </div>
+      <div class="col-xs-12 col-sm-6 example-col">
+        <kendo-label class="k-form" text="User category:">
+          <kendo-textbox
+            [disabled]="true"
+            placeholder="user category"
+            [value]="userCategory"
+          ></kendo-textbox>
+        </kendo-label>
+      </div>
+      <div class="col-xs-12 col-sm-6 example-col">
+        <kendo-label text="Selected lab:">
+          <br />
+          <kendo-dropdownlist
+            [data]="lab"
+            [value]="selectedLab"
+            (selectionChange)="labValueChange($event)"
+          >
+          </kendo-dropdownlist>
+        </kendo-label>
+      </div>
+      <div class="col-xs-12 col-sm-6 example-col">
+        <kendo-label text="Selected country:">
+          <br />
+          <kendo-dropdownlist
+            [data]="country"
+            [value]="selectedCountry"
+            (selectionChange)="countryValueChange($event)"
+          >
+          </kendo-dropdownlist>
+        </kendo-label>
+      </div>
+    </kendo-dialog-messages>
+  </kendo-dialog>
   <kendo-appbar position="top">
     <kendo-appbar-section>
       <!-- <button kendoButton fillMode="flat" type="button">
@@ -19,11 +73,43 @@
     <kendo-appbar-spacer width="32px"></kendo-appbar-spacer>
 
     <kendo-appbar-section>
-      <ul>
-        <li><span>What's New</span></li>
-        <li><span>About</span></li>
-        <li><span>Contacts</span></li>
-      </ul>
+      <button
+        type="button"
+        kendoButton
+        [size]="'large'"
+        [rounded]="'medium'"
+        [fillMode]="'solid'"
+        [themeColor]="'info'"
+        class="nav-button"
+        (click)="handleNav('edit')"
+      >
+        Edit Template
+      </button>
+      <button
+        type="button"
+        kendoButton
+        [size]="'large'"
+        [rounded]="'medium'"
+        [fillMode]="'solid'"
+        [themeColor]="'error'"
+        class="nav-button"
+        (click)="handleNav('upload')"
+      >
+        New
+      </button>
+      <button
+        type="button"
+        kendoButton
+        [size]="'large'"
+        [rounded]="'medium'"
+        [fillMode]="'solid'"
+        [themeColor]="'success'"
+        class="logout-button"
+        class="nav-button"
+        (click)="handleNav('pdf')"
+      >
+        View Reports
+      </button>
     </kendo-appbar-section>
 
     <kendo-appbar-spacer></kendo-appbar-spacer>
@@ -49,7 +135,22 @@
         shape="circle"
         width="26px"
         height="26px"
+        (click)="openModal()"
       ></kendo-avatar>
+    </kendo-appbar-section>
+    <kendo-appbar-section>
+      <button
+        type="button"
+        kendoButton
+        [size]="'large'"
+        [rounded]="'medium'"
+        [fillMode]="'solid'"
+        [themeColor]="'error'"
+        class="logout-button"
+        (click)="handleLogOut()"
+      >
+        Logout
+      </button>
     </kendo-appbar-section>
   </kendo-appbar>
 </div>

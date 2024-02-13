@@ -16,10 +16,14 @@ export type __SubscriptionContainer = {
   onCreateReport: OnCreateReportSubscription;
   onUpdateReport: OnUpdateReportSubscription;
   onDeleteReport: OnDeleteReportSubscription;
+  onCreateUserInfo: OnCreateUserInfoSubscription;
+  onUpdateUserInfo: OnUpdateUserInfoSubscription;
+  onDeleteUserInfo: OnDeleteUserInfoSubscription;
 };
 
 export type CreateReportTemplateInput = {
   templateId: string;
+  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -36,6 +40,7 @@ export type CreateReportTemplateInput = {
 
 export type ModelReportTemplateConditionInput = {
   templateId?: ModelIDInput | null;
+  countryCode?: ModelStringInput | null;
   localCompanyName?: ModelStringInput | null;
   localCompanyNameTranslation?: ModelStringInput | null;
   letterHeadImageName?: ModelStringInput | null;
@@ -110,6 +115,7 @@ export type ModelStringInput = {
 export type ReportTemplate = {
   __typename: "ReportTemplate";
   templateId: string;
+  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -124,10 +130,12 @@ export type ReportTemplate = {
   id: string;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type UpdateReportTemplateInput = {
   templateId?: string | null;
+  countryCode?: string | null;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -189,9 +197,9 @@ export type Report = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
-  reportTemplate?: ReportTemplate | null;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type UpdateReportInput = {
@@ -212,8 +220,43 @@ export type DeleteReportInput = {
   id: string;
 };
 
+export type CreateUserInfoInput = {
+  id?: string | null;
+  labLocation: string;
+  countryCode: string;
+};
+
+export type ModelUserInfoConditionInput = {
+  labLocation?: ModelStringInput | null;
+  countryCode?: ModelStringInput | null;
+  and?: Array<ModelUserInfoConditionInput | null> | null;
+  or?: Array<ModelUserInfoConditionInput | null> | null;
+  not?: ModelUserInfoConditionInput | null;
+};
+
+export type UserInfo = {
+  __typename: "UserInfo";
+  id: string;
+  labLocation: string;
+  countryCode: string;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type UpdateUserInfoInput = {
+  id: string;
+  labLocation?: string | null;
+  countryCode?: string | null;
+};
+
+export type DeleteUserInfoInput = {
+  id: string;
+};
+
 export type ModelReportTemplateFilterInput = {
   templateId?: ModelIDInput | null;
+  countryCode?: ModelStringInput | null;
   localCompanyName?: ModelStringInput | null;
   localCompanyNameTranslation?: ModelStringInput | null;
   letterHeadImageName?: ModelStringInput | null;
@@ -274,8 +317,24 @@ export enum ModelSortDirection {
   DESC = "DESC"
 }
 
+export type ModelUserInfoFilterInput = {
+  id?: ModelIDInput | null;
+  labLocation?: ModelStringInput | null;
+  countryCode?: ModelStringInput | null;
+  and?: Array<ModelUserInfoFilterInput | null> | null;
+  or?: Array<ModelUserInfoFilterInput | null> | null;
+  not?: ModelUserInfoFilterInput | null;
+};
+
+export type ModelUserInfoConnection = {
+  __typename: "ModelUserInfoConnection";
+  items: Array<UserInfo | null>;
+  nextToken?: string | null;
+};
+
 export type ModelSubscriptionReportTemplateFilterInput = {
   templateId?: ModelSubscriptionIDInput | null;
+  countryCode?: ModelSubscriptionStringInput | null;
   localCompanyName?: ModelSubscriptionStringInput | null;
   localCompanyNameTranslation?: ModelSubscriptionStringInput | null;
   letterHeadImageName?: ModelSubscriptionStringInput | null;
@@ -337,9 +396,18 @@ export type ModelSubscriptionReportFilterInput = {
   or?: Array<ModelSubscriptionReportFilterInput | null> | null;
 };
 
+export type ModelSubscriptionUserInfoFilterInput = {
+  id?: ModelSubscriptionIDInput | null;
+  labLocation?: ModelSubscriptionStringInput | null;
+  countryCode?: ModelSubscriptionStringInput | null;
+  and?: Array<ModelSubscriptionUserInfoFilterInput | null> | null;
+  or?: Array<ModelSubscriptionUserInfoFilterInput | null> | null;
+};
+
 export type CreateReportTemplateMutation = {
   __typename: "ReportTemplate";
   templateId: string;
+  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -354,11 +422,13 @@ export type CreateReportTemplateMutation = {
   id: string;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type UpdateReportTemplateMutation = {
   __typename: "ReportTemplate";
   templateId: string;
+  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -373,11 +443,13 @@ export type UpdateReportTemplateMutation = {
   id: string;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type DeleteReportTemplateMutation = {
   __typename: "ReportTemplate";
   templateId: string;
+  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -392,6 +464,7 @@ export type DeleteReportTemplateMutation = {
   id: string;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type CreateReportMutation = {
@@ -407,26 +480,9 @@ export type CreateReportMutation = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
-  reportTemplate?: {
-    __typename: "ReportTemplate";
-    templateId: string;
-    localCompanyName?: string | null;
-    localCompanyNameTranslation?: string | null;
-    letterHeadImageName?: string | null;
-    stampImageName?: string | null;
-    address?: string | null;
-    addressTranslation?: string | null;
-    phone?: string | null;
-    fax?: string | null;
-    email?: string | null;
-    testLocation?: string | null;
-    origin?: string | null;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type UpdateReportMutation = {
@@ -442,26 +498,9 @@ export type UpdateReportMutation = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
-  reportTemplate?: {
-    __typename: "ReportTemplate";
-    templateId: string;
-    localCompanyName?: string | null;
-    localCompanyNameTranslation?: string | null;
-    letterHeadImageName?: string | null;
-    stampImageName?: string | null;
-    address?: string | null;
-    addressTranslation?: string | null;
-    phone?: string | null;
-    fax?: string | null;
-    email?: string | null;
-    testLocation?: string | null;
-    origin?: string | null;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type DeleteReportMutation = {
@@ -477,31 +516,45 @@ export type DeleteReportMutation = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
-  reportTemplate?: {
-    __typename: "ReportTemplate";
-    templateId: string;
-    localCompanyName?: string | null;
-    localCompanyNameTranslation?: string | null;
-    letterHeadImageName?: string | null;
-    stampImageName?: string | null;
-    address?: string | null;
-    addressTranslation?: string | null;
-    phone?: string | null;
-    fax?: string | null;
-    email?: string | null;
-    testLocation?: string | null;
-    origin?: string | null;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
+};
+
+export type CreateUserInfoMutation = {
+  __typename: "UserInfo";
+  id: string;
+  labLocation: string;
+  countryCode: string;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type UpdateUserInfoMutation = {
+  __typename: "UserInfo";
+  id: string;
+  labLocation: string;
+  countryCode: string;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type DeleteUserInfoMutation = {
+  __typename: "UserInfo";
+  id: string;
+  labLocation: string;
+  countryCode: string;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
 };
 
 export type GetReportTemplateQuery = {
   __typename: "ReportTemplate";
   templateId: string;
+  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -516,6 +569,7 @@ export type GetReportTemplateQuery = {
   id: string;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type ListReportTemplatesQuery = {
@@ -523,6 +577,7 @@ export type ListReportTemplatesQuery = {
   items: Array<{
     __typename: "ReportTemplate";
     templateId: string;
+    countryCode: string;
     localCompanyName?: string | null;
     localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
@@ -537,6 +592,7 @@ export type ListReportTemplatesQuery = {
     id: string;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
   } | null>;
   nextToken?: string | null;
 };
@@ -554,26 +610,9 @@ export type GetReportQuery = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
-  reportTemplate?: {
-    __typename: "ReportTemplate";
-    templateId: string;
-    localCompanyName?: string | null;
-    localCompanyNameTranslation?: string | null;
-    letterHeadImageName?: string | null;
-    stampImageName?: string | null;
-    address?: string | null;
-    addressTranslation?: string | null;
-    phone?: string | null;
-    fax?: string | null;
-    email?: string | null;
-    testLocation?: string | null;
-    origin?: string | null;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type ListReportsQuery = {
@@ -593,6 +632,7 @@ export type ListReportsQuery = {
     dataRows?: Array<string | null> | null;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
   } | null>;
   nextToken?: string | null;
 };
@@ -614,6 +654,31 @@ export type ReportsByAttachmentUrlAndNameQuery = {
     dataRows?: Array<string | null> | null;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
+  } | null>;
+  nextToken?: string | null;
+};
+
+export type GetUserInfoQuery = {
+  __typename: "UserInfo";
+  id: string;
+  labLocation: string;
+  countryCode: string;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type ListUserInfosQuery = {
+  __typename: "ModelUserInfoConnection";
+  items: Array<{
+    __typename: "UserInfo";
+    id: string;
+    labLocation: string;
+    countryCode: string;
+    createdAt: string;
+    updatedAt: string;
+    owner?: string | null;
   } | null>;
   nextToken?: string | null;
 };
@@ -621,6 +686,7 @@ export type ReportsByAttachmentUrlAndNameQuery = {
 export type OnCreateReportTemplateSubscription = {
   __typename: "ReportTemplate";
   templateId: string;
+  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -635,11 +701,13 @@ export type OnCreateReportTemplateSubscription = {
   id: string;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type OnUpdateReportTemplateSubscription = {
   __typename: "ReportTemplate";
   templateId: string;
+  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -654,11 +722,13 @@ export type OnUpdateReportTemplateSubscription = {
   id: string;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type OnDeleteReportTemplateSubscription = {
   __typename: "ReportTemplate";
   templateId: string;
+  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -673,6 +743,7 @@ export type OnDeleteReportTemplateSubscription = {
   id: string;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type OnCreateReportSubscription = {
@@ -688,26 +759,9 @@ export type OnCreateReportSubscription = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
-  reportTemplate?: {
-    __typename: "ReportTemplate";
-    templateId: string;
-    localCompanyName?: string | null;
-    localCompanyNameTranslation?: string | null;
-    letterHeadImageName?: string | null;
-    stampImageName?: string | null;
-    address?: string | null;
-    addressTranslation?: string | null;
-    phone?: string | null;
-    fax?: string | null;
-    email?: string | null;
-    testLocation?: string | null;
-    origin?: string | null;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type OnUpdateReportSubscription = {
@@ -723,26 +777,9 @@ export type OnUpdateReportSubscription = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
-  reportTemplate?: {
-    __typename: "ReportTemplate";
-    templateId: string;
-    localCompanyName?: string | null;
-    localCompanyNameTranslation?: string | null;
-    letterHeadImageName?: string | null;
-    stampImageName?: string | null;
-    address?: string | null;
-    addressTranslation?: string | null;
-    phone?: string | null;
-    fax?: string | null;
-    email?: string | null;
-    testLocation?: string | null;
-    origin?: string | null;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
 };
 
 export type OnDeleteReportSubscription = {
@@ -758,26 +795,39 @@ export type OnDeleteReportSubscription = {
   variety: string;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
-  reportTemplate?: {
-    __typename: "ReportTemplate";
-    templateId: string;
-    localCompanyName?: string | null;
-    localCompanyNameTranslation?: string | null;
-    letterHeadImageName?: string | null;
-    stampImageName?: string | null;
-    address?: string | null;
-    addressTranslation?: string | null;
-    phone?: string | null;
-    fax?: string | null;
-    email?: string | null;
-    testLocation?: string | null;
-    origin?: string | null;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
   createdAt: string;
   updatedAt: string;
+  owner?: string | null;
+};
+
+export type OnCreateUserInfoSubscription = {
+  __typename: "UserInfo";
+  id: string;
+  labLocation: string;
+  countryCode: string;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type OnUpdateUserInfoSubscription = {
+  __typename: "UserInfo";
+  id: string;
+  labLocation: string;
+  countryCode: string;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type OnDeleteUserInfoSubscription = {
+  __typename: "UserInfo";
+  id: string;
+  labLocation: string;
+  countryCode: string;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
 };
 
 @Injectable({
@@ -792,6 +842,7 @@ export class APIService {
         createReportTemplate(input: $input, condition: $condition) {
           __typename
           templateId
+          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -806,6 +857,7 @@ export class APIService {
           id
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -827,6 +879,7 @@ export class APIService {
         updateReportTemplate(input: $input, condition: $condition) {
           __typename
           templateId
+          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -841,6 +894,7 @@ export class APIService {
           id
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -862,6 +916,7 @@ export class APIService {
         deleteReportTemplate(input: $input, condition: $condition) {
           __typename
           templateId
+          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -876,6 +931,7 @@ export class APIService {
           id
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -907,26 +963,9 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
-          reportTemplate {
-            __typename
-            templateId
-            localCompanyName
-            localCompanyNameTranslation
-            letterHeadImageName
-            stampImageName
-            address
-            addressTranslation
-            phone
-            fax
-            email
-            testLocation
-            origin
-            id
-            createdAt
-            updatedAt
-          }
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -958,26 +997,9 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
-          reportTemplate {
-            __typename
-            templateId
-            localCompanyName
-            localCompanyNameTranslation
-            letterHeadImageName
-            stampImageName
-            address
-            addressTranslation
-            phone
-            fax
-            email
-            testLocation
-            origin
-            id
-            createdAt
-            updatedAt
-          }
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1009,26 +1031,9 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
-          reportTemplate {
-            __typename
-            templateId
-            localCompanyName
-            localCompanyNameTranslation
-            letterHeadImageName
-            stampImageName
-            address
-            addressTranslation
-            phone
-            fax
-            email
-            testLocation
-            origin
-            id
-            createdAt
-            updatedAt
-          }
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1042,11 +1047,90 @@ export class APIService {
     )) as any;
     return <DeleteReportMutation>response.data.deleteReport;
   }
+  async CreateUserInfo(
+    input: CreateUserInfoInput,
+    condition?: ModelUserInfoConditionInput
+  ): Promise<CreateUserInfoMutation> {
+    const statement = `mutation CreateUserInfo($input: CreateUserInfoInput!, $condition: ModelUserInfoConditionInput) {
+        createUserInfo(input: $input, condition: $condition) {
+          __typename
+          id
+          labLocation
+          countryCode
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <CreateUserInfoMutation>response.data.createUserInfo;
+  }
+  async UpdateUserInfo(
+    input: UpdateUserInfoInput,
+    condition?: ModelUserInfoConditionInput
+  ): Promise<UpdateUserInfoMutation> {
+    const statement = `mutation UpdateUserInfo($input: UpdateUserInfoInput!, $condition: ModelUserInfoConditionInput) {
+        updateUserInfo(input: $input, condition: $condition) {
+          __typename
+          id
+          labLocation
+          countryCode
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <UpdateUserInfoMutation>response.data.updateUserInfo;
+  }
+  async DeleteUserInfo(
+    input: DeleteUserInfoInput,
+    condition?: ModelUserInfoConditionInput
+  ): Promise<DeleteUserInfoMutation> {
+    const statement = `mutation DeleteUserInfo($input: DeleteUserInfoInput!, $condition: ModelUserInfoConditionInput) {
+        deleteUserInfo(input: $input, condition: $condition) {
+          __typename
+          id
+          labLocation
+          countryCode
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <DeleteUserInfoMutation>response.data.deleteUserInfo;
+  }
   async GetReportTemplate(id: string): Promise<GetReportTemplateQuery> {
     const statement = `query GetReportTemplate($id: ID!) {
         getReportTemplate(id: $id) {
           __typename
           templateId
+          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -1061,6 +1145,7 @@ export class APIService {
           id
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1082,6 +1167,7 @@ export class APIService {
           items {
             __typename
             templateId
+            countryCode
             localCompanyName
             localCompanyNameTranslation
             letterHeadImageName
@@ -1096,6 +1182,7 @@ export class APIService {
             id
             createdAt
             updatedAt
+            owner
           }
           nextToken
         }
@@ -1130,26 +1217,9 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
-          reportTemplate {
-            __typename
-            templateId
-            localCompanyName
-            localCompanyNameTranslation
-            letterHeadImageName
-            stampImageName
-            address
-            addressTranslation
-            phone
-            fax
-            email
-            testLocation
-            origin
-            id
-            createdAt
-            updatedAt
-          }
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1183,6 +1253,7 @@ export class APIService {
             dataRows
             createdAt
             updatedAt
+            owner
           }
           nextToken
         }
@@ -1235,6 +1306,7 @@ export class APIService {
             dataRows
             createdAt
             updatedAt
+            owner
           }
           nextToken
         }
@@ -1264,17 +1336,74 @@ export class APIService {
       response.data.reportsByAttachmentUrlAndName
     );
   }
+  async GetUserInfo(id: string): Promise<GetUserInfoQuery> {
+    const statement = `query GetUserInfo($id: ID!) {
+        getUserInfo(id: $id) {
+          __typename
+          id
+          labLocation
+          countryCode
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      id
+    };
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <GetUserInfoQuery>response.data.getUserInfo;
+  }
+  async ListUserInfos(
+    filter?: ModelUserInfoFilterInput,
+    limit?: number,
+    nextToken?: string
+  ): Promise<ListUserInfosQuery> {
+    const statement = `query ListUserInfos($filter: ModelUserInfoFilterInput, $limit: Int, $nextToken: String) {
+        listUserInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+          __typename
+          items {
+            __typename
+            id
+            labLocation
+            countryCode
+            createdAt
+            updatedAt
+            owner
+          }
+          nextToken
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (limit) {
+      gqlAPIServiceArguments.limit = limit;
+    }
+    if (nextToken) {
+      gqlAPIServiceArguments.nextToken = nextToken;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <ListUserInfosQuery>response.data.listUserInfos;
+  }
   OnCreateReportTemplateListener(
-    filter?: ModelSubscriptionReportTemplateFilterInput
+    filter?: ModelSubscriptionReportTemplateFilterInput,
+    owner?: string
   ): Observable<
     SubscriptionResponse<
       Pick<__SubscriptionContainer, "onCreateReportTemplate">
     >
   > {
-    const statement = `subscription OnCreateReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput) {
-        onCreateReportTemplate(filter: $filter) {
+    const statement = `subscription OnCreateReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput, $owner: String) {
+        onCreateReportTemplate(filter: $filter, owner: $owner) {
           __typename
           templateId
+          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -1289,11 +1418,15 @@ export class APIService {
           id
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {};
     if (filter) {
       gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
     }
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -1305,16 +1438,18 @@ export class APIService {
   }
 
   OnUpdateReportTemplateListener(
-    filter?: ModelSubscriptionReportTemplateFilterInput
+    filter?: ModelSubscriptionReportTemplateFilterInput,
+    owner?: string
   ): Observable<
     SubscriptionResponse<
       Pick<__SubscriptionContainer, "onUpdateReportTemplate">
     >
   > {
-    const statement = `subscription OnUpdateReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput) {
-        onUpdateReportTemplate(filter: $filter) {
+    const statement = `subscription OnUpdateReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput, $owner: String) {
+        onUpdateReportTemplate(filter: $filter, owner: $owner) {
           __typename
           templateId
+          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -1329,11 +1464,15 @@ export class APIService {
           id
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {};
     if (filter) {
       gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
     }
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -1345,16 +1484,18 @@ export class APIService {
   }
 
   OnDeleteReportTemplateListener(
-    filter?: ModelSubscriptionReportTemplateFilterInput
+    filter?: ModelSubscriptionReportTemplateFilterInput,
+    owner?: string
   ): Observable<
     SubscriptionResponse<
       Pick<__SubscriptionContainer, "onDeleteReportTemplate">
     >
   > {
-    const statement = `subscription OnDeleteReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput) {
-        onDeleteReportTemplate(filter: $filter) {
+    const statement = `subscription OnDeleteReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput, $owner: String) {
+        onDeleteReportTemplate(filter: $filter, owner: $owner) {
           __typename
           templateId
+          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -1369,11 +1510,15 @@ export class APIService {
           id
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {};
     if (filter) {
       gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
     }
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -1385,12 +1530,13 @@ export class APIService {
   }
 
   OnCreateReportListener(
-    filter?: ModelSubscriptionReportFilterInput
+    filter?: ModelSubscriptionReportFilterInput,
+    owner?: string
   ): Observable<
     SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateReport">>
   > {
-    const statement = `subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput) {
-        onCreateReport(filter: $filter) {
+    const statement = `subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput, $owner: String) {
+        onCreateReport(filter: $filter, owner: $owner) {
           __typename
           id
           name
@@ -1403,31 +1549,17 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
-          reportTemplate {
-            __typename
-            templateId
-            localCompanyName
-            localCompanyNameTranslation
-            letterHeadImageName
-            stampImageName
-            address
-            addressTranslation
-            phone
-            fax
-            email
-            testLocation
-            origin
-            id
-            createdAt
-            updatedAt
-          }
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {};
     if (filter) {
       gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
     }
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -1437,12 +1569,13 @@ export class APIService {
   }
 
   OnUpdateReportListener(
-    filter?: ModelSubscriptionReportFilterInput
+    filter?: ModelSubscriptionReportFilterInput,
+    owner?: string
   ): Observable<
     SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateReport">>
   > {
-    const statement = `subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput) {
-        onUpdateReport(filter: $filter) {
+    const statement = `subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput, $owner: String) {
+        onUpdateReport(filter: $filter, owner: $owner) {
           __typename
           id
           name
@@ -1455,31 +1588,17 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
-          reportTemplate {
-            __typename
-            templateId
-            localCompanyName
-            localCompanyNameTranslation
-            letterHeadImageName
-            stampImageName
-            address
-            addressTranslation
-            phone
-            fax
-            email
-            testLocation
-            origin
-            id
-            createdAt
-            updatedAt
-          }
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {};
     if (filter) {
       gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
     }
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -1489,12 +1608,13 @@ export class APIService {
   }
 
   OnDeleteReportListener(
-    filter?: ModelSubscriptionReportFilterInput
+    filter?: ModelSubscriptionReportFilterInput,
+    owner?: string
   ): Observable<
     SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteReport">>
   > {
-    const statement = `subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput) {
-        onDeleteReport(filter: $filter) {
+    const statement = `subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput, $owner: String) {
+        onDeleteReport(filter: $filter, owner: $owner) {
           __typename
           id
           name
@@ -1507,36 +1627,115 @@ export class APIService {
           variety
           attachmentUrl
           dataRows
-          reportTemplate {
-            __typename
-            templateId
-            localCompanyName
-            localCompanyNameTranslation
-            letterHeadImageName
-            stampImageName
-            address
-            addressTranslation
-            phone
-            fax
-            email
-            testLocation
-            origin
-            id
-            createdAt
-            updatedAt
-          }
           createdAt
           updatedAt
+          owner
         }
       }`;
     const gqlAPIServiceArguments: any = {};
     if (filter) {
       gqlAPIServiceArguments.filter = filter;
     }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
+    }
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
       SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteReport">>
+    >;
+  }
+
+  OnCreateUserInfoListener(
+    filter?: ModelSubscriptionUserInfoFilterInput,
+    owner?: string
+  ): Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateUserInfo">>
+  > {
+    const statement = `subscription OnCreateUserInfo($filter: ModelSubscriptionUserInfoFilterInput, $owner: String) {
+        onCreateUserInfo(filter: $filter, owner: $owner) {
+          __typename
+          id
+          labLocation
+          countryCode
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
+    }
+    return API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    ) as Observable<
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateUserInfo">>
+    >;
+  }
+
+  OnUpdateUserInfoListener(
+    filter?: ModelSubscriptionUserInfoFilterInput,
+    owner?: string
+  ): Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateUserInfo">>
+  > {
+    const statement = `subscription OnUpdateUserInfo($filter: ModelSubscriptionUserInfoFilterInput, $owner: String) {
+        onUpdateUserInfo(filter: $filter, owner: $owner) {
+          __typename
+          id
+          labLocation
+          countryCode
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
+    }
+    return API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    ) as Observable<
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateUserInfo">>
+    >;
+  }
+
+  OnDeleteUserInfoListener(
+    filter?: ModelSubscriptionUserInfoFilterInput,
+    owner?: string
+  ): Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteUserInfo">>
+  > {
+    const statement = `subscription OnDeleteUserInfo($filter: ModelSubscriptionUserInfoFilterInput, $owner: String) {
+        onDeleteUserInfo(filter: $filter, owner: $owner) {
+          __typename
+          id
+          labLocation
+          countryCode
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
+    }
+    return API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    ) as Observable<
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteUserInfo">>
     >;
   }
 }

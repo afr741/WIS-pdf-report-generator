@@ -14,22 +14,22 @@
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authhvigend8bb609a"
-              }
+              "apiKeyConfig": {
+                "apiKeyExpirationDate": "2025-02-01T19:20:27.585Z",
+                "apiKeyExpirationDays": 365,
+                "description": "hvigen-dev_api_key"
+              },
+              "authenticationType": "API_KEY"
             },
             {
               "authenticationType": "AWS_IAM"
             }
           ],
           "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDate": "2024-11-01T11:51:58.205Z",
-              "apiKeyExpirationDays": 365,
-              "description": "reportkey"
-            },
-            "authenticationType": "API_KEY"
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authhvigend8bb609a"
+            }
           }
         }
       },
@@ -63,6 +63,22 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    },
+    "userPoolGroups": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "hvigend8bb609a"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups"
     }
   },
   "function": {

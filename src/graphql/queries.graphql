@@ -3,6 +3,7 @@
 query GetReportTemplate($id: ID!) {
   getReportTemplate(id: $id) {
     templateId
+    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -17,6 +18,7 @@ query GetReportTemplate($id: ID!) {
     id
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -29,6 +31,7 @@ query ListReportTemplates(
   listReportTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       templateId
+      countryCode
       localCompanyName
       localCompanyNameTranslation
       letterHeadImageName
@@ -43,6 +46,7 @@ query ListReportTemplates(
       id
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -63,26 +67,9 @@ query GetReport($id: ID!) {
     variety
     attachmentUrl
     dataRows
-    reportTemplate {
-      templateId
-      localCompanyName
-      localCompanyNameTranslation
-      letterHeadImageName
-      stampImageName
-      address
-      addressTranslation
-      phone
-      fax
-      email
-      testLocation
-      origin
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -107,6 +94,7 @@ query ListReports(
       dataRows
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -144,6 +132,39 @@ query ReportsByAttachmentUrlAndName(
       dataRows
       createdAt
       updatedAt
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query GetUserInfo($id: ID!) {
+  getUserInfo(id: $id) {
+    id
+    labLocation
+    countryCode
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+query ListUserInfos(
+  $filter: ModelUserInfoFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUserInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      labLocation
+      countryCode
+      createdAt
+      updatedAt
+      owner
       __typename
     }
     nextToken

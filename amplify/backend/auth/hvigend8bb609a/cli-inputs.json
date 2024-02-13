@@ -40,7 +40,9 @@
     "usernameAttributes": [
       "email"
     ],
-    "userPoolGroupList": [],
+    "userPoolGroupList": [
+      "labs"
+    ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,

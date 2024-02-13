@@ -3,6 +3,9 @@
   height: 86%;
 }
 
+.nav-button {
+  margin: 0.5rem;
+}
 .title {
   font-size: 18px;
   margin: 10px;

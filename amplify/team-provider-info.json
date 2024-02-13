@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "hvigend8bb609a": {}
+        "hvigend8bb609a": {},
+        "userPoolGroups": {}
       },
       "api": {
         "hvigen": {}
@@ -24,7 +25,7 @@
       "function": {
         "s3triggerfileprocessing": {
           "deploymentBucketName": "amplify-hvigen-dev-151624-deployment",
-          "s3Key": "amplify-builds/s3triggerfileprocessing-744174496e484576724f-build.zip"
+          "s3Key": "amplify-builds/s3triggerfileprocessing-2f626153795279556f49-build.zip"
         }
       }
     }

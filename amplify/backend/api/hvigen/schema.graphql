@@ -1,10 +1,13 @@
 # This "input" configures a global authorization rule to enable public access to
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-input AMPLIFY {
-  globalAuthRule: AuthRule = { allow: public }
-} # FOR TESTING ONLY!
-type ReportTemplate @model @auth(rules: [{ allow: public }]) {
+# input AMPLIFY {
+#   # globalAuthRule: AuthRule = { allow: public }
+# } # FOR TESTING ONLY!
+type ReportTemplate
+  @model
+  @auth(rules: [{ allow: public, operations: [read] }, { allow: owner }]) {
   templateId: ID!
+  countryCode: String!
   localCompanyName: String
   localCompanyNameTranslation: String
   letterHeadImageName: String
@@ -18,7 +21,9 @@ type ReportTemplate @model @auth(rules: [{ allow: public }]) {
   origin: String
 }
 
-type Report @model @auth(rules: [{ allow: public }]) {
+type Report
+  @model
+  @auth(rules: [{ allow: public, operations: [read] }, { allow: owner }]) {
   id: ID!
   name: String!
   testLocation: String!
@@ -31,5 +36,12 @@ type Report @model @auth(rules: [{ allow: public }]) {
   attachmentUrl: String!
     @index(name: "attachmentUrlIndex", sortKeyFields: ["name"])
   dataRows: [AWSJSON]
-  reportTemplate: ReportTemplate
+}
+
+type UserInfo
+  @model
+  @auth(rules: [{ allow: public, operations: [read] }, { allow: owner }]) {
+  id: ID!
+  labLocation: String!
+  countryCode: String!
 }

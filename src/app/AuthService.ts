@@ -62,7 +62,18 @@ export class AuthService {
   public isAuthenticated(): boolean {
     return Auth.currentAuthenticatedUser() !== null;
   }
-
+  public async getUserEmailAndLab() {
+    const emailAndLab = await Auth.currentAuthenticatedUser().then(
+      (userInfo: any) => {
+        return {
+          email: userInfo.signInUserSession.idToken.payload.email,
+          userGroup:
+            userInfo.signInUserSession.accessToken.payload['cognito:groups'],
+        };
+      }
+    );
+    return emailAndLab;
+  }
   public async onSignOut() {
     localStorage.removeItem('id_token');
     //temp workaround for persistence
