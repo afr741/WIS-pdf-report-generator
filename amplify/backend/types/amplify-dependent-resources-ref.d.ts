@@ -30,7 +30,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "hvi8gen8assets": {
+    "hvipdfgeneratorstorage": {
       "BucketName": "string",
       "Region": "string"
     }

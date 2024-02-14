@@ -5,7 +5,7 @@
     (close)="closeModal()"
     [minWidth]="250"
     [width]="450"
-    [height]="300"
+    [height]="350"
   >
     <kendo-dialog-messages>
       <!-- <kendo-dropdownbutton [data]="userData" fillMode="outline">
@@ -47,6 +47,17 @@
             [data]="country"
             [value]="selectedCountry"
             (selectionChange)="countryValueChange($event)"
+          >
+          </kendo-dropdownlist>
+        </kendo-label>
+      </div>
+      <div class="col-xs-12 col-sm-6 example-col">
+        <kendo-label text="Selected HVI version:">
+          <br />
+          <kendo-dropdownlist
+            [data]="hviVersions"
+            [value]="selectedHviVersion"
+            (selectionChange)="hviValueChange($event)"
           >
           </kendo-dropdownlist>
         </kendo-label>

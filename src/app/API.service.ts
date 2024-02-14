@@ -224,11 +224,13 @@ export type CreateUserInfoInput = {
   id?: string | null;
   labLocation: string;
   countryCode: string;
+  hviVersion: string;
 };
 
 export type ModelUserInfoConditionInput = {
   labLocation?: ModelStringInput | null;
   countryCode?: ModelStringInput | null;
+  hviVersion?: ModelStringInput | null;
   and?: Array<ModelUserInfoConditionInput | null> | null;
   or?: Array<ModelUserInfoConditionInput | null> | null;
   not?: ModelUserInfoConditionInput | null;
@@ -239,6 +241,7 @@ export type UserInfo = {
   id: string;
   labLocation: string;
   countryCode: string;
+  hviVersion: string;
   createdAt: string;
   updatedAt: string;
   owner?: string | null;
@@ -248,6 +251,7 @@ export type UpdateUserInfoInput = {
   id: string;
   labLocation?: string | null;
   countryCode?: string | null;
+  hviVersion?: string | null;
 };
 
 export type DeleteUserInfoInput = {
@@ -321,6 +325,7 @@ export type ModelUserInfoFilterInput = {
   id?: ModelIDInput | null;
   labLocation?: ModelStringInput | null;
   countryCode?: ModelStringInput | null;
+  hviVersion?: ModelStringInput | null;
   and?: Array<ModelUserInfoFilterInput | null> | null;
   or?: Array<ModelUserInfoFilterInput | null> | null;
   not?: ModelUserInfoFilterInput | null;
@@ -400,6 +405,7 @@ export type ModelSubscriptionUserInfoFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   labLocation?: ModelSubscriptionStringInput | null;
   countryCode?: ModelSubscriptionStringInput | null;
+  hviVersion?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionUserInfoFilterInput | null> | null;
   or?: Array<ModelSubscriptionUserInfoFilterInput | null> | null;
 };
@@ -526,6 +532,7 @@ export type CreateUserInfoMutation = {
   id: string;
   labLocation: string;
   countryCode: string;
+  hviVersion: string;
   createdAt: string;
   updatedAt: string;
   owner?: string | null;
@@ -536,6 +543,7 @@ export type UpdateUserInfoMutation = {
   id: string;
   labLocation: string;
   countryCode: string;
+  hviVersion: string;
   createdAt: string;
   updatedAt: string;
   owner?: string | null;
@@ -546,6 +554,7 @@ export type DeleteUserInfoMutation = {
   id: string;
   labLocation: string;
   countryCode: string;
+  hviVersion: string;
   createdAt: string;
   updatedAt: string;
   owner?: string | null;
@@ -664,6 +673,7 @@ export type GetUserInfoQuery = {
   id: string;
   labLocation: string;
   countryCode: string;
+  hviVersion: string;
   createdAt: string;
   updatedAt: string;
   owner?: string | null;
@@ -676,6 +686,7 @@ export type ListUserInfosQuery = {
     id: string;
     labLocation: string;
     countryCode: string;
+    hviVersion: string;
     createdAt: string;
     updatedAt: string;
     owner?: string | null;
@@ -805,6 +816,7 @@ export type OnCreateUserInfoSubscription = {
   id: string;
   labLocation: string;
   countryCode: string;
+  hviVersion: string;
   createdAt: string;
   updatedAt: string;
   owner?: string | null;
@@ -815,6 +827,7 @@ export type OnUpdateUserInfoSubscription = {
   id: string;
   labLocation: string;
   countryCode: string;
+  hviVersion: string;
   createdAt: string;
   updatedAt: string;
   owner?: string | null;
@@ -825,6 +838,7 @@ export type OnDeleteUserInfoSubscription = {
   id: string;
   labLocation: string;
   countryCode: string;
+  hviVersion: string;
   createdAt: string;
   updatedAt: string;
   owner?: string | null;
@@ -1057,6 +1071,7 @@ export class APIService {
           id
           labLocation
           countryCode
+          hviVersion
           createdAt
           updatedAt
           owner
@@ -1083,6 +1098,7 @@ export class APIService {
           id
           labLocation
           countryCode
+          hviVersion
           createdAt
           updatedAt
           owner
@@ -1109,6 +1125,7 @@ export class APIService {
           id
           labLocation
           countryCode
+          hviVersion
           createdAt
           updatedAt
           owner
@@ -1343,6 +1360,7 @@ export class APIService {
           id
           labLocation
           countryCode
+          hviVersion
           createdAt
           updatedAt
           owner
@@ -1369,6 +1387,7 @@ export class APIService {
             id
             labLocation
             countryCode
+            hviVersion
             createdAt
             updatedAt
             owner
@@ -1658,6 +1677,7 @@ export class APIService {
           id
           labLocation
           countryCode
+          hviVersion
           createdAt
           updatedAt
           owner
@@ -1689,6 +1709,7 @@ export class APIService {
           id
           labLocation
           countryCode
+          hviVersion
           createdAt
           updatedAt
           owner
@@ -1720,6 +1741,7 @@ export class APIService {
           id
           labLocation
           countryCode
+          hviVersion
           createdAt
           updatedAt
           owner

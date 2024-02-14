@@ -1,0 +1,20 @@
+{
+  "resourceName": "hvipdfgeneratorstorage",
+  "policyUUID": "de1db0b2",
+  "bucketName": "hvipdfgens3bucket",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "s3triggerfileprocessing",
+  "groupAccess": {
+    "labs": [
+      "CREATE_AND_UPDATE",
+      "READ",
+      "DELETE"
+    ]
+  }
+}

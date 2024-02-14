@@ -44,4 +44,5 @@ type UserInfo
   id: ID!
   labLocation: String!
   countryCode: String!
+  hviVersion: String!
 }

@@ -8,7 +8,8 @@ import {
 } from '@angular/forms';
 /** Subscription type will be inferred from this library */
 import { ZenObservable } from 'zen-observable-ts';
-import { Storage } from 'aws-amplify';
+import { Storage, Amplify } from 'aws-amplify';
+
 import { Router } from '@angular/router';
 import {
   LoaderType,
@@ -36,8 +37,6 @@ export class UploadComponent implements OnInit, OnDestroy {
   ) {
     // (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
     this.createForm = this.fb.group({
-      countryCode: ['', Validators.required],
-      machineType: ['', Validators.required],
       name: ['', Validators.required],
       testLocation: ['', Validators.required],
       reportNum: ['', Validators.required],
@@ -49,6 +48,7 @@ export class UploadComponent implements OnInit, OnDestroy {
       attachmentUrl: [null, Validators.required],
     });
   }
+
   public loader = {
     type: <LoaderType>'converging-spinner',
     themeColor: <LoaderThemeColor>'info',
@@ -65,7 +65,17 @@ export class UploadComponent implements OnInit, OnDestroy {
       .subscribe((event: any) => {
         const newReport = event.value.data.onCreateReport;
         this.reports = [newReport, ...this.reports];
+        console.log('sub created newReport', newReport);
       });
+    this.api.ListReports().then((reports) => {
+      console.log('reports', reports);
+    });
+    try {
+      const files = await Storage.list('/', { level: 'private' });
+      console.log(files);
+    } catch (err) {
+      console.log('error', err);
+    }
   }
 
   ngOnDestroy() {
@@ -95,6 +105,7 @@ export class UploadComponent implements OnInit, OnDestroy {
         const uploadResponse = await Storage.put(key, this.selectedFile, {
           contentType:
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          level: 'private',
         });
         // Update the report's attachmentUrl with the URL of the uploaded file
         report.attachmentUrl = uploadResponse.key;
@@ -126,12 +137,14 @@ export class UploadComponent implements OnInit, OnDestroy {
       this.error = 'name is required';
     } else {
       console.log('currentreport', this.currentReport);
+
+      console.log('report inside create report', report);
       this.api
         .CreateReport(report)
         .then(() => {
           this.isLoading = false;
           console.log('Item created!', report);
-          this.router.navigate(['/pdf']);
+          // this.router.navigate(['/pdf']);
         })
         .catch((e) => {
           this.isLoading = false;

@@ -145,6 +145,7 @@ query GetUserInfo($id: ID!) {
     id
     labLocation
     countryCode
+    hviVersion
     createdAt
     updatedAt
     owner
@@ -162,6 +163,7 @@ query ListUserInfos(
       id
       labLocation
       countryCode
+      hviVersion
       createdAt
       updatedAt
       owner

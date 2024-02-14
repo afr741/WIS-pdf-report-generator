@@ -155,6 +155,7 @@ subscription OnCreateUserInfo(
     id
     labLocation
     countryCode
+    hviVersion
     createdAt
     updatedAt
     owner
@@ -170,6 +171,7 @@ subscription OnUpdateUserInfo(
     id
     labLocation
     countryCode
+    hviVersion
     createdAt
     updatedAt
     owner
@@ -185,6 +187,7 @@ subscription OnDeleteUserInfo(
     id
     labLocation
     countryCode
+    hviVersion
     createdAt
     updatedAt
     owner

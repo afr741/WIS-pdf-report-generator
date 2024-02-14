@@ -118,7 +118,7 @@
     }
   },
   "storage": {
-    "hvi8gen8assets": {
+    "hvipdfgeneratorstorage": {
       "dependsOn": [
         {
           "attributes": [
@@ -128,6 +128,20 @@
           ],
           "category": "function",
           "resourceName": "s3triggerfileprocessing"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "hvigend8bb609a"
+        },
+        {
+          "attributes": [
+            "labsGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
         }
       ],
       "providerPlugin": "awscloudformation",

@@ -22,6 +22,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public userEmail: string = '';
   public selectedCountry: string = '';
   public selectedLab: string = '';
+  public selectedHviVersion: string = '';
   public userList: any = [];
   private createUserPreferenceSubscription: ZenObservable.Subscription | null =
     null;
@@ -36,7 +37,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   public lab = ['Dushanbe', 'Bokhtar', 'Khujand'];
   public country = ['Tajikistan', 'India', 'Vietnam'];
-
+  public hviVersions = ['v1', 'v2', 'v3'];
   constructor(
     private authService: AuthService,
     private userPreferenceService: UserPreferencesService,
@@ -69,6 +70,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.userId = user.items[0]?.id;
         this.selectedCountry = user.items[0]?.countryCode;
         this.selectedLab = user.items[0]?.labLocation;
+        this.selectedHviVersion = user.items[0]?.hviVersion;
       } else {
         this.openModal();
       }
@@ -105,6 +107,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.api.CreateUserInfo({
       labLocation: this.selectedLab,
       countryCode: this.selectedCountry,
+      hviVersion: this.selectedHviVersion,
     });
     this.isPreferenceSet = true;
   }
@@ -146,5 +149,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public countryValueChange(value: any): void {
     console.log('counttry valueChange', value);
     this.selectedCountry = value;
+  }
+  public hviValueChange(value: any): void {
+    console.log('hvi valueChange', value);
+    this.selectedHviVersion = value;
   }
 }

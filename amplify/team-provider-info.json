@@ -19,14 +19,14 @@
       "api": {
         "hvigen": {}
       },
-      "storage": {
-        "hvi8gen8assets": {}
-      },
       "function": {
         "s3triggerfileprocessing": {
           "deploymentBucketName": "amplify-hvigen-dev-151624-deployment",
           "s3Key": "amplify-builds/s3triggerfileprocessing-2f626153795279556f49-build.zip"
         }
+      },
+      "storage": {
+        "hvipdfgeneratorstorage": {}
       }
     }
   }
