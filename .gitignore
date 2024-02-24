@@ -41,9 +41,10 @@ testem.log
 .DS_Store
 Thumbs.db
 
+amplify/team-provider-info.json
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
-amplify/team-provider-info.json
 amplify/.config/local-*
 amplify/logs
 amplify/mock-data
@@ -63,4 +64,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-amplify/team-provider-info.json

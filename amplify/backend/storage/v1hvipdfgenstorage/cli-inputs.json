@@ -1,0 +1,14 @@
+{
+  "resourceName": "v1hvipdfgenstorage",
+  "policyUUID": "06e200b8",
+  "bucketName": "v1hvipdfgenstorage",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "S3Trigger99fb30a2",
+  "groupAccess": {}
+}

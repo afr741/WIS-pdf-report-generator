@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "hvigend8bb609a_identitypool_d8bb609a",
-    "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "hvigend8bb609a",
-    "userPoolName": "hvigend8bb609a_userpool_d8bb609a",
+    "identityPoolName": "wispdfgeneratorv1c92bf7b7_identitypool_c92bf7b7",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "wispdfc92bf7b7",
+    "userPoolName": "wispdfgeneratorv1c92bf7b7_userpool_c92bf7b7",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,10 +31,10 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "hvigend8bb609a_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "wispdfc92bf7b7_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "d8bb609a",
-    "resourceName": "hvigend8bb609a",
+    "sharedId": "c92bf7b7",
+    "resourceName": "wispdfgeneratorv1c92bf7b7",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
     "usernameAttributes": [
@@ -43,20 +43,6 @@
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "useEnabledMfas": true,
-    "authRoleArn": {
-      "Fn::GetAtt": [
-        "AuthRole",
-        "Arn"
-      ]
-    },
-    "unauthRoleArn": {
-      "Fn::GetAtt": [
-        "UnauthRole",
-        "Arn"
-      ]
-    },
-    "breakCircularDependency": true,
-    "dependsOn": []
+    "useEnabledMfas": true
   }
 }

@@ -1,33 +1,13 @@
 {
   "api": {
-    "hvigen": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "hvigend8bb609a"
-        }
-      ],
+    "wispdfgeneratorv1": {
+      "dependsOn": [],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authhvigend8bb609a"
-              }
-            },
-            {
-              "authenticationType": "AWS_IAM"
-            }
-          ],
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2024-11-01T11:51:58.205Z",
-              "apiKeyExpirationDays": 365,
-              "description": "reportkey"
+              "apiKeyExpirationDays": 7
             },
             "authenticationType": "API_KEY"
           }
@@ -38,7 +18,7 @@
     }
   },
   "auth": {
-    "hvigend8bb609a": {
+    "wispdfgeneratorv1c92bf7b7": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -66,43 +46,32 @@
     }
   },
   "function": {
-    "s3triggerfileprocessing": {
+    "S3Trigger99fb30a2": {
       "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ],
-          "category": "api",
-          "resourceName": "hvigen"
-        }
-      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_function_s3triggerfileprocessing_deploymentBucketName": {
+    "AMPLIFY_function_S3Trigger99fb30a2_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "s3triggerfileprocessing"
+          "resourceName": "S3Trigger99fb30a2"
         }
       ]
     },
-    "AMPLIFY_function_s3triggerfileprocessing_s3Key": {
+    "AMPLIFY_function_S3Trigger99fb30a2_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "s3triggerfileprocessing"
+          "resourceName": "S3Trigger99fb30a2"
         }
       ]
     }
   },
   "storage": {
-    "hvi8gen8assets": {
+    "v1hvipdfgenstorage": {
       "dependsOn": [
         {
           "attributes": [
@@ -111,7 +80,7 @@
             "LambdaExecutionRole"
           ],
           "category": "function",
-          "resourceName": "s3triggerfileprocessing"
+          "resourceName": "S3Trigger99fb30a2"
         }
       ],
       "providerPlugin": "awscloudformation",
