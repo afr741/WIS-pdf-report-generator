@@ -9,6 +9,6 @@
     "READ",
     "DELETE"
   ],
-  "triggerFunction": "S3Trigger99fb30a2",
-  "groupAccess": {}
+  "groupAccess": {},
+  "triggerFunction": "v1hvifileprocessing"
 }

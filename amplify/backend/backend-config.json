@@ -46,26 +46,36 @@
     }
   },
   "function": {
-    "S3Trigger99fb30a2": {
+    "v1hvifileprocessing": {
       "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "wispdfgeneratorv1"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_function_S3Trigger99fb30a2_deploymentBucketName": {
+    "AMPLIFY_function_v1hvifileprocessing_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "S3Trigger99fb30a2"
+          "resourceName": "v1hvifileprocessing"
         }
       ]
     },
-    "AMPLIFY_function_S3Trigger99fb30a2_s3Key": {
+    "AMPLIFY_function_v1hvifileprocessing_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "S3Trigger99fb30a2"
+          "resourceName": "v1hvifileprocessing"
         }
       ]
     }
@@ -80,7 +90,7 @@
             "LambdaExecutionRole"
           ],
           "category": "function",
-          "resourceName": "S3Trigger99fb30a2"
+          "resourceName": "v1hvifileprocessing"
         }
       ],
       "providerPlugin": "awscloudformation",
