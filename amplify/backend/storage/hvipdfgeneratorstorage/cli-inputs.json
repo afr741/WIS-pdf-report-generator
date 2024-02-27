@@ -9,12 +9,12 @@
     "READ",
     "DELETE"
   ],
-  "triggerFunction": "s3triggerfileprocessing",
   "groupAccess": {
     "labs": [
       "CREATE_AND_UPDATE",
       "READ",
       "DELETE"
     ]
-  }
+  },
+  "triggerFunction": "hvigenv2processor"
 }

@@ -82,7 +82,7 @@
     }
   },
   "function": {
-    "s3triggerfileprocessing": {
+    "hvigenv2processor": {
       "build": true,
       "dependsOn": [
         {
@@ -100,19 +100,19 @@
     }
   },
   "parameters": {
-    "AMPLIFY_function_s3triggerfileprocessing_deploymentBucketName": {
+    "AMPLIFY_function_hvigenv2processor_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "s3triggerfileprocessing"
+          "resourceName": "hvigenv2processor"
         }
       ]
     },
-    "AMPLIFY_function_s3triggerfileprocessing_s3Key": {
+    "AMPLIFY_function_hvigenv2processor_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "s3triggerfileprocessing"
+          "resourceName": "hvigenv2processor"
         }
       ]
     }
@@ -127,7 +127,7 @@
             "LambdaExecutionRole"
           ],
           "category": "function",
-          "resourceName": "s3triggerfileprocessing"
+          "resourceName": "hvigenv2processor"
         },
         {
           "attributes": [

@@ -21,7 +21,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
-    "s3triggerfileprocessing": {
+    "hvigenv2processor": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

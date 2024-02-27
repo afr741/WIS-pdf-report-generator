@@ -4,6 +4,10 @@
 	API_HVIGEN_GRAPHQLAPIKEYOUTPUT
 	API_HVIGEN_REPORTTABLE_ARN
 	API_HVIGEN_REPORTTABLE_NAME
+	API_HVIGEN_REPORTTEMPLATETABLE_ARN
+	API_HVIGEN_REPORTTEMPLATETABLE_NAME
+	API_HVIGEN_USERINFOTABLE_ARN
+	API_HVIGEN_USERINFOTABLE_NAME
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */
@@ -44,6 +48,8 @@ export const handler = async (event) => {
 
   const bucket = event.Records[0].s3.bucket.name;
   const key = event.Records[0].s3.object.key;
+
+  console.log("ZOZO KEY!!!!!", key);
   const KeyParts = key.split("/");
   const name = KeyParts[KeyParts.length - 1];
 

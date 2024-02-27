@@ -1,14 +1,14 @@
 {
-  "dev": {
+  "phasetwo": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-hvigen-dev-151624-authRole",
-      "UnauthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvigen-dev-151624-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvigen-dev-151624-authRole",
+      "AuthRoleName": "amplify-hvigen-phasetwo-01056-authRole",
+      "UnauthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvigen-phasetwo-01056-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvigen-phasetwo-01056-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-hvigen-dev-151624-deployment",
-      "UnauthRoleName": "amplify-hvigen-dev-151624-unauthRole",
-      "StackName": "amplify-hvigen-dev-151624",
-      "StackId": "arn:aws:cloudformation:us-east-1:169759725246:stack/amplify-hvigen-dev-151624/c1ff8cb0-5c55-11ee-af03-12b3e04e42fd",
+      "DeploymentBucketName": "amplify-hvigen-phasetwo-01056-deployment",
+      "UnauthRoleName": "amplify-hvigen-phasetwo-01056-unauthRole",
+      "StackName": "amplify-hvigen-phasetwo-01056",
+      "StackId": "arn:aws:cloudformation:us-east-1:169759725246:stack/amplify-hvigen-phasetwo-01056/853d8be0-cf84-11ee-b85e-12648b12e967",
       "AmplifyAppId": "d275476ssy5cup"
     },
     "categories": {
@@ -16,17 +16,17 @@
         "hvigend8bb609a": {},
         "userPoolGroups": {}
       },
-      "api": {
-        "hvigen": {}
-      },
-      "function": {
-        "s3triggerfileprocessing": {
-          "deploymentBucketName": "amplify-hvigen-dev-151624-deployment",
-          "s3Key": "amplify-builds/s3triggerfileprocessing-2f626153795279556f49-build.zip"
-        }
-      },
       "storage": {
         "hvipdfgeneratorstorage": {}
+      },
+      "function": {
+        "hvigenv2processor": {
+          "deploymentBucketName": "amplify-hvigen-phasetwo-01056-deployment",
+          "s3Key": "amplify-builds/hvigenv2processor-704c49322f566d757361-build.zip"
+        }
+      },
+      "api": {
+        "hvigen": {}
       }
     }
   }
