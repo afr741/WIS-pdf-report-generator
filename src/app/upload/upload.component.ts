@@ -1,4 +1,7 @@
 import { APIService, Report } from '../API.service';
+import { AuthService } from '../AuthService';
+import * as XLSX from 'xlsx';
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
@@ -29,8 +32,9 @@ export class UploadComponent implements OnInit, OnDestroy {
   public error?: string | null = null;
   public isLoading: boolean = false;
   private currentReport: Report | null = null;
-
+  public jsonData: any = null;
   constructor(
+    private authService: AuthService,
     private api: APIService,
     private fb: FormBuilder,
     public router: Router
@@ -46,6 +50,7 @@ export class UploadComponent implements OnInit, OnDestroy {
       stations: ['', Validators.required],
       variety: ['', Validators.required],
       attachmentUrl: [null, Validators.required],
+      dataRows: ['', Validators.required],
     });
   }
 
@@ -70,12 +75,15 @@ export class UploadComponent implements OnInit, OnDestroy {
     this.api.ListReports().then((reports) => {
       console.log('reports', reports);
     });
-    try {
-      const files = await Storage.list('/', { level: 'private' });
-      console.log(files);
-    } catch (err) {
-      console.log('error', err);
-    }
+    // try {
+    //   // const credentials = await this.authService.getCurrentUserInfo();
+    //   // console.log('credentials:', credentials);
+
+    //   // const files = await Storage.list('', { level: 'private' });
+    //   // console.log('private files:', files);
+    // } catch (err) {
+    //   console.log('error', err);
+    // }
   }
 
   ngOnDestroy() {
@@ -108,9 +116,15 @@ export class UploadComponent implements OnInit, OnDestroy {
           level: 'private',
         });
         // Update the report's attachmentUrl with the URL of the uploaded file
+
+        console.log('uploadresponse', uploadResponse);
         report.attachmentUrl = uploadResponse.key;
+        console.log('thisjsondata', this.jsonData);
+        report.dataRows = [JSON.stringify(this.jsonData)];
+
         this.currentReport = report;
-        report.dataRows = null;
+        console.log('datarows', this.jsonData, 'jsondata', this.jsonData);
+
         this.createReportWithAttachment(report);
       } catch (error: any) {
         this.isLoading = false;
@@ -120,14 +134,38 @@ export class UploadComponent implements OnInit, OnDestroy {
     }
   }
 
+  // public streamToBuffer(stream: any) {
+  //   return new Promise((resolve, reject) => {
+  //     const chunks: any = [];
+  //     stream.on('data', (chunk: any) => chunks.push(chunk));
+  //     stream.on('error', reject);
+  //     stream.on('end', () => resolve(Buffer.concat(chunks)));
+  //   });
+  // }
+
   // Handle file change event and update the formData
-  onFileChange(event: any) {
+  public onFileChange(event: any) {
     console.log('File changed', event);
     const fileList: any = event.files;
+
     if (fileList && fileList.length > 0) {
-      // console.log(this.createForm);
-      this.selectedFile = fileList[0].rawFile;
-      console.log('selected file,', fileList[0]);
+      const file = fileList[0].rawFile;
+      this.selectedFile = file;
+      let fileReader = new FileReader();
+      let arrayBuffer: any;
+      fileReader.onload = (e) => {
+        arrayBuffer = fileReader.result;
+        var data = new Uint8Array(arrayBuffer);
+        var arr = new Array();
+        for (var i = 0; i != data.length; ++i)
+          arr[i] = String.fromCharCode(data[i]);
+        var bstr = arr.join('');
+        var workbook = XLSX.read(bstr, { type: 'binary' });
+        var first_sheet_name = workbook.SheetNames[0];
+        var worksheet = workbook.Sheets[first_sheet_name];
+        this.jsonData = XLSX.utils.sheet_to_json(worksheet, { raw: true });
+      };
+      fileReader.readAsArrayBuffer(file);
     }
   }
 

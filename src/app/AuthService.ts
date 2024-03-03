@@ -74,6 +74,10 @@ export class AuthService {
     );
     return emailAndLab;
   }
+
+  public async getCurrentUserInfo() {
+    return Auth.currentAuthenticatedUser();
+  }
   public async onSignOut() {
     localStorage.removeItem('id_token');
     //temp workaround for persistence

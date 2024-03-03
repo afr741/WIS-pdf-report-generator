@@ -82,9 +82,21 @@
     }
   },
   "function": {
+    "hvigenphasetwolayer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer"
+    },
     "hvigenv2processor": {
       "build": true,
       "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "hvigenphasetwolayer"
+        },
         {
           "attributes": [
             "GraphQLAPIIdOutput",
@@ -93,6 +105,13 @@
           ],
           "category": "api",
           "resourceName": "hvigen"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "hvigend8bb609a"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -100,6 +119,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_hvigenphasetwolayer_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "hvigenphasetwolayer"
+        }
+      ]
+    },
+    "AMPLIFY_function_hvigenphasetwolayer_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "hvigenphasetwolayer"
+        }
+      ]
+    },
     "AMPLIFY_function_hvigenv2processor_deploymentBucketName": {
       "usedBy": [
         {

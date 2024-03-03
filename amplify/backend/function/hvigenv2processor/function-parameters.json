@@ -1,11 +1,27 @@
 {
-  "lambdaLayers": [],
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "hvigenphasetwolayer",
+      "env": "phasetwo",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ],
   "permissions": {
     "api": {
       "hvigen": [
         "Query",
         "Mutation",
         "Subscription"
+      ]
+    },
+    "auth": {
+      "hvigend8bb609a": [
+        "create",
+        "read",
+        "update",
+        "delete"
       ]
     },
     "storage": {

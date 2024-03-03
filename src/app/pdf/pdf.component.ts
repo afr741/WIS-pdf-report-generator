@@ -6,6 +6,7 @@ import { APIService, Report, ReportTemplate } from '../API.service';
 import { Router } from '@angular/router';
 import * as QRCode from 'qrcode';
 import { Storage } from 'aws-amplify';
+
 import {
   LoaderType,
   LoaderThemeColor,
@@ -63,6 +64,19 @@ export class PdfComponent implements OnInit {
 
   async ngOnInit() {
     let pollingAttempts = 0;
+
+    try {
+      const result = await Storage.list(
+        'lambdasdirtes_1709038497250_RAWDATA.xls',
+        {
+          level: 'private',
+        }
+      );
+      console.log('s3 file,', result);
+    } catch (error) {
+      console.log(error);
+    }
+
     const fetchData = async () => {
       await this.api
         .ListReports()
@@ -121,6 +135,7 @@ export class PdfComponent implements OnInit {
           this.letterHeadPreviewUrl
         );
       }
+
       if (this.templateInfo[0].stampImageName) {
         this.stampPreviewUrl = await Storage.get(
           this.templateInfo[0].stampImageName
@@ -132,8 +147,7 @@ export class PdfComponent implements OnInit {
     };
 
     try {
-      // fetchTemplateData().then(() => fetchData());
-      fetchData();
+      fetchTemplateData().then(() => fetchData());
     } catch (error) {
       // Handle errors if any of the async functions fail
       this.error = 'Error fetching, try again';

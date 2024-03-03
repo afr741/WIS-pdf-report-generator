@@ -21,6 +21,9 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "hvigenphasetwolayer": {
+      "Arn": "string"
+    },
     "hvigenv2processor": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
