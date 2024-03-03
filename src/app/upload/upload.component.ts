@@ -182,7 +182,7 @@ export class UploadComponent implements OnInit, OnDestroy {
         .then(() => {
           this.isLoading = false;
           console.log('Item created!', report);
-          // this.router.navigate(['/pdf']);
+          this.router.navigate(['/pdf']);
         })
         .catch((e) => {
           this.isLoading = false;

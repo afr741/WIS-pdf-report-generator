@@ -60,25 +60,10 @@ export class EditComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      // const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
-      // const stampImageFromS3 = await Storage.get('wis-stamp');
-      // this.letterHeadPreviewUrl = letterHeadImageFromS3;
-      // this.stampPreviewUrl = stampImageFromS3;
-      this.api.CreateReportTemplate({
-        countryCode: 'TJK',
-        templateId: '324234923423',
-        localCompanyName: 'local company name',
-        localCompanyNameTranslation: '',
-        letterHeadImageName: '',
-        stampImageName: '',
-        address: '',
-        addressTranslation: '',
-        phone: '',
-        fax: '',
-        email: '',
-        testLocation: '',
-        origin: '',
-      });
+      const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
+      const stampImageFromS3 = await Storage.get('wis-stamp');
+      this.letterHeadPreviewUrl = letterHeadImageFromS3;
+      this.stampPreviewUrl = stampImageFromS3;
     } catch (err) {
       console.log(err);
     }
@@ -94,17 +79,17 @@ export class EditComponent implements OnInit {
         .then((event) => {
           this.templateInfos = event.items as ReportTemplate[];
           console.log('this.templateInfos', this.templateInfos);
-          // const {
-          //   id,
-          //   createdAt,
-          //   updatedAt,
-          //   __typename,
-          //   templateId,
-          //   ...fieldsToPrefill
-          // } = this.templateInfos[0];
+          const {
+            id,
+            createdAt,
+            updatedAt,
+            __typename,
+            templateId,
+            ...fieldsToPrefill
+          } = this.templateInfos[0];
 
-          // this.createForm.patchValue(fieldsToPrefill);
-          // this.isLoading = false;
+          this.createForm.patchValue(fieldsToPrefill);
+          this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);

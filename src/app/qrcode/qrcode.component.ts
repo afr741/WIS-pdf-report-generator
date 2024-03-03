@@ -60,114 +60,53 @@ export class QrcodeComponent implements OnInit {
     this.decodedID = decryptedText;
   }
 
-  parseData(data: any): any {
-    if (!data || data[0] === null) return;
-    let parsedRawData = JSON.parse(data[0]);
-    let removedEmptyArraysData = parsedRawData.filter(
-      (array: []) => array.length !== 0
-    );
+  parseData(dataRows: any): any {
+    if (!dataRows || dataRows[0] === null) {
+      // this.error = 'Faied to extract data rows!';
+      return;
+    }
 
-    console.log('raw ALL', removedEmptyArraysData);
-    // to find the start of data extraction
+    let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
 
-    let timeIndex = removedEmptyArraysData.findIndex((array: any) =>
+    // number of elements based on elments in this row
+    const keys = Object.keys(parsedRawData[7]);
+
+    const averageRow = parsedRawData[33];
+    // Convert array of objects to array of arrays
+    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+      return keys.map((key) => {
+        let cellValue = obj[key];
+        if (index === 34 && key === '__EMPTY_1') {
+          // console.log('averageRow', Object.values(averageRow)[0]);
+          return Object.values(averageRow)[0];
+        }
+        let roundedCellValue = isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(2);
+        return roundedCellValue || '';
+      });
+    });
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = extractedRows.findIndex((array: any) =>
       array.includes('Time')
     );
 
-    // to find the end of data extraction
-    let averageIndex = removedEmptyArraysData.findIndex((array: any) =>
+    // to find the end of data body using "Average" word
+    let bodyEndIndex = extractedRows.findIndex((array: any) =>
       array.some(
         (element: any) =>
           typeof element === 'string' && element.includes('Average')
       )
     );
-    console.log('time', timeIndex, 'average', averageIndex);
-    let extractedRows = removedEmptyArraysData.slice(
-      timeIndex + 1,
-      averageIndex + 2
+
+    let extractedRowsBody = extractedRows.slice(
+      bodyStartIndex + 1,
+      bodyEndIndex + 1
     );
-
-    let numberOfSamples = extractedRows.length - 4;
-
-    const lastTwoArrays = extractedRows.slice(-2);
-    let summaryChanged = lastTwoArrays[0];
-    summaryChanged.push(numberOfSamples.toFixed(0));
-    let slicedSummary = lastTwoArrays[1].slice(2);
-    const mainArr: any = [null].concat(summaryChanged).concat(slicedSummary);
-
-    const combinedArray = mainArr;
-    extractedRows.splice(-2);
-    extractedRows.push(combinedArray);
-
-    console.log(
-      'lastTwoArrays',
-      lastTwoArrays,
-      'mainArr:',
-      mainArr,
-      'extractedRows prior: ',
-      extractedRows
-    );
-
-    let arrayedRows = [];
-    let firstRow = extractedRows[0];
-    for (let i = 0; i < extractedRows.length; i++) {
-      let innerArray = extractedRows[i];
-      if (i < extractedRows.length - 1) {
-        innerArray.splice(2, 0, '');
-      }
-      let filteredArray = [];
-
-      for (let j = 0; j < innerArray.length; j++) {
-        let isNoDecs = [1, 5, 6, 28];
-        let isOneDec = [9, 14, 18, 19, 21, 22, 26];
-        let isThreeDec = [13];
-
-        if (firstRow[j] !== null) {
-          if (innerArray[j] === null || innerArray[j] === undefined) {
-            // Replace null with an empty string
-            innerArray[j] = '';
-          } else {
-            innerArray[j] =
-              typeof innerArray[j] == 'string'
-                ? innerArray[j]
-                : Number(innerArray[j]).toFixed(
-                    isNoDecs.includes(j)
-                      ? 0
-                      : isOneDec.includes(j)
-                      ? 1
-                      : isThreeDec.includes(j)
-                      ? 3
-                      : 2
-                  ); //
-          }
-
-          filteredArray.push(innerArray[j]);
-        }
-      }
-
-      arrayedRows.push(filteredArray);
-    }
-
-    // converting data into a data structure where first row(dataColumnNames) values is the key of each subsequent array item
-
-    this.dataColumnNames = arrayedRows[0];
-
-    const [keys, ...values] = arrayedRows; // Destructuring keys and values
-
-    this.dataRows = values.map((row: any) => {
-      const obj: any = {};
-      keys.forEach((key: any, index: any) => {
-        obj[key] = row[index];
-      });
-      return obj;
-    });
-
-    console.log(
-      'dataRows',
-      this.dataRows,
-      'dataColumnNames',
-      this.dataColumnNames
-    );
+    // const numberOfSamples = extractedRowsBody.length - 4;
+    console.log('extractedRows', extractedRows);
+    this.dataRows = extractedRowsBody;
   }
 
   async ngOnInit() {
