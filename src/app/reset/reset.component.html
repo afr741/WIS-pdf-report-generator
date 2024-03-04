@@ -1,5 +1,5 @@
 <div class="row d-flex justify-content-md-center">
-  <div class="col-md-6">
+  <div class="form-container col-md-6">
     <form>
       <div class="form-outline mb-4">
         <label for="pwd" class="form-label">New Password:</label>
@@ -29,6 +29,11 @@
           type="submit"
           (click)="OnConfirm()"
           class="btn btn-primary btn-block mb-4"
+          kendoButton
+          [size]="'large'"
+          [rounded]="'medium'"
+          [fillMode]="'solid'"
+          [themeColor]="'success'"
         >
           Confirm
         </button>
