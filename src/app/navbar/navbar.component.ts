@@ -115,12 +115,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public updateUserPreference() {
     if (
       this.userList[0].countryCode !== this.selectedCountry ||
-      this.userList[0].labLocation !== this.selectedLab
+      this.userList[0].labLocation !== this.selectedLab ||
+      this.userList[0].hviVersion !== this.selectedHviVersion
     ) {
       this.api.UpdateUserInfo({
         id: this.userId,
         labLocation: this.selectedLab,
         countryCode: this.selectedCountry,
+        hviVersion: this.selectedHviVersion,
       });
     }
   }
@@ -131,6 +133,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.createUserPreference();
       } else {
         this.updateUserPreference();
+        console.log('PROFILE IS UPDATED!');
       }
       this.isModalOpen = false;
     } else {

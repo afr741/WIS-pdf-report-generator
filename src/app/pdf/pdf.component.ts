@@ -6,6 +6,7 @@ import { APIService, Report, ReportTemplate } from '../API.service';
 import { Router } from '@angular/router';
 import * as QRCode from 'qrcode';
 import { Storage } from 'aws-amplify';
+import { ZenObservable } from 'zen-observable-ts';
 
 import {
   LoaderType,
@@ -44,6 +45,7 @@ const REMARKS = {
 export class PdfComponent implements OnInit {
   public reports: Array<Report> = [];
   public templateInfo: ReportTemplate[] = [];
+  public selectedHviVersion: any = 'v1';
   public pdfData: any = null;
   private secretKey: string = 'wis';
   public isLoading: boolean = true;
@@ -54,7 +56,8 @@ export class PdfComponent implements OnInit {
   public stampPreviewUrl: string = '';
   public letterHeadImage: any = null;
   public stampImage: any = null;
-
+  private updateUserPreferenceSubscription: ZenObservable.Subscription | null =
+    null;
   public loader = {
     type: <LoaderType>'converging-spinner',
     themeColor: <LoaderThemeColor>'info',
@@ -64,6 +67,21 @@ export class PdfComponent implements OnInit {
 
   async ngOnInit() {
     let pollingAttempts = 0;
+
+    this.updateUserPreferenceSubscription = this.api
+      .OnUpdateUserInfoListener()
+      .subscribe((user: any) => {
+        const updatedUser = user.value.data.onUpdateUserInfo;
+        this.selectedHviVersion = updatedUser.hviVersion;
+        console.log(
+          'ZOZO UPDATED USER',
+          updatedUser,
+          'selecte version,',
+          this.selectedHviVersion
+        );
+
+        // console.log('userList update ng init', this.userList);
+      });
 
     const fetchData = async () => {
       await this.api
@@ -96,7 +114,7 @@ export class PdfComponent implements OnInit {
             }
           } else {
             if (this.reports[0].dataRows !== null) {
-              this.processPDFData(this.reports[0]);
+              this.handleProcessingVersion(this.reports[0]);
             }
           }
         })
@@ -141,6 +159,12 @@ export class PdfComponent implements OnInit {
       this.error = 'Error fetching, try again';
     }
     // fetchData(); // Start the initial data fetch.
+  }
+  ngOnDestroy() {
+    if (this.updateUserPreferenceSubscription) {
+      this.updateUserPreferenceSubscription.unsubscribe();
+    }
+    this.updateUserPreferenceSubscription = null;
   }
 
   makeUrlFriendly(encryptedText: string): string {
@@ -190,7 +214,7 @@ export class PdfComponent implements OnInit {
     });
   }
 
-  async processPDFData(report: Report) {
+  async processPDFDataV1(report: Report) {
     try {
       let {
         dataRows,
@@ -409,6 +433,463 @@ export class PdfComponent implements OnInit {
       this.error = `${error}`;
     }
   }
+
+  async processPDFDataV2(report: Report) {
+    try {
+      let {
+        dataRows,
+        reportNum,
+        lotNum,
+        customerName,
+        stations,
+        variety,
+        createdAt,
+      } = report;
+      let { testLocation, origin } = this.templateInfo[0];
+      console.log('processpdfdata dataRows', dataRows);
+
+      let formatedDate = () => {
+        let createdDate = new Date(createdAt);
+        const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
+        let date = `${createdDate.getFullYear()}.${month}.${
+          createdDate.getDate() < 10 ? 0 : ''
+        }${createdDate.getDate()}.`;
+
+        return date;
+      };
+
+      if (!dataRows || dataRows[0] === null) {
+        // this.error = 'Faied to extract data rows!';
+        return;
+      }
+
+      let parsedRawData = JSON.parse(dataRows[0]);
+      console.log('parsedRawData', parsedRawData);
+
+      // number of elements based on elments in this row
+      const keys = Object.keys(parsedRawData[6]);
+
+      const averageRow = parsedRawData[33];
+      // Convert array of objects to array of arrays
+      const extractedRows = parsedRawData.map((obj: any, index: any) => {
+        return keys.map((key) => {
+          let cellValue = obj[key];
+          if (index === 34 && key === '__EMPTY_1') {
+            // console.log('averageRow', Object.values(averageRow)[0]);
+            return Object.values(averageRow)[0];
+          }
+          let roundedCellValue = isNaN(cellValue)
+            ? cellValue
+            : Number(cellValue).toFixed(2);
+          return roundedCellValue || '';
+        });
+      });
+      // to find the start of data body using "Time" word
+      let bodyStartIndex = extractedRows.findIndex((array: any) =>
+        array.includes('SCI')
+      );
+
+      // to find the end of data body using "Average" word
+      let bodyEndIndex = extractedRows.findIndex((array: any) =>
+        array.some(
+          (element: any) =>
+            typeof element === 'string' && element.includes('Max')
+        )
+      );
+
+      let extractedRowsBody = extractedRows.slice(
+        bodyStartIndex,
+        bodyEndIndex + 1
+      );
+      const numberOfSamples = extractedRowsBody.length - 4;
+
+      console.log('extractedRows', extractedRows);
+      console.log('extractedRowsBody,', extractedRowsBody);
+      console.log(
+        'bodyStartIndex',
+        bodyStartIndex,
+        'bodyEndIndex',
+        bodyEndIndex
+      );
+
+      const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
+      let docDefinition = {
+        pageSize: 'A4',
+        background: [
+          {
+            image: await this.stampImage,
+            fit: [150, 150],
+            absolutePosition: { x: 380, y: 660 },
+          },
+        ],
+        content: [
+          {
+            width: 520,
+            margin: [0, 10],
+            image: await this.letterHeadImage,
+          },
+          {
+            style: 'header',
+            layout: 'noBorders',
+            table: {
+              widths: [140, 140, 140, 140, 140],
+              body: [
+                ['Test Location', testLocation, 'Recepient', customerName],
+                ['CI Number', reportNum, 'ORIGIN', origin],
+                [
+                  'CI Report Number',
+                  reportNum,
+                  'Station(As advised)',
+                  stations,
+                ],
+                ['Date', formatedDate(), 'Variety(As advised)', variety],
+                [
+                  'Lot number',
+                  lotNum,
+                  { text: 'Samples drawn by customer', bold: true },
+                  `${numberOfSamples} samples`,
+                ],
+              ],
+            },
+          },
+          {
+            style: 'dataTable',
+            layout: {
+              hLineWidth: function (i: any, node: any) {
+                if (i === 0 || i === node.table.body.length) {
+                  return 0;
+                }
+                return i === node.table.headerRows ? 2 : 1;
+              },
+              vLineWidth: () => 0,
+            },
+            table: {
+              headerRows: 1,
+              // widths: columnWidthArray,
+              // heights: 1,
+              body: extractedRowsBody,
+            },
+          },
+
+          { text: '\n\nRemarks', style: 'remarks' },
+          {
+            style: 'remarksBullets',
+            ol: REMARKS.part1,
+          },
+          {
+            style: 'remarksBullets',
+            text: REMARKS.part2,
+          },
+          {
+            style: 'remarksBullets',
+            ol: REMARKS.part3,
+          },
+          {
+            text: `${this.templateInfo[0].localCompanyName}\n ${this.templateInfo[0].localCompanyNameTranslation}`,
+            style: 'contactsHeader',
+          },
+
+          {
+            table: {
+              widths: [170, 140, 140],
+              body: [
+                [
+                  {
+                    style: 'contactsColumns',
+                    columns: [
+                      {
+                        width: 80,
+                        text: `${this.templateInfo[0].address}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
+                      },
+                      {
+                        width: 80,
+                        text: `${this.templateInfo[0].addressTranslation}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
+                      },
+                    ],
+                  },
+
+                  {
+                    link: qrURL,
+                    image: qrImage,
+                    fit: [90, 90],
+                  },
+                ],
+              ],
+            },
+            layout: 'noBorders',
+          },
+        ],
+        styles: {
+          header: {
+            fontSize: 8,
+          },
+          dataTable: {
+            margin: [15, 5],
+            fontSize: 6,
+          },
+          qrCodeText: {
+            fontSize: 8,
+          },
+          remarks: {
+            fontSize: 6,
+          },
+          remarksBullets: {
+            fontSize: 6,
+          },
+          contactsHeader: {
+            fontSize: 7,
+            bold: true,
+            margin: [0, 10, 0, 3],
+          },
+          contactsColumns: {
+            fontSize: 6,
+          },
+        },
+      };
+
+      this.pdfData = docDefinition;
+      this.isLoading = false;
+    } catch (error) {
+      this.error = `${error}`;
+    }
+  }
+
+  async processPDFDataV3(report: Report) {
+    try {
+      let {
+        dataRows,
+        reportNum,
+        lotNum,
+        customerName,
+        stations,
+        variety,
+        createdAt,
+      } = report;
+      let { testLocation, origin } = this.templateInfo[0];
+      console.log('processpdfdata dataRows', dataRows);
+
+      let formatedDate = () => {
+        let createdDate = new Date(createdAt);
+        const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
+        let date = `${createdDate.getFullYear()}.${month}.${
+          createdDate.getDate() < 10 ? 0 : ''
+        }${createdDate.getDate()}.`;
+
+        return date;
+      };
+
+      if (!dataRows || dataRows[0] === null) {
+        // this.error = 'Faied to extract data rows!';
+        return;
+      }
+
+      let parsedRawData = JSON.parse(dataRows[0]);
+      console.log('parsedRawData', parsedRawData);
+
+      // number of elements based on elments in this row
+      const keys = Object.keys(parsedRawData[6]);
+
+      const averageRow = parsedRawData[33];
+      // Convert array of objects to array of arrays
+      const extractedRows = parsedRawData.map((obj: any, index: any) => {
+        return keys.map((key) => {
+          let cellValue = obj[key];
+          if (index === 34 && key === '__EMPTY_1') {
+            // console.log('averageRow', Object.values(averageRow)[0]);
+            return Object.values(averageRow)[0];
+          }
+          let roundedCellValue = isNaN(cellValue)
+            ? cellValue
+            : Number(cellValue).toFixed(2);
+          return roundedCellValue || '';
+        });
+      });
+      // to find the start of data body using "Time" word
+      let bodyStartIndex = extractedRows.findIndex((array: any) =>
+        array.includes('SCI')
+      );
+
+      // to find the end of data body using "Average" word
+      let bodyEndIndex = extractedRows.findIndex((array: any) =>
+        array.some(
+          (element: any) =>
+            typeof element === 'string' && element.includes('Max')
+        )
+      );
+
+      let extractedRowsBody = extractedRows.slice(
+        bodyStartIndex,
+        bodyEndIndex + 1
+      );
+      const numberOfSamples = extractedRowsBody.length - 4;
+
+      console.log('extractedRows', extractedRows);
+      console.log('extractedRowsBody,', extractedRowsBody);
+      console.log(
+        'bodyStartIndex',
+        bodyStartIndex,
+        'bodyEndIndex',
+        bodyEndIndex
+      );
+
+      const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
+      let docDefinition = {
+        pageSize: 'A4',
+        background: [
+          {
+            image: await this.stampImage,
+            fit: [150, 150],
+            absolutePosition: { x: 380, y: 660 },
+          },
+        ],
+        content: [
+          {
+            width: 520,
+            margin: [0, 10],
+            image: await this.letterHeadImage,
+          },
+          {
+            style: 'header',
+            layout: 'noBorders',
+            table: {
+              widths: [140, 140, 140, 140, 140],
+              body: [
+                ['Test Location', testLocation, 'Recepient', customerName],
+                ['CI Number', reportNum, 'ORIGIN', origin],
+                [
+                  'CI Report Number',
+                  reportNum,
+                  'Station(As advised)',
+                  stations,
+                ],
+                ['Date', formatedDate(), 'Variety(As advised)', variety],
+                [
+                  'Lot number',
+                  lotNum,
+                  { text: 'Samples drawn by customer', bold: true },
+                  `${numberOfSamples} samples`,
+                ],
+              ],
+            },
+          },
+          {
+            style: 'dataTable',
+            layout: {
+              hLineWidth: function (i: any, node: any) {
+                if (i === 0 || i === node.table.body.length) {
+                  return 0;
+                }
+                return i === node.table.headerRows ? 2 : 1;
+              },
+              vLineWidth: () => 0,
+            },
+            table: {
+              headerRows: 1,
+              // widths: columnWidthArray,
+              // heights: 1,
+              body: extractedRowsBody,
+            },
+          },
+
+          { text: '\n\nRemarks', style: 'remarks' },
+          {
+            style: 'remarksBullets',
+            ol: REMARKS.part1,
+          },
+          {
+            style: 'remarksBullets',
+            text: REMARKS.part2,
+          },
+          {
+            style: 'remarksBullets',
+            ol: REMARKS.part3,
+          },
+          {
+            text: `${this.templateInfo[0].localCompanyName}\n ${this.templateInfo[0].localCompanyNameTranslation}`,
+            style: 'contactsHeader',
+          },
+
+          {
+            table: {
+              widths: [170, 140, 140],
+              body: [
+                [
+                  {
+                    style: 'contactsColumns',
+                    columns: [
+                      {
+                        width: 80,
+                        text: `${this.templateInfo[0].address}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
+                      },
+                      {
+                        width: 80,
+                        text: `${this.templateInfo[0].addressTranslation}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
+                      },
+                    ],
+                  },
+
+                  {
+                    link: qrURL,
+                    image: qrImage,
+                    fit: [90, 90],
+                  },
+                ],
+              ],
+            },
+            layout: 'noBorders',
+          },
+        ],
+        styles: {
+          header: {
+            fontSize: 8,
+          },
+          dataTable: {
+            margin: [15, 5],
+            fontSize: 6,
+          },
+          qrCodeText: {
+            fontSize: 8,
+          },
+          remarks: {
+            fontSize: 6,
+          },
+          remarksBullets: {
+            fontSize: 6,
+          },
+          contactsHeader: {
+            fontSize: 7,
+            bold: true,
+            margin: [0, 10, 0, 3],
+          },
+          contactsColumns: {
+            fontSize: 6,
+          },
+        },
+      };
+
+      this.pdfData = docDefinition;
+      this.isLoading = false;
+    } catch (error) {
+      this.error = `${error}`;
+    }
+  }
+
+  async handleProcessingVersion(dataItem: any) {
+    let version = this.selectedHviVersion;
+    switch (version) {
+      case 'v1':
+        return this.processPDFDataV1(dataItem);
+        break;
+      case 'v2':
+        return this.processPDFDataV2(dataItem);
+      case 'v3':
+        return this.processPDFDataV3(dataItem);
+        break;
+      default:
+        console.log(`version doesnt exist!`);
+    }
+  }
+
   handlBackButton() {
     this.router.navigate(['/upload']);
   }
@@ -420,7 +901,7 @@ export class PdfComponent implements OnInit {
       console.log(this.error);
     } else {
       this.error = null;
-      await this.processPDFData(dataItem);
+      await this.handleProcessingVersion(dataItem);
     }
   }
   async openPDF(dataItem: any) {
