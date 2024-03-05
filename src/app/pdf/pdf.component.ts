@@ -83,6 +83,10 @@ export class PdfComponent implements OnInit {
         // console.log('userList update ng init', this.userList);
       });
 
+    this.api.ListUserInfos().then((user) => {
+      this.selectedHviVersion = user.items[0]?.hviVersion;
+      console.log('list user', user);
+    });
     const fetchData = async () => {
       await this.api
         .ListReports()
@@ -687,17 +691,17 @@ export class PdfComponent implements OnInit {
       console.log('parsedRawData', parsedRawData);
 
       // number of elements based on elments in this row
-      const keys = Object.keys(parsedRawData[6]);
+      const keys = Object.keys(parsedRawData[5]);
 
-      const averageRow = parsedRawData[33];
+      // const averageRow = parsedRawData[33];
       // Convert array of objects to array of arrays
       const extractedRows = parsedRawData.map((obj: any, index: any) => {
         return keys.map((key) => {
           let cellValue = obj[key];
-          if (index === 34 && key === '__EMPTY_1') {
-            // console.log('averageRow', Object.values(averageRow)[0]);
-            return Object.values(averageRow)[0];
-          }
+          // if (index === 34 && key === '__EMPTY_1') {
+          //   // console.log('averageRow', Object.values(averageRow)[0]);
+          //   return Object.values(averageRow)[0];
+          // }
           let roundedCellValue = isNaN(cellValue)
             ? cellValue
             : Number(cellValue).toFixed(2);
@@ -706,7 +710,7 @@ export class PdfComponent implements OnInit {
       });
       // to find the start of data body using "Time" word
       let bodyStartIndex = extractedRows.findIndex((array: any) =>
-        array.includes('SCI')
+        array.includes('Print Time')
       );
 
       // to find the end of data body using "Average" word
@@ -876,6 +880,11 @@ export class PdfComponent implements OnInit {
 
   async handleProcessingVersion(dataItem: any) {
     let version = this.selectedHviVersion;
+    console.log(
+      'handleProcessingVersion, version,',
+      'handleProcessing dataItem',
+      dataItem
+    );
     switch (version) {
       case 'v1':
         return this.processPDFDataV1(dataItem);
