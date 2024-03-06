@@ -35,6 +35,7 @@ export type CreateReportTemplateInput = {
   email?: string | null;
   testLocation?: string | null;
   origin?: string | null;
+  labLocation?: string | null;
   id?: string | null;
 };
 
@@ -52,6 +53,7 @@ export type ModelReportTemplateConditionInput = {
   email?: ModelStringInput | null;
   testLocation?: ModelStringInput | null;
   origin?: ModelStringInput | null;
+  labLocation?: ModelStringInput | null;
   and?: Array<ModelReportTemplateConditionInput | null> | null;
   or?: Array<ModelReportTemplateConditionInput | null> | null;
   not?: ModelReportTemplateConditionInput | null;
@@ -127,6 +129,7 @@ export type ReportTemplate = {
   email?: string | null;
   testLocation?: string | null;
   origin?: string | null;
+  labLocation?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -147,6 +150,7 @@ export type UpdateReportTemplateInput = {
   email?: string | null;
   testLocation?: string | null;
   origin?: string | null;
+  labLocation?: string | null;
   id: string;
 };
 
@@ -272,6 +276,7 @@ export type ModelReportTemplateFilterInput = {
   email?: ModelStringInput | null;
   testLocation?: ModelStringInput | null;
   origin?: ModelStringInput | null;
+  labLocation?: ModelStringInput | null;
   and?: Array<ModelReportTemplateFilterInput | null> | null;
   or?: Array<ModelReportTemplateFilterInput | null> | null;
   not?: ModelReportTemplateFilterInput | null;
@@ -351,6 +356,7 @@ export type ModelSubscriptionReportTemplateFilterInput = {
   email?: ModelSubscriptionStringInput | null;
   testLocation?: ModelSubscriptionStringInput | null;
   origin?: ModelSubscriptionStringInput | null;
+  labLocation?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionReportTemplateFilterInput | null> | null;
   or?: Array<ModelSubscriptionReportTemplateFilterInput | null> | null;
 };
@@ -425,6 +431,7 @@ export type CreateReportTemplateMutation = {
   email?: string | null;
   testLocation?: string | null;
   origin?: string | null;
+  labLocation?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -446,6 +453,7 @@ export type UpdateReportTemplateMutation = {
   email?: string | null;
   testLocation?: string | null;
   origin?: string | null;
+  labLocation?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -467,6 +475,7 @@ export type DeleteReportTemplateMutation = {
   email?: string | null;
   testLocation?: string | null;
   origin?: string | null;
+  labLocation?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -575,6 +584,7 @@ export type GetReportTemplateQuery = {
   email?: string | null;
   testLocation?: string | null;
   origin?: string | null;
+  labLocation?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -598,6 +608,7 @@ export type ListReportTemplatesQuery = {
     email?: string | null;
     testLocation?: string | null;
     origin?: string | null;
+    labLocation?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -709,6 +720,7 @@ export type OnCreateReportTemplateSubscription = {
   email?: string | null;
   testLocation?: string | null;
   origin?: string | null;
+  labLocation?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -730,6 +742,7 @@ export type OnUpdateReportTemplateSubscription = {
   email?: string | null;
   testLocation?: string | null;
   origin?: string | null;
+  labLocation?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -751,6 +764,7 @@ export type OnDeleteReportTemplateSubscription = {
   email?: string | null;
   testLocation?: string | null;
   origin?: string | null;
+  labLocation?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -868,6 +882,7 @@ export class APIService {
           email
           testLocation
           origin
+          labLocation
           id
           createdAt
           updatedAt
@@ -905,6 +920,7 @@ export class APIService {
           email
           testLocation
           origin
+          labLocation
           id
           createdAt
           updatedAt
@@ -942,6 +958,7 @@ export class APIService {
           email
           testLocation
           origin
+          labLocation
           id
           createdAt
           updatedAt
@@ -1159,6 +1176,7 @@ export class APIService {
           email
           testLocation
           origin
+          labLocation
           id
           createdAt
           updatedAt
@@ -1196,6 +1214,7 @@ export class APIService {
             email
             testLocation
             origin
+            labLocation
             id
             createdAt
             updatedAt
@@ -1434,6 +1453,7 @@ export class APIService {
           email
           testLocation
           origin
+          labLocation
           id
           createdAt
           updatedAt
@@ -1480,6 +1500,7 @@ export class APIService {
           email
           testLocation
           origin
+          labLocation
           id
           createdAt
           updatedAt
@@ -1526,6 +1547,7 @@ export class APIService {
           email
           testLocation
           origin
+          labLocation
           id
           createdAt
           updatedAt

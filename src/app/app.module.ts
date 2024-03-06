@@ -31,7 +31,6 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { UserOptionsModalComponent } from './user-options-modal/user-options-modal.component';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { AuthService } from './AuthService';
-import { UserPreferencesService } from './UserPreferencesService';
 @NgModule({
   declarations: [
     AppComponent,
@@ -81,7 +80,7 @@ import { UserPreferencesService } from './UserPreferencesService';
       { path: '', redirectTo: 'upload', pathMatch: 'full' },
     ]),
   ],
-  providers: [AuthService, UserPreferencesService],
+  providers: [AuthService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -4,9 +4,7 @@ import { Router } from '@angular/router';
 import { APIService, Report } from '../API.service';
 import { bellIcon, menuIcon, SVGIcon } from '@progress/kendo-svg-icons';
 import { ZenObservable } from 'zen-observable-ts';
-
 // const logo = require('../../assets/images/wis-logo.jpeg').default as string;
-import { UserPreferencesService } from '../UserPreferencesService';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -40,7 +38,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public hviVersions = ['v1', 'v2', 'v3'];
   constructor(
     private authService: AuthService,
-    private userPreferenceService: UserPreferencesService,
     private router: Router,
     private api: APIService
   ) {}

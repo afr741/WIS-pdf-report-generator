@@ -157,15 +157,6 @@
       "dependsOn": [
         {
           "attributes": [
-            "Name",
-            "Arn",
-            "LambdaExecutionRole"
-          ],
-          "category": "function",
-          "resourceName": "hvigenv2processor"
-        },
-        {
-          "attributes": [
             "UserPoolId"
           ],
           "category": "auth",
@@ -174,6 +165,20 @@
         {
           "attributes": [
             "labsGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "managersGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "adminsGroupRole"
           ],
           "category": "auth",
           "resourceName": "userPoolGroups"

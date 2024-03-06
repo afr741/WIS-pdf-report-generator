@@ -4,6 +4,8 @@ import {
   CreateReportTemplateInput,
   UpdateReportTemplateInput,
 } from '../API.service';
+import { AuthService } from '../AuthService';
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   LoaderType,
@@ -22,28 +24,32 @@ import { NotificationService } from '@progress/kendo-angular-notification';
   styleUrls: ['./edit.component.css'],
 })
 export class EditComponent implements OnInit {
+  public lab = ['Dushanbe', 'Bokhtar', 'Khujand'];
   public createForm: FormGroup;
   private selectedFileLetterHead: File | null = null;
   private selectedStamp: File | null = null; // Store the selected file
   public error?: string | null = null;
   public isLoading: boolean = false;
   public templateInfos: Array<ReportTemplate> = [];
+  public matchedIndex: number = 0;
   letterHeadPreviewUrl: string | ArrayBuffer | null | undefined = null;
   stampPreviewUrl: string | ArrayBuffer | null | undefined = null;
-
+  public selectedLab: any = '';
   public loader = {
     type: <LoaderType>'converging-spinner',
     themeColor: <LoaderThemeColor>'info',
     size: <LoaderSize>'large',
   };
-
+  public activeTemplateInfo: ReportTemplate | undefined = undefined;
   constructor(
     private fb: FormBuilder,
     private api: APIService,
+    private authService: AuthService,
     public router: Router,
     private notificationService: NotificationService
   ) {
     this.createForm = this.fb.group({
+      selectedLab: [this.selectedLab, Validators.required],
       localCompanyName: ['', Validators.required],
       localCompanyNameTranslation: ['', Validators.required],
       letterHeadImage: [null, Validators.required],
@@ -64,74 +70,86 @@ export class EditComponent implements OnInit {
       const stampImageFromS3 = await Storage.get('wis-stamp');
       this.letterHeadPreviewUrl = letterHeadImageFromS3;
       this.stampPreviewUrl = stampImageFromS3;
+      await this.api.ListUserInfos().then((user: any) => {
+        if (user.items.length > 0) {
+          console.log('user.items', user.items);
+          this.selectedLab = user.items[0].labLocation;
+          this.matchedIndex = this.lab.indexOf(this.selectedLab);
+        }
+      });
     } catch (err) {
       console.log(err);
     }
 
-    const fetchData = async () => {
-      // await this.api
-      //   .GetReportTemplate('4e353648-aa38-4799-8e5e-ccaaac97e6e3')
-      await this.api.ListReportTemplates().then((response) => {
-        console.log('response', response);
-      });
-      await this.api
-        .ListReportTemplates()
-        .then((event) => {
-          this.templateInfos = event.items as ReportTemplate[];
-          console.log('this.templateInfos', this.templateInfos);
-          const {
-            id,
-            createdAt,
-            updatedAt,
-            __typename,
-            templateId,
-            ...fieldsToPrefill
-          } = this.templateInfos[0];
-
-          this.createForm.patchValue(fieldsToPrefill);
-          this.isLoading = false;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      console.log('sorted reports', this.templateInfos);
-    };
-
-    fetchData(); // Start the initial data fetch.
+    this.fetchData(); // Start the initial data fetch.
   }
 
+  private fetchData = async () => {
+    await this.api
+      .ListReportTemplates()
+      .then((event) => {
+        this.templateInfos = event.items as ReportTemplate[];
+        console.log('this.templateInfos', this.templateInfos);
+        const foundEntry = this.templateInfos.find(
+          (item) => (item.countryCode = this.selectedLab)
+        );
+        this.activeTemplateInfo = foundEntry;
+        const {
+          id,
+          createdAt,
+          updatedAt,
+          __typename,
+          templateId,
+          ...fieldsToPrefill
+        } = this.templateInfos[this.matchedIndex];
+
+        console.log('activeTemplateInfo:', this.activeTemplateInfo);
+        this.createForm.patchValue(fieldsToPrefill);
+        this.isLoading = false;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log('sorted templates', this.templateInfos);
+  };
+
   public async onCreate(report: any) {
-    console.log('report', report);
+    console.log('report template', report);
     let stampImageNamePredefined = 'wis-stamp';
     let letterHeadImageNamePredefined = 'wis-letterhead';
+    const { stampImage, letterHeadImage, selectedLab, ...rest } = report;
 
-    const { stampImage, letterHeadImage, ...rest } = report;
-    let currentReportID = this.templateInfos[0].id;
-    let modifiedReport: UpdateReportTemplateInput = {
-      ...rest,
-      id: currentReportID,
-    };
+    if (this.activeTemplateInfo) {
+      let modifiedReport: UpdateReportTemplateInput = {
+        ...rest,
+        countryCode: this.selectedLab,
+        labLocation: this.selectedLab,
+        id: this.activeTemplateInfo.id,
+      };
 
-    if (this.selectedFileLetterHead || this.selectedStamp) {
-      try {
-        if (this.selectedFileLetterHead) {
-          const letterheadUploadResponse = await Storage.put(
-            letterHeadImageNamePredefined,
-            this.selectedFileLetterHead
-          );
+      if (this.selectedFileLetterHead || this.selectedStamp) {
+        try {
+          if (this.selectedFileLetterHead) {
+            const letterheadUploadResponse = await Storage.put(
+              letterHeadImageNamePredefined,
+              this.selectedFileLetterHead
+            );
+          }
+          if (this.selectedStamp) {
+            const stampUploadResponse = await Storage.put(
+              stampImageNamePredefined,
+              this.selectedStamp
+            );
+          }
+        } catch (error: any) {
+          console.log('Error uploading file locally: ', error);
+          this.error = error;
         }
-        if (this.selectedStamp) {
-          const stampUploadResponse = await Storage.put(
-            stampImageNamePredefined,
-            this.selectedStamp
-          );
-        }
-      } catch (error: any) {
-        console.log('Error uploading file locally: ', error);
-        this.error = error;
       }
+      this.updateReportWithAttachment(modifiedReport);
+    } else {
+      this.createReportWithAttachment(report);
     }
-    this.createReportWithAttachment(modifiedReport);
   }
 
   // Handle file change event and update the formData
@@ -165,7 +183,7 @@ export class EditComponent implements OnInit {
     }
   }
 
-  private createReportWithAttachment(
+  private updateReportWithAttachment(
     reportTemplate: UpdateReportTemplateInput
   ) {
     console.log('reportTemplate', reportTemplate);
@@ -177,8 +195,26 @@ export class EditComponent implements OnInit {
       })
       .catch((e) => {
         this.displayStatus(false);
-        console.log('Error updating report...', e);
-        this.error = 'Error updating report';
+        console.log('Error updating template...', e);
+        this.error = 'Error updating template';
+      });
+    // }
+  }
+
+  private createReportWithAttachment(
+    reportTemplate: CreateReportTemplateInput
+  ) {
+    console.log('createReportWithAttachment reportTempalte ', reportTemplate);
+    this.api
+      .CreateReportTemplate(reportTemplate)
+      .then(() => {
+        console.log('Item created!', reportTemplate);
+        this.displayStatus(true);
+      })
+      .catch((e) => {
+        this.displayStatus(false);
+        console.log('Error creating template...', e);
+        this.error = 'Error creating template';
       });
     // }
   }
@@ -193,6 +229,12 @@ export class EditComponent implements OnInit {
       type: { style: isUpdated ? 'success' : 'error', icon: true },
       closable: true,
     });
+  }
+  public async labValueChange(value: any) {
+    console.log('lab valueChange', value);
+    this.selectedLab = value;
+    this.isLoading = true;
+    this.fetchData();
   }
 
   backToUpload(): void {

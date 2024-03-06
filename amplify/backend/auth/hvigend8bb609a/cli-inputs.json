@@ -41,7 +41,9 @@
       "email"
     ],
     "userPoolGroupList": [
-      "labs"
+      "labs",
+      "managers",
+      "admins"
     ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,

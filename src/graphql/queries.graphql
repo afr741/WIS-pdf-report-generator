@@ -15,6 +15,7 @@ query GetReportTemplate($id: ID!) {
     email
     testLocation
     origin
+    labLocation
     id
     createdAt
     updatedAt
@@ -43,6 +44,7 @@ query ListReportTemplates(
       email
       testLocation
       origin
+      labLocation
       id
       createdAt
       updatedAt

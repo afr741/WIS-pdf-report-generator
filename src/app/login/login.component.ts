@@ -69,11 +69,20 @@ export class LoginComponent implements OnInit {
           String(email),
           String(password)
         );
-        console.log(user);
+        let userGroupList = await this.authService
+          .getUserEmailAndLab()
+          .then((userInfo) => userInfo.userGroup);
+        console.log('user', userGroupList);
         if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
           return this.router.navigate(['/reset']);
         } else {
-          return this.router.navigate(['upload']);
+          if (userGroupList.includes('managers')) {
+            return this.router.navigate(['edit']);
+          } else if (userGroupList.includes('admins')) {
+            return this.router.navigate(['pdf']);
+          } else {
+            return this.router.navigate(['upload']);
+          }
         }
       } else {
         this.isLoading = false;
