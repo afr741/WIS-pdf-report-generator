@@ -93,6 +93,7 @@
         [themeColor]="'info'"
         class="nav-button"
         (click)="handleNav('edit')"
+        *ngIf="isManagerUp"
       >
         Edit Template
       </button>

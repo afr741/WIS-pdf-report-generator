@@ -28,6 +28,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     null;
 
   public userId: string = '';
+  public isManagerUp: boolean = false;
 
   // public wisLogo: any = logo;
   public kendokaAvatar =
@@ -51,6 +52,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
         // console.log('userList create ng init', this.userList);
       });
 
+    this.authService.getUserEmailAndLab().then((res) => {
+      console.log('user lab', res);
+      this.isManagerUp = res.userGroup.includes('managers');
+    });
     this.modifyUserPreferenceSubscription = this.api
       .OnUpdateUserInfoListener()
       .subscribe((user: any) => {
