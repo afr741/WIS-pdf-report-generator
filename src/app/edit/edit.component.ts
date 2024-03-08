@@ -65,6 +65,9 @@ export class EditComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.api.ListReportTemplates().then((event) => {
+      console.log('this.templateInfos', event);
+    });
     try {
       const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
       const stampImageFromS3 = await Storage.get('wis-stamp');
@@ -74,7 +77,12 @@ export class EditComponent implements OnInit {
         if (user.items.length > 0) {
           console.log('user.items', user.items);
           this.selectedLab = user.items[0].labLocation;
-          this.matchedIndex = this.lab.indexOf(this.selectedLab);
+          this.matchedIndex =
+            this.selectedLab !== ''
+              ? this.lab.indexOf(this.selectedLab)
+              : this.matchedIndex;
+          console.log('matchedIndex', this.matchedIndex);
+          console.log('selectedLab', this.selectedLab);
         }
       });
     } catch (err) {
@@ -84,28 +92,30 @@ export class EditComponent implements OnInit {
     this.fetchData(); // Start the initial data fetch.
   }
 
-  private fetchData = async () => {
-    await this.api
+  public fetchData = async () => {
+    this.api
       .ListReportTemplates()
       .then((event) => {
+        console.log('this.templateInfos', event);
         this.templateInfos = event.items as ReportTemplate[];
-        console.log('this.templateInfos', this.templateInfos);
-        const foundEntry = this.templateInfos.find(
-          (item) => (item.countryCode = this.selectedLab)
-        );
-        this.activeTemplateInfo = foundEntry;
-        const {
-          id,
-          createdAt,
-          updatedAt,
-          __typename,
-          templateId,
-          ...fieldsToPrefill
-        } = this.templateInfos[this.matchedIndex];
+        if (this.templateInfos.length > 0) {
+          const foundEntry = this.templateInfos.find(
+            (item) => (item.countryCode = 'Dushanbe')
+          );
+          this.activeTemplateInfo = foundEntry;
+          const {
+            id,
+            createdAt,
+            updatedAt,
+            __typename,
+            templateId,
+            ...fieldsToPrefill
+          } = this.templateInfos[this.matchedIndex];
 
-        console.log('activeTemplateInfo:', this.activeTemplateInfo);
-        this.createForm.patchValue(fieldsToPrefill);
-        this.isLoading = false;
+          console.log('activeTemplateInfo:', this.activeTemplateInfo);
+          this.createForm.patchValue(fieldsToPrefill);
+          this.isLoading = false;
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -148,7 +158,16 @@ export class EditComponent implements OnInit {
       }
       this.updateReportWithAttachment(modifiedReport);
     } else {
-      this.createReportWithAttachment(report);
+      let modifiedReport: CreateReportTemplateInput = {
+        ...rest,
+        countryCode: this.selectedLab,
+        labLocation: this.selectedLab,
+        stampImageName: stampImageNamePredefined,
+        letterHeadImageName: letterHeadImageNamePredefined,
+        id: this.selectedLab,
+        templateId: this.selectedLab,
+      };
+      this.createReportWithAttachment(modifiedReport);
     }
   }
 
@@ -186,7 +205,7 @@ export class EditComponent implements OnInit {
   private updateReportWithAttachment(
     reportTemplate: UpdateReportTemplateInput
   ) {
-    console.log('reportTemplate', reportTemplate);
+    // console.log('reportTemplate', reportTemplate);
     this.api
       .UpdateReportTemplate(reportTemplate)
       .then(() => {
@@ -204,7 +223,7 @@ export class EditComponent implements OnInit {
   private createReportWithAttachment(
     reportTemplate: CreateReportTemplateInput
   ) {
-    console.log('createReportWithAttachment reportTempalte ', reportTemplate);
+    // console.log('createReportWithAttachment reportTempalte ', reportTemplate);
     this.api
       .CreateReportTemplate(reportTemplate)
       .then(() => {
@@ -231,7 +250,7 @@ export class EditComponent implements OnInit {
     });
   }
   public async labValueChange(value: any) {
-    console.log('lab valueChange', value);
+    // console.log('lab valueChange', value);
     this.selectedLab = value;
     this.isLoading = true;
     this.fetchData();

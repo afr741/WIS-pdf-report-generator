@@ -26,7 +26,7 @@
         },
         "hvigenphasetwolayer": {
           "deploymentBucketName": "amplify-hvigen-phasetwo-01056-deployment",
-          "s3Key": "amplify-builds/hvigenphasetwolayer-LambdaLayerVersion3417c92c-build.zip"
+          "s3Key": "amplify-builds/hvigenphasetwolayer-LambdaLayerVersion994fb65b-build.zip"
         }
       },
       "api": {

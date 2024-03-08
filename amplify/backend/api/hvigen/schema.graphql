@@ -19,6 +19,7 @@ type ReportTemplate
   email: String
   testLocation: String
   origin: String
+  labLocation: String
 }
 
 type Report
