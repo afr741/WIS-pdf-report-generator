@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import * as QRCode from 'qrcode';
 import { Storage } from 'aws-amplify';
 import { ZenObservable } from 'zen-observable-ts';
+import { NotificationService } from '@progress/kendo-angular-notification';
 
 import {
   LoaderType,
@@ -46,11 +47,13 @@ export class PdfComponent implements OnInit {
   public reports: Array<Report> = [];
   public templateInfo: ReportTemplate[] = [];
   public selectedHviVersion: any = 'v1';
+  public selectedLab: any = '';
   public pdfData: any = null;
   private secretKey: string = 'wis';
   public isLoading: boolean = true;
   public qrImage: any = null;
   public qrImageURL: string = '';
+  public activeTemplateInfo: ReportTemplate | undefined = undefined;
   public error: string | null = null;
   public letterHeadPreviewUrl: string = '';
   public stampPreviewUrl: string = '';
@@ -63,7 +66,11 @@ export class PdfComponent implements OnInit {
     themeColor: <LoaderThemeColor>'info',
     size: <LoaderSize>'large',
   };
-  constructor(private api: APIService, public router: Router) {}
+  constructor(
+    private api: APIService,
+    public router: Router,
+    private notificationService: NotificationService
+  ) {}
 
   async ngOnInit() {
     let pollingAttempts = 0;
@@ -79,12 +86,14 @@ export class PdfComponent implements OnInit {
           'selecte version,',
           this.selectedHviVersion
         );
+        fetchTemplateData().then(() => fetchData());
 
         // console.log('userList update ng init', this.userList);
       });
 
     this.api.ListUserInfos().then((user) => {
       this.selectedHviVersion = user.items[0]?.hviVersion;
+      this.selectedLab = user.items[0]?.labLocation;
       console.log('list user', user);
     });
     const fetchData = async () => {
@@ -105,7 +114,6 @@ export class PdfComponent implements OnInit {
                 updatedAt: new Date(report.updatedAt).toDateString(),
               })
           );
-          // this.openPDF(this.reports[0]);
           if (this.reports[0].dataRows == null) {
             if (pollingAttempts < 5) {
               // Limit the number of polling attempts
@@ -115,9 +123,11 @@ export class PdfComponent implements OnInit {
               console.log('Data not available after 5 polling attempts.');
               this.isLoading = false;
               this.error = 'Sorry, unable to extract data, please try again';
+              this.displayStatus(false);
             }
           } else {
-            if (this.reports[0].dataRows !== null) {
+            if (this.selectedHviVersion) {
+              console.log('sorted this.reports[0]', this.reports[0]);
               this.handleProcessingVersion(this.reports[0]);
             }
           }
@@ -131,38 +141,60 @@ export class PdfComponent implements OnInit {
       await this.api
         .ListReportTemplates()
         .then((event) => {
+          console.log('template info event', event);
           this.templateInfo = event.items as ReportTemplate[];
+          if (this.templateInfo.length > 0) {
+            const foundEntry = this.templateInfo.find(
+              (item) => (item.labLocation = this.selectedLab)
+            );
+            this.activeTemplateInfo = foundEntry;
+            console.log(
+              'template fetch activeTemplateInfo',
+              this.activeTemplateInfo
+            );
+            this.assignActiveTemplate(this.activeTemplateInfo);
+          }
         })
         .catch((err) => {
           console.log(err);
+          this.error = err;
+          this.displayStatus(false);
+          this.isLoading = false;
         });
-      console.log('template info', this.templateInfo);
-      if (this.templateInfo[0].letterHeadImageName) {
-        this.letterHeadPreviewUrl = await Storage.get(
-          this.templateInfo[0].letterHeadImageName
-        );
-        this.letterHeadImage = await this.getBase64ImageFromURL(
-          this.letterHeadPreviewUrl
-        );
-      }
-
-      if (this.templateInfo[0].stampImageName) {
-        this.stampPreviewUrl = await Storage.get(
-          this.templateInfo[0].stampImageName
-        );
-        this.stampImage = await this.getBase64ImageFromURL(
-          this.stampPreviewUrl
-        );
-      }
     };
 
     try {
       fetchTemplateData().then(() => fetchData());
     } catch (error) {
       // Handle errors if any of the async functions fail
+      this.displayStatus(false);
       this.error = 'Error fetching, try again';
+      this.isLoading = false;
     }
-    // fetchData(); // Start the initial data fetch.
+  }
+
+  async assignActiveTemplate(templateInfo: any) {
+    try {
+      if (templateInfo.letterHeadImageName) {
+        this.letterHeadPreviewUrl = await Storage.get(
+          templateInfo.letterHeadImageName
+        );
+        this.letterHeadImage = await this.getBase64ImageFromURL(
+          this.letterHeadPreviewUrl
+        );
+      }
+
+      if (templateInfo.stampImageName) {
+        this.stampPreviewUrl = await Storage.get(templateInfo.stampImageName);
+        this.stampImage = await this.getBase64ImageFromURL(
+          this.stampPreviewUrl
+        );
+      }
+    } catch (error) {
+      this.displayStatus(false);
+      this.error = `${error}`;
+      this.isLoading = false;
+    }
   }
   ngOnDestroy() {
     if (this.updateUserPreferenceSubscription) {
@@ -219,683 +251,674 @@ export class PdfComponent implements OnInit {
   }
 
   async processPDFDataV1(report: Report) {
-    try {
-      let {
-        dataRows,
-        reportNum,
-        lotNum,
-        customerName,
-        stations,
-        variety,
-        createdAt,
-      } = report;
-      let { testLocation, origin } = this.templateInfo[0];
-      console.log('processpdfdata dataRows', dataRows);
+    if (!report || !this.activeTemplateInfo) return;
 
-      let formatedDate = () => {
-        let createdDate = new Date(createdAt);
-        const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
-        let date = `${createdDate.getFullYear()}.${month}.${
-          createdDate.getDate() < 10 ? 0 : ''
-        }${createdDate.getDate()}.`;
+    let {
+      dataRows,
+      reportNum,
+      lotNum,
+      customerName,
+      stations,
+      variety,
+      createdAt,
+    } = report;
 
-        return date;
-      };
+    let { testLocation, origin } = this.activeTemplateInfo;
+    console.log('processpdfdata dataRows', dataRows);
 
-      if (!dataRows || dataRows[0] === null) {
-        // this.error = 'Faied to extract data rows!';
-        return;
-      }
+    let formatedDate = () => {
+      let createdDate = new Date(createdAt);
+      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
+      let date = `${createdDate.getFullYear()}.${month}.${
+        createdDate.getDate() < 10 ? 0 : ''
+      }${createdDate.getDate()}.`;
 
-      let parsedRawData = JSON.parse(dataRows[0]);
-      console.log('parsedRawData', parsedRawData);
+      return date;
+    };
 
-      // number of elements based on elments in this row
-      const keys = Object.keys(parsedRawData[7]);
+    if (!dataRows || dataRows[0] === null) {
+      this.displayStatus(false);
+      this.error = 'Faied to extract data rows!';
+      return;
+    }
 
-      const averageRow = parsedRawData[33];
-      // Convert array of objects to array of arrays
-      const extractedRows = parsedRawData.map((obj: any, index: any) => {
-        return keys.map((key) => {
-          let cellValue = obj[key];
-          if (index === 34 && key === '__EMPTY_1') {
-            // console.log('averageRow', Object.values(averageRow)[0]);
-            return Object.values(averageRow)[0];
-          }
-          let roundedCellValue = isNaN(cellValue)
-            ? cellValue
-            : Number(cellValue).toFixed(2);
-          return roundedCellValue || '';
-        });
+    let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
+
+    // number of elements based on elments in this row
+    const keys = Object.keys(parsedRawData[7]);
+
+    const averageRow = parsedRawData[33];
+    // Convert array of objects to array of arrays
+    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+      return keys.map((key) => {
+        let cellValue = obj[key];
+        if (index === 34 && key === '__EMPTY_1') {
+          // console.log('averageRow', Object.values(averageRow)[0]);
+          return Object.values(averageRow)[0];
+        }
+        let roundedCellValue = isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(2);
+        return roundedCellValue || '';
       });
-      // to find the start of data body using "Time" word
-      let bodyStartIndex = extractedRows.findIndex((array: any) =>
-        array.includes('Time')
-      );
+    });
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = extractedRows.findIndex((array: any) =>
+      array.includes('Time')
+    );
 
-      // to find the end of data body using "Average" word
-      let bodyEndIndex = extractedRows.findIndex((array: any) =>
-        array.some(
-          (element: any) =>
-            typeof element === 'string' && element.includes('Average')
-        )
-      );
+    // to find the end of data body using "Average" word
+    let bodyEndIndex = extractedRows.findIndex((array: any) =>
+      array.some(
+        (element: any) =>
+          typeof element === 'string' && element.includes('Average')
+      )
+    );
 
-      let extractedRowsBody = extractedRows.slice(
-        bodyStartIndex + 1,
-        bodyEndIndex + 1
-      );
-      const numberOfSamples = extractedRowsBody.length - 4;
+    let extractedRowsBody = extractedRows.slice(
+      bodyStartIndex + 1,
+      bodyEndIndex + 1
+    );
+    const numberOfSamples = extractedRowsBody.length - 4;
 
-      // console.log('extractedRows', extractedRows);
-      // console.log('extractedRowsBody,', extractedRowsBody);
-      // console.log(
-      //   'bodyStartIndex',
-      //   bodyStartIndex,
-      //   'bodyEndIndex',
-      //   bodyEndIndex
-      // );
+    // console.log('extractedRows', extractedRows);
+    // console.log('extractedRowsBody,', extractedRowsBody);
+    // console.log(
+    //   'bodyStartIndex',
+    //   bodyStartIndex,
+    //   'bodyEndIndex',
+    //   bodyEndIndex
+    // );
 
-      const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
-      let docDefinition = {
-        pageSize: 'A4',
-        background: [
-          {
-            image: await this.stampImage,
-            fit: [150, 150],
-            absolutePosition: { x: 380, y: 660 },
-          },
-        ],
-        content: [
-          {
-            width: 520,
-            margin: [0, 10],
-            image: await this.letterHeadImage,
-          },
-          {
-            style: 'header',
-            layout: 'noBorders',
-            table: {
-              widths: [140, 140, 140, 140, 140],
-              body: [
-                ['Test Location', testLocation, 'Recepient', customerName],
-                ['CI Number', reportNum, 'ORIGIN', origin],
-                [
-                  'CI Report Number',
-                  reportNum,
-                  'Station(As advised)',
-                  stations,
-                ],
-                ['Date', formatedDate(), 'Variety(As advised)', variety],
-                [
-                  'Lot number',
-                  lotNum,
-                  { text: 'Samples drawn by customer', bold: true },
-                  `${numberOfSamples} samples`,
-                ],
+    const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
+    let docDefinition = {
+      pageSize: 'A4',
+      background: [
+        {
+          image: await this.stampImage,
+          fit: [150, 150],
+          absolutePosition: { x: 380, y: 660 },
+        },
+      ],
+      content: [
+        {
+          width: 520,
+          margin: [0, 10],
+          image: await this.letterHeadImage,
+        },
+        {
+          style: 'header',
+          layout: 'noBorders',
+          table: {
+            widths: [140, 140, 140, 140, 140],
+            body: [
+              ['Test Location', testLocation, 'Recepient', customerName],
+              ['CI Number', reportNum, 'ORIGIN', origin],
+              ['CI Report Number', reportNum, 'Station(As advised)', stations],
+              ['Date', formatedDate(), 'Variety(As advised)', variety],
+              [
+                'Lot number',
+                lotNum,
+                { text: 'Samples drawn by customer', bold: true },
+                `${numberOfSamples} samples`,
               ],
-            },
-          },
-          {
-            style: 'dataTable',
-            layout: {
-              hLineWidth: function (i: any, node: any) {
-                if (i === 0 || i === node.table.body.length) {
-                  return 0;
-                }
-                return i === node.table.headerRows ? 2 : 1;
-              },
-              vLineWidth: () => 0,
-            },
-            table: {
-              headerRows: 1,
-              // widths: columnWidthArray,
-              // heights: 1,
-              body: extractedRowsBody,
-            },
-          },
-
-          { text: '\n\nRemarks', style: 'remarks' },
-          {
-            style: 'remarksBullets',
-            ol: REMARKS.part1,
-          },
-          {
-            style: 'remarksBullets',
-            text: REMARKS.part2,
-          },
-          {
-            style: 'remarksBullets',
-            ol: REMARKS.part3,
-          },
-          {
-            text: `${this.templateInfo[0].localCompanyName}\n ${this.templateInfo[0].localCompanyNameTranslation}`,
-            style: 'contactsHeader',
-          },
-
-          {
-            table: {
-              widths: [170, 140, 140],
-              body: [
-                [
-                  {
-                    style: 'contactsColumns',
-                    columns: [
-                      {
-                        width: 80,
-                        text: `${this.templateInfo[0].address}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
-                      },
-                      {
-                        width: 80,
-                        text: `${this.templateInfo[0].addressTranslation}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
-                      },
-                    ],
-                  },
-
-                  {
-                    link: qrURL,
-                    image: qrImage,
-                    fit: [90, 90],
-                  },
-                ],
-              ],
-            },
-            layout: 'noBorders',
-          },
-        ],
-        styles: {
-          header: {
-            fontSize: 8,
-          },
-          dataTable: {
-            margin: [15, 5],
-            fontSize: 6,
-          },
-          qrCodeText: {
-            fontSize: 8,
-          },
-          remarks: {
-            fontSize: 6,
-          },
-          remarksBullets: {
-            fontSize: 6,
-          },
-          contactsHeader: {
-            fontSize: 7,
-            bold: true,
-            margin: [0, 10, 0, 3],
-          },
-          contactsColumns: {
-            fontSize: 6,
+            ],
           },
         },
-      };
+        {
+          style: 'dataTable',
+          layout: {
+            hLineWidth: function (i: any, node: any) {
+              if (i === 0 || i === node.table.body.length) {
+                return 0;
+              }
+              return i === node.table.headerRows ? 2 : 1;
+            },
+            vLineWidth: () => 0,
+          },
+          table: {
+            headerRows: 1,
+            // widths: columnWidthArray,
+            // heights: 1,
+            body: extractedRowsBody,
+          },
+        },
 
-      this.pdfData = docDefinition;
-      this.isLoading = false;
-    } catch (error) {
-      this.error = `${error}`;
-    }
+        { text: '\n\nRemarks', style: 'remarks' },
+        {
+          style: 'remarksBullets',
+          ol: REMARKS.part1,
+        },
+        {
+          style: 'remarksBullets',
+          text: REMARKS.part2,
+        },
+        {
+          style: 'remarksBullets',
+          ol: REMARKS.part3,
+        },
+        {
+          text: `${this.activeTemplateInfo.localCompanyName}\n ${this.activeTemplateInfo.localCompanyNameTranslation}`,
+          style: 'contactsHeader',
+        },
+
+        {
+          table: {
+            widths: [170, 140, 140],
+            body: [
+              [
+                {
+                  style: 'contactsColumns',
+                  columns: [
+                    {
+                      width: 80,
+                      text: `${this.activeTemplateInfo.address}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
+                    },
+                    {
+                      width: 80,
+                      text: `${this.activeTemplateInfo.addressTranslation}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
+                    },
+                  ],
+                },
+
+                {
+                  link: qrURL,
+                  image: qrImage,
+                  fit: [90, 90],
+                },
+              ],
+            ],
+          },
+          layout: 'noBorders',
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 8,
+        },
+        dataTable: {
+          margin: [15, 5],
+          fontSize: 6,
+        },
+        qrCodeText: {
+          fontSize: 8,
+        },
+        remarks: {
+          fontSize: 6,
+        },
+        remarksBullets: {
+          fontSize: 6,
+        },
+        contactsHeader: {
+          fontSize: 7,
+          bold: true,
+          margin: [0, 10, 0, 3],
+        },
+        contactsColumns: {
+          fontSize: 6,
+        },
+      },
+    };
+
+    this.pdfData = docDefinition;
+    this.isLoading = false;
   }
 
   async processPDFDataV2(report: Report) {
-    try {
-      let {
-        dataRows,
-        reportNum,
-        lotNum,
-        customerName,
-        stations,
-        variety,
-        createdAt,
-      } = report;
-      let { testLocation, origin } = this.templateInfo[0];
-      console.log('processpdfdata dataRows', dataRows);
+    if (!report || !this.activeTemplateInfo) return;
 
-      let formatedDate = () => {
-        let createdDate = new Date(createdAt);
-        const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
-        let date = `${createdDate.getFullYear()}.${month}.${
-          createdDate.getDate() < 10 ? 0 : ''
-        }${createdDate.getDate()}.`;
+    let {
+      dataRows,
+      reportNum,
+      lotNum,
+      customerName,
+      stations,
+      variety,
+      createdAt,
+    } = report;
+    let { testLocation, origin } = this.activeTemplateInfo;
+    console.log('processpdfdata dataRows', dataRows);
 
-        return date;
-      };
+    let formatedDate = () => {
+      let createdDate = new Date(createdAt);
+      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
+      let date = `${createdDate.getFullYear()}.${month}.${
+        createdDate.getDate() < 10 ? 0 : ''
+      }${createdDate.getDate()}.`;
 
-      if (!dataRows || dataRows[0] === null) {
-        // this.error = 'Faied to extract data rows!';
-        return;
-      }
+      return date;
+    };
 
-      let parsedRawData = JSON.parse(dataRows[0]);
-      console.log('parsedRawData', parsedRawData);
+    if (!dataRows || dataRows[0] === null) {
+      this.displayStatus(false);
+      this.error = 'Faied to extract data rows!';
 
-      // number of elements based on elments in this row
-      const keys = Object.keys(parsedRawData[6]);
+      return;
+    }
 
-      const averageRow = parsedRawData[33];
-      // Convert array of objects to array of arrays
-      const extractedRows = parsedRawData.map((obj: any, index: any) => {
-        return keys.map((key) => {
-          let cellValue = obj[key];
-          if (index === 34 && key === '__EMPTY_1') {
-            // console.log('averageRow', Object.values(averageRow)[0]);
-            return Object.values(averageRow)[0];
-          }
-          let roundedCellValue = isNaN(cellValue)
-            ? cellValue
-            : Number(cellValue).toFixed(2);
-          return roundedCellValue || '';
-        });
+    let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
+
+    // number of elements based on elments in this row
+    const keys = Object.keys(parsedRawData[6]);
+
+    const averageRow = parsedRawData[33];
+    // Convert array of objects to array of arrays
+    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+      return keys.map((key) => {
+        let cellValue = obj[key];
+        if (index === 34 && key === '__EMPTY_1') {
+          // console.log('averageRow', Object.values(averageRow)[0]);
+          return Object.values(averageRow)[0];
+        }
+        let roundedCellValue = isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(2);
+        return roundedCellValue || '';
       });
-      // to find the start of data body using "Time" word
-      let bodyStartIndex = extractedRows.findIndex((array: any) =>
-        array.includes('SCI')
-      );
+    });
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = extractedRows.findIndex((array: any) =>
+      array.includes('SCI')
+    );
 
-      // to find the end of data body using "Average" word
-      let bodyEndIndex = extractedRows.findIndex((array: any) =>
-        array.some(
-          (element: any) =>
-            typeof element === 'string' && element.includes('Max')
-        )
-      );
+    // to find the end of data body using "Average" word
+    let bodyEndIndex = extractedRows.findIndex((array: any) =>
+      array.some(
+        (element: any) => typeof element === 'string' && element.includes('Max')
+      )
+    );
 
-      let extractedRowsBody = extractedRows.slice(
-        bodyStartIndex,
-        bodyEndIndex + 1
-      );
-      const numberOfSamples = extractedRowsBody.length - 4;
+    let extractedRowsBody = extractedRows.slice(
+      bodyStartIndex,
+      bodyEndIndex + 1
+    );
+    const numberOfSamples = extractedRowsBody.length - 4;
 
-      console.log('extractedRows', extractedRows);
-      console.log('extractedRowsBody,', extractedRowsBody);
-      console.log(
-        'bodyStartIndex',
-        bodyStartIndex,
-        'bodyEndIndex',
-        bodyEndIndex
-      );
+    console.log('extractedRows', extractedRows);
+    console.log('extractedRowsBody,', extractedRowsBody);
+    console.log('bodyStartIndex', bodyStartIndex, 'bodyEndIndex', bodyEndIndex);
 
-      const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
-      let docDefinition = {
-        pageSize: 'A4',
-        background: [
-          {
-            image: await this.stampImage,
-            fit: [150, 150],
-            absolutePosition: { x: 380, y: 660 },
-          },
-        ],
-        content: [
-          {
-            width: 520,
-            margin: [0, 10],
-            image: await this.letterHeadImage,
-          },
-          {
-            style: 'header',
-            layout: 'noBorders',
-            table: {
-              widths: [140, 140, 140, 140, 140],
-              body: [
-                ['Test Location', testLocation, 'Recepient', customerName],
-                ['CI Number', reportNum, 'ORIGIN', origin],
-                [
-                  'CI Report Number',
-                  reportNum,
-                  'Station(As advised)',
-                  stations,
-                ],
-                ['Date', formatedDate(), 'Variety(As advised)', variety],
-                [
-                  'Lot number',
-                  lotNum,
-                  { text: 'Samples drawn by customer', bold: true },
-                  `${numberOfSamples} samples`,
-                ],
+    const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
+    let docDefinition = {
+      pageSize: 'A4',
+      background: [
+        {
+          image: await this.stampImage,
+          fit: [150, 150],
+          absolutePosition: { x: 380, y: 660 },
+        },
+      ],
+      content: [
+        {
+          width: 520,
+          margin: [0, 10],
+          image: await this.letterHeadImage,
+        },
+        {
+          style: 'header',
+          layout: 'noBorders',
+          table: {
+            widths: [140, 140, 140, 140, 140],
+            body: [
+              ['Test Location', testLocation, 'Recepient', customerName],
+              ['CI Number', reportNum, 'ORIGIN', origin],
+              ['CI Report Number', reportNum, 'Station(As advised)', stations],
+              ['Date', formatedDate(), 'Variety(As advised)', variety],
+              [
+                'Lot number',
+                lotNum,
+                { text: 'Samples drawn by customer', bold: true },
+                `${numberOfSamples} samples`,
               ],
-            },
-          },
-          {
-            style: 'dataTable',
-            layout: {
-              hLineWidth: function (i: any, node: any) {
-                if (i === 0 || i === node.table.body.length) {
-                  return 0;
-                }
-                return i === node.table.headerRows ? 2 : 1;
-              },
-              vLineWidth: () => 0,
-            },
-            table: {
-              headerRows: 1,
-              // widths: columnWidthArray,
-              // heights: 1,
-              body: extractedRowsBody,
-            },
-          },
-
-          { text: '\n\nRemarks', style: 'remarks' },
-          {
-            style: 'remarksBullets',
-            ol: REMARKS.part1,
-          },
-          {
-            style: 'remarksBullets',
-            text: REMARKS.part2,
-          },
-          {
-            style: 'remarksBullets',
-            ol: REMARKS.part3,
-          },
-          {
-            text: `${this.templateInfo[0].localCompanyName}\n ${this.templateInfo[0].localCompanyNameTranslation}`,
-            style: 'contactsHeader',
-          },
-
-          {
-            table: {
-              widths: [170, 140, 140],
-              body: [
-                [
-                  {
-                    style: 'contactsColumns',
-                    columns: [
-                      {
-                        width: 80,
-                        text: `${this.templateInfo[0].address}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
-                      },
-                      {
-                        width: 80,
-                        text: `${this.templateInfo[0].addressTranslation}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
-                      },
-                    ],
-                  },
-
-                  {
-                    link: qrURL,
-                    image: qrImage,
-                    fit: [90, 90],
-                  },
-                ],
-              ],
-            },
-            layout: 'noBorders',
-          },
-        ],
-        styles: {
-          header: {
-            fontSize: 8,
-          },
-          dataTable: {
-            margin: [15, 5],
-            fontSize: 6,
-          },
-          qrCodeText: {
-            fontSize: 8,
-          },
-          remarks: {
-            fontSize: 6,
-          },
-          remarksBullets: {
-            fontSize: 6,
-          },
-          contactsHeader: {
-            fontSize: 7,
-            bold: true,
-            margin: [0, 10, 0, 3],
-          },
-          contactsColumns: {
-            fontSize: 6,
+            ],
           },
         },
-      };
+        {
+          style: 'dataTable',
+          layout: {
+            hLineWidth: function (i: any, node: any) {
+              if (i === 0 || i === node.table.body.length) {
+                return 0;
+              }
+              return i === node.table.headerRows ? 2 : 1;
+            },
+            vLineWidth: () => 0,
+          },
+          table: {
+            headerRows: 1,
+            // widths: columnWidthArray,
+            // heights: 1,
+            body: extractedRowsBody,
+          },
+        },
 
-      this.pdfData = docDefinition;
-      this.isLoading = false;
-    } catch (error) {
-      this.error = `${error}`;
-    }
+        { text: '\n\nRemarks', style: 'remarks' },
+        {
+          style: 'remarksBullets',
+          ol: REMARKS.part1,
+        },
+        {
+          style: 'remarksBullets',
+          text: REMARKS.part2,
+        },
+        {
+          style: 'remarksBullets',
+          ol: REMARKS.part3,
+        },
+        {
+          text: `${this.activeTemplateInfo.localCompanyName}\n ${this.activeTemplateInfo.localCompanyNameTranslation}`,
+          style: 'contactsHeader',
+        },
+
+        {
+          table: {
+            widths: [170, 140, 140],
+            body: [
+              [
+                {
+                  style: 'contactsColumns',
+                  columns: [
+                    {
+                      width: 80,
+                      text: `${this.activeTemplateInfo.address}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
+                    },
+                    {
+                      width: 80,
+                      text: `${this.activeTemplateInfo.addressTranslation}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
+                    },
+                  ],
+                },
+
+                {
+                  link: qrURL,
+                  image: qrImage,
+                  fit: [90, 90],
+                },
+              ],
+            ],
+          },
+          layout: 'noBorders',
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 8,
+        },
+        dataTable: {
+          margin: [15, 5],
+          fontSize: 6,
+        },
+        qrCodeText: {
+          fontSize: 8,
+        },
+        remarks: {
+          fontSize: 6,
+        },
+        remarksBullets: {
+          fontSize: 6,
+        },
+        contactsHeader: {
+          fontSize: 7,
+          bold: true,
+          margin: [0, 10, 0, 3],
+        },
+        contactsColumns: {
+          fontSize: 6,
+        },
+      },
+    };
+
+    this.pdfData = docDefinition;
+    this.isLoading = false;
   }
 
   async processPDFDataV3(report: Report) {
-    try {
-      let {
-        dataRows,
-        reportNum,
-        lotNum,
-        customerName,
-        stations,
-        variety,
-        createdAt,
-      } = report;
-      let { testLocation, origin } = this.templateInfo[0];
-      console.log('processpdfdata dataRows', dataRows);
+    if (!report || !this.activeTemplateInfo) return;
 
-      let formatedDate = () => {
-        let createdDate = new Date(createdAt);
-        const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
-        let date = `${createdDate.getFullYear()}.${month}.${
-          createdDate.getDate() < 10 ? 0 : ''
-        }${createdDate.getDate()}.`;
+    let {
+      dataRows,
+      reportNum,
+      lotNum,
+      customerName,
+      stations,
+      variety,
+      createdAt,
+    } = report;
+    let { testLocation, origin } = this.activeTemplateInfo;
+    console.log('processpdfdata dataRows', dataRows);
 
-        return date;
-      };
+    let formatedDate = () => {
+      let createdDate = new Date(createdAt);
+      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
+      let date = `${createdDate.getFullYear()}.${month}.${
+        createdDate.getDate() < 10 ? 0 : ''
+      }${createdDate.getDate()}.`;
 
-      if (!dataRows || dataRows[0] === null) {
-        // this.error = 'Faied to extract data rows!';
-        return;
-      }
+      return date;
+    };
 
-      let parsedRawData = JSON.parse(dataRows[0]);
-      console.log('parsedRawData', parsedRawData);
+    if (!dataRows || dataRows[0] === null) {
+      this.displayStatus(false);
+      this.error = 'Faied to extract data rows!';
+      return;
+    }
 
-      // number of elements based on elments in this row
-      const keys = Object.keys(parsedRawData[5]);
+    let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
 
-      // const averageRow = parsedRawData[33];
-      // Convert array of objects to array of arrays
-      const extractedRows = parsedRawData.map((obj: any, index: any) => {
-        return keys.map((key) => {
-          let cellValue = obj[key];
-          // if (index === 34 && key === '__EMPTY_1') {
-          //   // console.log('averageRow', Object.values(averageRow)[0]);
-          //   return Object.values(averageRow)[0];
-          // }
-          let roundedCellValue = isNaN(cellValue)
-            ? cellValue
-            : Number(cellValue).toFixed(2);
-          return roundedCellValue || '';
-        });
+    // number of elements based on elments in this row
+    const keys = Object.keys(parsedRawData[5]);
+
+    // const averageRow = parsedRawData[33];
+    // Convert array of objects to array of arrays
+    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+      return keys.map((key) => {
+        let cellValue = obj[key];
+        // if (index === 34 && key === '__EMPTY_1') {
+        //   // console.log('averageRow', Object.values(averageRow)[0]);
+        //   return Object.values(averageRow)[0];
+        // }
+        let roundedCellValue = isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(2);
+        return roundedCellValue || '';
       });
-      // to find the start of data body using "Time" word
-      let bodyStartIndex = extractedRows.findIndex((array: any) =>
-        array.includes('Print Time')
-      );
+    });
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = extractedRows.findIndex((array: any) =>
+      array.includes('Print Time')
+    );
 
-      // to find the end of data body using "Average" word
-      let bodyEndIndex = extractedRows.findIndex((array: any) =>
-        array.some(
-          (element: any) =>
-            typeof element === 'string' && element.includes('Max')
-        )
-      );
+    // to find the end of data body using "Average" word
+    let bodyEndIndex = extractedRows.findIndex((array: any) =>
+      array.some(
+        (element: any) => typeof element === 'string' && element.includes('Max')
+      )
+    );
 
-      let extractedRowsBody = extractedRows.slice(
-        bodyStartIndex,
-        bodyEndIndex + 1
-      );
-      const numberOfSamples = extractedRowsBody.length - 4;
+    let extractedRowsBody = extractedRows.slice(
+      bodyStartIndex,
+      bodyEndIndex + 1
+    );
+    const numberOfSamples = extractedRowsBody.length - 4;
 
-      console.log('extractedRows', extractedRows);
-      console.log('extractedRowsBody,', extractedRowsBody);
-      console.log(
-        'bodyStartIndex',
-        bodyStartIndex,
-        'bodyEndIndex',
-        bodyEndIndex
-      );
+    console.log('extractedRows', extractedRows);
+    console.log('extractedRowsBody,', extractedRowsBody);
+    console.log('bodyStartIndex', bodyStartIndex, 'bodyEndIndex', bodyEndIndex);
 
-      const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
-      let docDefinition = {
-        pageSize: 'A4',
-        background: [
-          {
-            image: await this.stampImage,
-            fit: [150, 150],
-            absolutePosition: { x: 380, y: 660 },
-          },
-        ],
-        content: [
-          {
-            width: 520,
-            margin: [0, 10],
-            image: await this.letterHeadImage,
-          },
-          {
-            style: 'header',
-            layout: 'noBorders',
-            table: {
-              widths: [140, 140, 140, 140, 140],
-              body: [
-                ['Test Location', testLocation, 'Recepient', customerName],
-                ['CI Number', reportNum, 'ORIGIN', origin],
-                [
-                  'CI Report Number',
-                  reportNum,
-                  'Station(As advised)',
-                  stations,
-                ],
-                ['Date', formatedDate(), 'Variety(As advised)', variety],
-                [
-                  'Lot number',
-                  lotNum,
-                  { text: 'Samples drawn by customer', bold: true },
-                  `${numberOfSamples} samples`,
-                ],
+    const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
+    let docDefinition = {
+      pageSize: 'A4',
+      background: [
+        {
+          image: await this.stampImage,
+          fit: [150, 150],
+          absolutePosition: { x: 380, y: 660 },
+        },
+      ],
+      content: [
+        {
+          width: 520,
+          margin: [0, 10],
+          image: await this.letterHeadImage,
+        },
+        {
+          style: 'header',
+          layout: 'noBorders',
+          table: {
+            widths: [140, 140, 140, 140, 140],
+            body: [
+              ['Test Location', testLocation, 'Recepient', customerName],
+              ['CI Number', reportNum, 'ORIGIN', origin],
+              ['CI Report Number', reportNum, 'Station(As advised)', stations],
+              ['Date', formatedDate(), 'Variety(As advised)', variety],
+              [
+                'Lot number',
+                lotNum,
+                { text: 'Samples drawn by customer', bold: true },
+                `${numberOfSamples} samples`,
               ],
-            },
-          },
-          {
-            style: 'dataTable',
-            layout: {
-              hLineWidth: function (i: any, node: any) {
-                if (i === 0 || i === node.table.body.length) {
-                  return 0;
-                }
-                return i === node.table.headerRows ? 2 : 1;
-              },
-              vLineWidth: () => 0,
-            },
-            table: {
-              headerRows: 1,
-              // widths: columnWidthArray,
-              // heights: 1,
-              body: extractedRowsBody,
-            },
-          },
-
-          { text: '\n\nRemarks', style: 'remarks' },
-          {
-            style: 'remarksBullets',
-            ol: REMARKS.part1,
-          },
-          {
-            style: 'remarksBullets',
-            text: REMARKS.part2,
-          },
-          {
-            style: 'remarksBullets',
-            ol: REMARKS.part3,
-          },
-          {
-            text: `${this.templateInfo[0].localCompanyName}\n ${this.templateInfo[0].localCompanyNameTranslation}`,
-            style: 'contactsHeader',
-          },
-
-          {
-            table: {
-              widths: [170, 140, 140],
-              body: [
-                [
-                  {
-                    style: 'contactsColumns',
-                    columns: [
-                      {
-                        width: 80,
-                        text: `${this.templateInfo[0].address}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
-                      },
-                      {
-                        width: 80,
-                        text: `${this.templateInfo[0].addressTranslation}, \nPh ${this.templateInfo[0].phone} \nFx ${this.templateInfo[0].fax}\nEm ${this.templateInfo[0].email}\n www.wiscontrol.com`,
-                      },
-                    ],
-                  },
-
-                  {
-                    link: qrURL,
-                    image: qrImage,
-                    fit: [90, 90],
-                  },
-                ],
-              ],
-            },
-            layout: 'noBorders',
-          },
-        ],
-        styles: {
-          header: {
-            fontSize: 8,
-          },
-          dataTable: {
-            margin: [15, 5],
-            fontSize: 6,
-          },
-          qrCodeText: {
-            fontSize: 8,
-          },
-          remarks: {
-            fontSize: 6,
-          },
-          remarksBullets: {
-            fontSize: 6,
-          },
-          contactsHeader: {
-            fontSize: 7,
-            bold: true,
-            margin: [0, 10, 0, 3],
-          },
-          contactsColumns: {
-            fontSize: 6,
+            ],
           },
         },
-      };
+        {
+          style: 'dataTable',
+          layout: {
+            hLineWidth: function (i: any, node: any) {
+              if (i === 0 || i === node.table.body.length) {
+                return 0;
+              }
+              return i === node.table.headerRows ? 2 : 1;
+            },
+            vLineWidth: () => 0,
+          },
+          table: {
+            headerRows: 1,
+            // widths: columnWidthArray,
+            // heights: 1,
+            body: extractedRowsBody,
+          },
+        },
 
-      this.pdfData = docDefinition;
-      this.isLoading = false;
-    } catch (error) {
-      this.error = `${error}`;
-    }
+        { text: '\n\nRemarks', style: 'remarks' },
+        {
+          style: 'remarksBullets',
+          ol: REMARKS.part1,
+        },
+        {
+          style: 'remarksBullets',
+          text: REMARKS.part2,
+        },
+        {
+          style: 'remarksBullets',
+          ol: REMARKS.part3,
+        },
+        {
+          text: `${this.activeTemplateInfo.localCompanyName}\n ${this.activeTemplateInfo.localCompanyNameTranslation}`,
+          style: 'contactsHeader',
+        },
+
+        {
+          table: {
+            widths: [170, 140, 140],
+            body: [
+              [
+                {
+                  style: 'contactsColumns',
+                  columns: [
+                    {
+                      width: 80,
+                      text: `${this.activeTemplateInfo.address}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
+                    },
+                    {
+                      width: 80,
+                      text: `${this.activeTemplateInfo.addressTranslation}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
+                    },
+                  ],
+                },
+
+                {
+                  link: qrURL,
+                  image: qrImage,
+                  fit: [90, 90],
+                },
+              ],
+            ],
+          },
+          layout: 'noBorders',
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 8,
+        },
+        dataTable: {
+          margin: [15, 5],
+          fontSize: 6,
+        },
+        qrCodeText: {
+          fontSize: 8,
+        },
+        remarks: {
+          fontSize: 6,
+        },
+        remarksBullets: {
+          fontSize: 6,
+        },
+        contactsHeader: {
+          fontSize: 7,
+          bold: true,
+          margin: [0, 10, 0, 3],
+        },
+        contactsColumns: {
+          fontSize: 6,
+        },
+      },
+    };
+
+    this.pdfData = docDefinition;
+    this.isLoading = false;
   }
 
   async handleProcessingVersion(dataItem: any) {
     let version = this.selectedHviVersion;
     console.log(
-      'handleProcessingVersion, version,',
-      'handleProcessing dataItem',
+      'handleProcessingVersion',
+      'version:',
+      version,
+      'activeTemplateInfo:',
+      this.activeTemplateInfo,
+      'dataItem:',
       dataItem
     );
-    switch (version) {
-      case 'v1':
-        return this.processPDFDataV1(dataItem);
-        break;
-      case 'v2':
-        return this.processPDFDataV2(dataItem);
-      case 'v3':
-        return this.processPDFDataV3(dataItem);
-        break;
-      default:
-        console.log(`version doesnt exist!`);
+
+    try {
+      if (!dataItem || !dataItem.dataRows || !this.activeTemplateInfo) {
+        this.displayStatus(false);
+        this.error = `Unable to render, try again`;
+      } else {
+        switch (version) {
+          case 'v1':
+            return this.processPDFDataV1(dataItem);
+            break;
+          case 'v2':
+            return this.processPDFDataV2(dataItem);
+          case 'v3':
+            return this.processPDFDataV3(dataItem);
+            break;
+          default:
+            console.log(`version doesnt exist!`);
+            this.displayStatus(false);
+            this.error = 'version does not exist';
+            this.isLoading = false;
+        }
+      }
+    } catch (error) {
+      this.error = `${error}`;
+      this.displayStatus(false);
+      this.isLoading = false;
     }
   }
 
@@ -906,10 +929,11 @@ export class PdfComponent implements OnInit {
   async openAndDownloadCallBack(dataItem: any) {
     console.log('openPDF', dataItem);
     if (dataItem.dataRows === null) {
+      this.displayStatus(false);
       this.error = 'Row are not processed!';
-      console.log(this.error);
     } else {
       this.error = null;
+      this.displayStatus(true);
       await this.handleProcessingVersion(dataItem);
     }
   }
@@ -934,5 +958,15 @@ export class PdfComponent implements OnInit {
   }
   handleEditTemplate(): void {
     this.router.navigate(['/edit']);
+  }
+  public displayStatus(isUpdated: boolean): void {
+    this.notificationService.show({
+      content: isUpdated ? 'Updated!' : 'Update failed, try again',
+      cssClass: 'button-notification',
+      animation: { type: 'slide', duration: 400 },
+      position: { horizontal: 'center', vertical: 'bottom' },
+      type: { style: isUpdated ? 'success' : 'error', icon: true },
+      closable: true,
+    });
   }
 }

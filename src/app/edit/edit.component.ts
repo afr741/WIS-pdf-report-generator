@@ -3,6 +3,7 @@ import {
   ReportTemplate,
   CreateReportTemplateInput,
   UpdateReportTemplateInput,
+  UserInfo,
 } from '../API.service';
 import { AuthService } from '../AuthService';
 
@@ -17,24 +18,30 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Storage } from 'aws-amplify';
 import { NotificationService } from '@progress/kendo-angular-notification';
+import { ZenObservable } from 'zen-observable-ts';
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, OnDestroy {
   public lab = ['Dushanbe', 'Bokhtar', 'Khujand'];
   public createForm: FormGroup;
   private selectedFileLetterHead: File | null = null;
   private selectedStamp: File | null = null; // Store the selected file
   public error?: string | null = null;
+  public userId: string = '';
+  public selectedHviVersion: string = '';
+  public selectedCountry: string = '';
   public isLoading: boolean = false;
   public templateInfos: Array<ReportTemplate> = [];
-  public matchedIndex: number = 0;
+  private modifyUserPreferenceSubscription: ZenObservable.Subscription | null =
+    null;
   letterHeadPreviewUrl: string | ArrayBuffer | null | undefined = null;
   stampPreviewUrl: string | ArrayBuffer | null | undefined = null;
   public selectedLab: any = '';
+  public userInfo: UserInfo | null = null;
   public loader = {
     type: <LoaderType>'converging-spinner',
     themeColor: <LoaderThemeColor>'info',
@@ -66,8 +73,18 @@ export class EditComponent implements OnInit {
 
   async ngOnInit() {
     this.api.ListReportTemplates().then((event) => {
-      console.log('this.templateInfos', event);
+      console.log('this.templateInfos on init', event);
     });
+    this.modifyUserPreferenceSubscription = this.api
+      .OnUpdateUserInfoListener()
+      .subscribe((user: any) => {
+        console.log('OnUpdateUserInfoListener', user);
+        const updatedUser = user.value.data.onUpdateUserInfo;
+        this.selectedLab = updatedUser.labLocation;
+
+        this.fetchTemplateData();
+      });
+
     try {
       const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
       const stampImageFromS3 = await Storage.get('wis-stamp');
@@ -76,12 +93,8 @@ export class EditComponent implements OnInit {
       await this.api.ListUserInfos().then((user: any) => {
         if (user.items.length > 0) {
           console.log('user.items', user.items);
+          this.userInfo = user.items[0];
           this.selectedLab = user.items[0].labLocation;
-          this.matchedIndex =
-            this.selectedLab !== ''
-              ? this.lab.indexOf(this.selectedLab)
-              : this.matchedIndex;
-          console.log('matchedIndex', this.matchedIndex);
           console.log('selectedLab', this.selectedLab);
         }
       });
@@ -89,36 +102,53 @@ export class EditComponent implements OnInit {
       console.log(err);
     }
 
-    this.fetchData(); // Start the initial data fetch.
+    this.fetchTemplateData(); // Start the initial data fetch.
   }
 
-  public fetchData = async () => {
+  ngOnDestroy() {
+    if (this.modifyUserPreferenceSubscription) {
+      this.modifyUserPreferenceSubscription.unsubscribe();
+    }
+    this.modifyUserPreferenceSubscription = null;
+  }
+
+  public fetchTemplateData = async () => {
     this.api
       .ListReportTemplates()
       .then((event) => {
-        console.log('this.templateInfos', event);
+        console.log('this.templateInfos fetchTemplateData event', event);
         this.templateInfos = event.items as ReportTemplate[];
         if (this.templateInfos.length > 0) {
           const foundEntry = this.templateInfos.find(
-            (item) => (item.countryCode = 'Dushanbe')
+            (item) => item.id == this.selectedLab
           );
-          this.activeTemplateInfo = foundEntry;
-          const {
-            id,
-            createdAt,
-            updatedAt,
-            __typename,
-            templateId,
-            ...fieldsToPrefill
-          } = this.templateInfos[this.matchedIndex];
+          console.log('EDIT COMP, foundEntry', foundEntry);
+          if (foundEntry) {
+            this.activeTemplateInfo = foundEntry;
+            const {
+              id,
+              createdAt,
+              updatedAt,
+              __typename,
+              templateId,
+              ...fieldsToPrefill
+            } = this.activeTemplateInfo;
+            console.log('activeTemplateInfo', this.activeTemplateInfo);
 
-          console.log('activeTemplateInfo:', this.activeTemplateInfo);
-          this.createForm.patchValue(fieldsToPrefill);
-          this.isLoading = false;
+            console.log('fieldsToPrefill:', fieldsToPrefill);
+            this.createForm.patchValue(fieldsToPrefill);
+          } else {
+            this.createForm.reset();
+            this.displayStatus(false);
+          }
         }
+        this.isLoading = false;
       })
       .catch((err) => {
         console.log(err);
+        this.error = err;
+        this.displayStatus(false);
+        this.isLoading = false;
       });
     console.log('sorted templates', this.templateInfos);
   };
@@ -129,10 +159,10 @@ export class EditComponent implements OnInit {
     let letterHeadImageNamePredefined = 'wis-letterhead';
     const { stampImage, letterHeadImage, selectedLab, ...rest } = report;
 
-    if (this.activeTemplateInfo) {
+    if (this.activeTemplateInfo && this.userInfo) {
       let modifiedReport: UpdateReportTemplateInput = {
         ...rest,
-        countryCode: this.selectedLab,
+        countryCode: this.userInfo.countryCode,
         labLocation: this.selectedLab,
         id: this.activeTemplateInfo.id,
       };
@@ -249,12 +279,31 @@ export class EditComponent implements OnInit {
       closable: true,
     });
   }
-  public async labValueChange(value: any) {
-    // console.log('lab valueChange', value);
-    this.selectedLab = value;
-    this.isLoading = true;
-    this.fetchData();
-  }
+  // public async labValueChange(value: any) {
+  //   // console.log('lab valueChange', value);
+  //   this.selectedLab = value;
+  //   this.isLoading = true;
+  //   if (this.userInfo !== null) {
+  //     const { id, countryCode, hviVersion } = this.userInfo;
+  //     try {
+  //       await this.api
+  //         .UpdateUserInfo({
+  //           id: id,
+  //           labLocation: value,
+  //           countryCode: countryCode,
+  //           hviVersion: hviVersion,
+  //         })
+  //         .then((response) => {
+  //           console.log('update user iffom', response);
+  //           this.fetchTemplateData();
+  //         });
+  //     } catch (err) {
+  //       console.log(err);
+  //       this.error = `${err}`;
+  //       this.displayStatus(false);
+  //     }
+  //   }
+  // }
 
   backToUpload(): void {
     this.router.navigate(['/upload']);

@@ -61,13 +61,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .subscribe((user: any) => {
         const updatedUser = user.value.data.onUpdateUserInfo;
         this.userList = [updatedUser];
-        // console.log('userList update ng init', this.userList);
+        // this.selectedLab = updatedUser.labLocation;
+        // this.selectedHviVersion = updatedUser.hviVersion;
+        // this.selectedCountry = updatedUser.countryCode;
+        console.log('userList subscription', this.userList);
       });
 
     await this.api.ListUserInfos().then((user: any) => {
+      console.log('user list', user);
+
       if (user.items.length > 0) {
         this.isPreferenceSet = true;
-        console.log('user list', user);
         this.userList = user.items;
         this.userId = user.items[0]?.id;
         this.selectedCountry = user.items[0]?.countryCode;

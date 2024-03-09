@@ -5,7 +5,13 @@
 # } # FOR TESTING ONLY!
 type ReportTemplate
   @model
-  @auth(rules: [{ allow: public, operations: [read] }, { allow: owner }]) {
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: owner, operations: [create, update, read] }
+      { allow: groups, groups: ["admins", "labs", "managers"] }
+    ]
+  ) {
   templateId: ID!
   countryCode: String!
   localCompanyName: String
