@@ -61,9 +61,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .subscribe((user: any) => {
         const updatedUser = user.value.data.onUpdateUserInfo;
         this.userList = [updatedUser];
-        // this.selectedLab = updatedUser.labLocation;
-        // this.selectedHviVersion = updatedUser.hviVersion;
-        // this.selectedCountry = updatedUser.countryCode;
         console.log('userList subscription', this.userList);
       });
 
@@ -104,9 +101,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .onSignOut()
       .then(() => this.router.navigate(['/login']));
   }
-
-  handleNav(routeName: string) {
-    this.router.navigate([`/${routeName}`]);
+  handleEditNav() {
+    this.router.navigate(['/edit']);
+  }
+  handlePdfNav() {
+    this.router.navigate(['/pdf']);
+  }
+  handleUploadNav() {
+    this.router.navigate(['/upload']);
   }
 
   public createUserPreference() {

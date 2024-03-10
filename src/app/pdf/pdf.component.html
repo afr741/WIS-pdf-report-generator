@@ -44,6 +44,7 @@
           [fillMode]="'solid'"
           [themeColor]="'info'"
           (click)="handleEditTemplate()"
+          *ngIf="isManagerUp"
         >
           Edit Template
         </button>
@@ -51,6 +52,22 @@
     </div>
     <h3>Previous Reports:</h3>
     <kendo-grid [kendoGridBinding]="reports" [filterable]="true" [height]="800">
+      <kendo-grid-column field="email" title="owner email" *ngIf="isManagerUp">
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="testLocation"
+        title="testLocation"
+        *ngIf="isManagerUp"
+      >
+      </kendo-grid-column>
+
+      <kendo-grid-column
+        field="customerName"
+        title="customerName"
+        *ngIf="isManagerUp"
+      >
+      </kendo-grid-column>
+
       <kendo-grid-column field="id" title="Report ID" [filterable]="false">
       </kendo-grid-column>
       <kendo-grid-column field="name" title="Report Name"> </kendo-grid-column>

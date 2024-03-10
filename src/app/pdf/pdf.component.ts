@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { AuthService } from '../AuthService';
 import * as CryptoJS from 'crypto-js';
 import { APIService, Report, ReportTemplate } from '../API.service';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import * as QRCode from 'qrcode';
 import { Storage } from 'aws-amplify';
 import { ZenObservable } from 'zen-observable-ts';
 import { NotificationService } from '@progress/kendo-angular-notification';
-
 import {
   LoaderType,
   LoaderThemeColor,
@@ -49,6 +49,7 @@ export class PdfComponent implements OnInit {
   public selectedHviVersion: any = 'v1';
   public selectedLab: any = '';
   public pdfData: any = null;
+  public reportUserEmail: string = '';
   private secretKey: string = 'wis';
   public isLoading: boolean = true;
   public qrImage: any = null;
@@ -59,6 +60,9 @@ export class PdfComponent implements OnInit {
   public stampPreviewUrl: string = '';
   public letterHeadImage: any = null;
   public stampImage: any = null;
+  public isManagerUp: boolean = false;
+  public isSuperUser: boolean = false;
+
   private updateUserPreferenceSubscription: ZenObservable.Subscription | null =
     null;
   public loader = {
@@ -69,10 +73,23 @@ export class PdfComponent implements OnInit {
   constructor(
     private api: APIService,
     public router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private authService: AuthService
   ) {}
 
   async ngOnInit() {
+    // this.router.events.subscribe((event: any) => {
+    //   console.log('router event', event);
+
+    //   if (
+    //     (event instanceof NavigationEnd && event.url == '/pdf') ||
+    //     event.routerEvent.url == '/pdf'
+    //   ) {
+    //     // We've finished navigating
+    //     fetchTemplateData().then(() => fetchData());
+    //   }
+    // });
+
     let pollingAttempts = 0;
 
     this.updateUserPreferenceSubscription = this.api
@@ -80,20 +97,23 @@ export class PdfComponent implements OnInit {
       .subscribe((user: any) => {
         const updatedUser = user.value.data.onUpdateUserInfo;
         this.selectedHviVersion = updatedUser.hviVersion;
-        console.log(
-          'ZOZO UPDATED USER',
-          updatedUser,
-          'selecte version,',
-          this.selectedHviVersion
-        );
         fetchTemplateData().then(() => fetchData());
 
         // console.log('userList update ng init', this.userList);
       });
+    this.authService.getUserEmailAndLab().then((res) => {
+      console.log('user lab', res);
+      this.isManagerUp = res.userGroup.includes('managers');
+      this.isSuperUser = res.userGroup.includes('admins');
+    });
 
     this.api.ListUserInfos().then((user) => {
       this.selectedHviVersion = user.items[0]?.hviVersion;
       this.selectedLab = user.items[0]?.labLocation;
+
+      //list all user nfo and select baserd on  report
+      ///////////////////tbd
+
       console.log('list user', user);
     });
     const fetchData = async () => {
@@ -101,11 +121,20 @@ export class PdfComponent implements OnInit {
         .ListReports()
         .then((event) => {
           this.reports = event.items as Report[];
-          this.reports.sort((a, b) => {
-            let dateA: any = new Date(a.updatedAt);
-            let dateB: any = new Date(b.updatedAt);
-            return dateB - dateA;
-          });
+          this.reports
+            .sort((a, b) => {
+              let dateA: any = new Date(a.updatedAt);
+              let dateB: any = new Date(b.updatedAt);
+              return dateB - dateA;
+            })
+            .filter((report: any) => {
+              if (this.isManagerUp && !this.isSuperUser) {
+                //filter for managers based on report/manager test/lab location
+                return report.testLocation == this.selectedLab;
+              } else {
+                return true;
+              }
+            });
 
           this.reports = this.reports.map(
             (report, index) =>
@@ -114,6 +143,16 @@ export class PdfComponent implements OnInit {
                 updatedAt: new Date(report.updatedAt).toDateString(),
               })
           );
+          console.log('this.reports', this.reports);
+
+          if (this.isManagerUp && !this.isSuperUser) {
+            this.reports = this.reports.filter((report: any) => {
+              console.log('filter fuxn', report.testLocation, this.selectedLab);
+              return report.testLocation == this.selectedLab;
+            });
+            console.log('yeaaah that would be great', this.reports);
+          }
+
           if (this.reports[0].dataRows == null) {
             if (pollingAttempts < 5) {
               // Limit the number of polling attempts
@@ -148,10 +187,6 @@ export class PdfComponent implements OnInit {
               (item) => (item.labLocation = this.selectedLab)
             );
             this.activeTemplateInfo = foundEntry;
-            console.log(
-              'template fetch activeTemplateInfo',
-              this.activeTemplateInfo
-            );
             this.assignActiveTemplate(this.activeTemplateInfo);
           }
         })
@@ -895,7 +930,11 @@ export class PdfComponent implements OnInit {
     );
 
     try {
-      if (!dataItem || !dataItem.dataRows || !this.activeTemplateInfo) {
+      if (
+        !dataItem ||
+        !dataItem.dataRows ||
+        (!this.activeTemplateInfo && !this.isLoading)
+      ) {
         this.displayStatus(false);
         this.error = `Unable to render, try again`;
       } else {

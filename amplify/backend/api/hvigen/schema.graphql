@@ -33,6 +33,7 @@ type Report
   @auth(rules: [{ allow: public, operations: [read] }, { allow: owner }]) {
   id: ID!
   name: String!
+  email: String!
   testLocation: String!
   reportNum: String!
   lotNum: String!

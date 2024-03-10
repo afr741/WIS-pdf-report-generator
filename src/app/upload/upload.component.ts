@@ -33,6 +33,8 @@ export class UploadComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false;
   private currentReport: Report | null = null;
   public jsonData: any = null;
+  public selectedLab: any = '';
+  public reportEmail: string = '';
   constructor(
     private authService: AuthService,
     private api: APIService,
@@ -44,6 +46,7 @@ export class UploadComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       testLocation: ['', Validators.required],
       reportNum: ['', Validators.required],
+      email: ['', Validators.required],
       lotNum: ['', Validators.required],
       customerName: ['', Validators.required],
       origin: ['', Validators.required],
@@ -62,9 +65,19 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   private createSubscription: ZenObservable.Subscription | null = null;
   private modifySubscription: ZenObservable.Subscription | null = null;
+  private modifyUserPreferenceSubscription: ZenObservable.Subscription | null =
+    null;
 
   async ngOnInit() {
     /* subscribe to new report being created */
+
+    this.modifyUserPreferenceSubscription = this.api
+      .OnUpdateUserInfoListener()
+      .subscribe((user: any) => {
+        console.log('OnUpdateUserInfoListener', user);
+        const updatedUser = user.value.data.onUpdateUserInfo;
+        this.selectedLab = updatedUser.labLocation;
+      });
     this.createSubscription = this.api
       .OnCreateReportListener()
       .subscribe((event: any) => {
@@ -75,18 +88,18 @@ export class UploadComponent implements OnInit, OnDestroy {
     this.api.ListReports().then((reports) => {
       console.log('reports', reports);
     });
-    // try {
-    //   // const credentials = await this.authService.getCurrentUserInfo();
-    //   // console.log('credentials:', credentials);
-
-    //   // const files = await Storage.list('', { level: 'private' });
-    //   // console.log('private files:', files);
-    // } catch (err) {
-    //   console.log('error', err);
-    // }
+    this.authService.getUserEmailAndLab().then((res) => {
+      console.log('user lab', res);
+      this.reportEmail = res.email;
+    });
   }
 
   ngOnDestroy() {
+    if (this.modifyUserPreferenceSubscription) {
+      this.modifyUserPreferenceSubscription.unsubscribe();
+    }
+    this.modifyUserPreferenceSubscription = null;
+
     if (this.createSubscription) {
       this.createSubscription.unsubscribe();
     }
@@ -119,9 +132,9 @@ export class UploadComponent implements OnInit, OnDestroy {
 
         console.log('uploadresponse', uploadResponse);
         report.attachmentUrl = uploadResponse.key;
-        console.log('thisjsondata', this.jsonData);
         report.dataRows = [JSON.stringify(this.jsonData)];
-
+        report.email = this.reportEmail;
+        report.testLocation = this.selectedLab;
         this.currentReport = report;
         console.log('datarows', this.jsonData, 'jsondata', this.jsonData);
 
@@ -133,15 +146,6 @@ export class UploadComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  // public streamToBuffer(stream: any) {
-  //   return new Promise((resolve, reject) => {
-  //     const chunks: any = [];
-  //     stream.on('data', (chunk: any) => chunks.push(chunk));
-  //     stream.on('error', reject);
-  //     stream.on('end', () => resolve(Buffer.concat(chunks)));
-  //   });
-  // }
 
   // Handle file change event and update the formData
   public onFileChange(event: any) {

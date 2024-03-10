@@ -161,6 +161,7 @@ export type DeleteReportTemplateInput = {
 export type CreateReportInput = {
   id?: string | null;
   name: string;
+  email: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -174,6 +175,7 @@ export type CreateReportInput = {
 
 export type ModelReportConditionInput = {
   name?: ModelStringInput | null;
+  email?: ModelStringInput | null;
   testLocation?: ModelStringInput | null;
   reportNum?: ModelStringInput | null;
   lotNum?: ModelStringInput | null;
@@ -192,6 +194,7 @@ export type Report = {
   __typename: "Report";
   id: string;
   name: string;
+  email: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -209,6 +212,7 @@ export type Report = {
 export type UpdateReportInput = {
   id: string;
   name?: string | null;
+  email?: string | null;
   testLocation?: string | null;
   reportNum?: string | null;
   lotNum?: string | null;
@@ -291,6 +295,7 @@ export type ModelReportTemplateConnection = {
 export type ModelReportFilterInput = {
   id?: ModelIDInput | null;
   name?: ModelStringInput | null;
+  email?: ModelStringInput | null;
   testLocation?: ModelStringInput | null;
   reportNum?: ModelStringInput | null;
   lotNum?: ModelStringInput | null;
@@ -394,6 +399,7 @@ export type ModelSubscriptionStringInput = {
 export type ModelSubscriptionReportFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   name?: ModelSubscriptionStringInput | null;
+  email?: ModelSubscriptionStringInput | null;
   testLocation?: ModelSubscriptionStringInput | null;
   reportNum?: ModelSubscriptionStringInput | null;
   lotNum?: ModelSubscriptionStringInput | null;
@@ -486,6 +492,7 @@ export type CreateReportMutation = {
   __typename: "Report";
   id: string;
   name: string;
+  email: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -504,6 +511,7 @@ export type UpdateReportMutation = {
   __typename: "Report";
   id: string;
   name: string;
+  email: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -522,6 +530,7 @@ export type DeleteReportMutation = {
   __typename: "Report";
   id: string;
   name: string;
+  email: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -621,6 +630,7 @@ export type GetReportQuery = {
   __typename: "Report";
   id: string;
   name: string;
+  email: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -641,6 +651,7 @@ export type ListReportsQuery = {
     __typename: "Report";
     id: string;
     name: string;
+    email: string;
     testLocation: string;
     reportNum: string;
     lotNum: string;
@@ -663,6 +674,7 @@ export type ReportsByAttachmentUrlAndNameQuery = {
     __typename: "Report";
     id: string;
     name: string;
+    email: string;
     testLocation: string;
     reportNum: string;
     lotNum: string;
@@ -775,6 +787,7 @@ export type OnCreateReportSubscription = {
   __typename: "Report";
   id: string;
   name: string;
+  email: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -793,6 +806,7 @@ export type OnUpdateReportSubscription = {
   __typename: "Report";
   id: string;
   name: string;
+  email: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -811,6 +825,7 @@ export type OnDeleteReportSubscription = {
   __typename: "Report";
   id: string;
   name: string;
+  email: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -985,6 +1000,7 @@ export class APIService {
           __typename
           id
           name
+          email
           testLocation
           reportNum
           lotNum
@@ -1019,6 +1035,7 @@ export class APIService {
           __typename
           id
           name
+          email
           testLocation
           reportNum
           lotNum
@@ -1053,6 +1070,7 @@ export class APIService {
           __typename
           id
           name
+          email
           testLocation
           reportNum
           lotNum
@@ -1244,6 +1262,7 @@ export class APIService {
           __typename
           id
           name
+          email
           testLocation
           reportNum
           lotNum
@@ -1278,6 +1297,7 @@ export class APIService {
             __typename
             id
             name
+            email
             testLocation
             reportNum
             lotNum
@@ -1331,6 +1351,7 @@ export class APIService {
             __typename
             id
             name
+            email
             testLocation
             reportNum
             lotNum
@@ -1581,6 +1602,7 @@ export class APIService {
           __typename
           id
           name
+          email
           testLocation
           reportNum
           lotNum
@@ -1620,6 +1642,7 @@ export class APIService {
           __typename
           id
           name
+          email
           testLocation
           reportNum
           lotNum
@@ -1659,6 +1682,7 @@ export class APIService {
           __typename
           id
           name
+          email
           testLocation
           reportNum
           lotNum

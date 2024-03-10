@@ -88,6 +88,7 @@ mutation CreateReport(
   createReport(input: $input, condition: $condition) {
     id
     name
+    email
     testLocation
     reportNum
     lotNum
@@ -111,6 +112,7 @@ mutation UpdateReport(
   updateReport(input: $input, condition: $condition) {
     id
     name
+    email
     testLocation
     reportNum
     lotNum
@@ -134,6 +136,7 @@ mutation DeleteReport(
   deleteReport(input: $input, condition: $condition) {
     id
     name
+    email
     testLocation
     reportNum
     lotNum

@@ -92,7 +92,7 @@
         [fillMode]="'solid'"
         [themeColor]="'info'"
         class="nav-button"
-        (click)="handleNav('edit')"
+        (click)="handleEditNav()"
         *ngIf="isManagerUp"
       >
         Edit Template
@@ -105,7 +105,7 @@
         [fillMode]="'solid'"
         [themeColor]="'error'"
         class="nav-button"
-        (click)="handleNav('upload')"
+        (click)="handleUploadNav()"
       >
         New
       </button>
@@ -118,7 +118,7 @@
         [themeColor]="'success'"
         class="logout-button"
         class="nav-button"
-        (click)="handleNav('pdf')"
+        (click)="handlePdfNav()"
       >
         View Reports
       </button>
