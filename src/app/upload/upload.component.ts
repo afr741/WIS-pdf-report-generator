@@ -45,7 +45,6 @@ export class UploadComponent implements OnInit, OnDestroy {
     // (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
     this.createForm = this.fb.group({
       name: ['', Validators.required],
-      testLocation: ['', Validators.required],
       hviVersion: ['', Validators.required],
       labLocation: ['', Validators.required],
       reportNum: ['', Validators.required],
@@ -98,23 +97,6 @@ export class UploadComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    if (this.modifyUserPreferenceSubscription) {
-      this.modifyUserPreferenceSubscription.unsubscribe();
-    }
-    this.modifyUserPreferenceSubscription = null;
-
-    if (this.createSubscription) {
-      this.createSubscription.unsubscribe();
-    }
-    this.createSubscription = null;
-
-    if (this.modifySubscription) {
-      this.modifySubscription.unsubscribe();
-    }
-    this.modifySubscription = null;
-  }
-
   public async onCreate(report: Report) {
     if (this.selectedFile) {
       this.isLoading = true;
@@ -138,11 +120,9 @@ export class UploadComponent implements OnInit, OnDestroy {
         report.attachmentUrl = uploadResponse.key;
         report.dataRows = [JSON.stringify(this.jsonData)];
         report.email = this.reportEmail;
-        report.testLocation = this.selectedLab;
         report.labLocation = this.selectedLab;
         report.hviVersion = this.selectedHviVersion;
         this.currentReport = report;
-        console.log('datarows', this.jsonData, 'jsondata', this.jsonData);
 
         this.createReportWithAttachment(report);
       } catch (error: any) {
@@ -180,8 +160,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   }
 
   private createReportWithAttachment(report: Report) {
-    this.currentReport = report;
-    if (this.currentReport.name === '') {
+    if (report.name === '') {
       this.error = 'name is required';
     } else {
       console.log('currentreport', this.currentReport);
@@ -200,5 +179,22 @@ export class UploadComponent implements OnInit, OnDestroy {
           this.error = 'Error creating report';
         });
     }
+  }
+
+  ngOnDestroy() {
+    if (this.modifyUserPreferenceSubscription) {
+      this.modifyUserPreferenceSubscription.unsubscribe();
+    }
+    this.modifyUserPreferenceSubscription = null;
+
+    if (this.createSubscription) {
+      this.createSubscription.unsubscribe();
+    }
+    this.createSubscription = null;
+
+    if (this.modifySubscription) {
+      this.modifySubscription.unsubscribe();
+    }
+    this.modifySubscription = null;
   }
 }

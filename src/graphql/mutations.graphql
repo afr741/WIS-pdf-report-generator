@@ -6,7 +6,6 @@ mutation CreateReportTemplate(
 ) {
   createReportTemplate(input: $input, condition: $condition) {
     templateId
-    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -33,7 +32,6 @@ mutation UpdateReportTemplate(
 ) {
   updateReportTemplate(input: $input, condition: $condition) {
     templateId
-    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -60,7 +58,6 @@ mutation DeleteReportTemplate(
 ) {
   deleteReportTemplate(input: $input, condition: $condition) {
     templateId
-    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -91,7 +88,6 @@ mutation CreateReport(
     email
     labLocation
     hviVersion
-    testLocation
     reportNum
     lotNum
     customerName
@@ -117,7 +113,6 @@ mutation UpdateReport(
     email
     labLocation
     hviVersion
-    testLocation
     reportNum
     lotNum
     customerName
@@ -143,7 +138,6 @@ mutation DeleteReport(
     email
     labLocation
     hviVersion
-    testLocation
     reportNum
     lotNum
     customerName
@@ -166,7 +160,6 @@ mutation CreateUserInfo(
   createUserInfo(input: $input, condition: $condition) {
     id
     labLocation
-    countryCode
     hviVersion
     createdAt
     updatedAt
@@ -182,7 +175,6 @@ mutation UpdateUserInfo(
   updateUserInfo(input: $input, condition: $condition) {
     id
     labLocation
-    countryCode
     hviVersion
     createdAt
     updatedAt
@@ -198,7 +190,6 @@ mutation DeleteUserInfo(
   deleteUserInfo(input: $input, condition: $condition) {
     id
     labLocation
-    countryCode
     hviVersion
     createdAt
     updatedAt

@@ -23,7 +23,6 @@ export type __SubscriptionContainer = {
 
 export type CreateReportTemplateInput = {
   templateId: string;
-  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -41,7 +40,6 @@ export type CreateReportTemplateInput = {
 
 export type ModelReportTemplateConditionInput = {
   templateId?: ModelIDInput | null;
-  countryCode?: ModelStringInput | null;
   localCompanyName?: ModelStringInput | null;
   localCompanyNameTranslation?: ModelStringInput | null;
   letterHeadImageName?: ModelStringInput | null;
@@ -117,7 +115,6 @@ export type ModelStringInput = {
 export type ReportTemplate = {
   __typename: "ReportTemplate";
   templateId: string;
-  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -138,7 +135,6 @@ export type ReportTemplate = {
 
 export type UpdateReportTemplateInput = {
   templateId?: string | null;
-  countryCode?: string | null;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -164,7 +160,6 @@ export type CreateReportInput = {
   email: string;
   labLocation: string;
   hviVersion: string;
-  testLocation: string;
   reportNum: string;
   lotNum: string;
   customerName: string;
@@ -180,7 +175,6 @@ export type ModelReportConditionInput = {
   email?: ModelStringInput | null;
   labLocation?: ModelStringInput | null;
   hviVersion?: ModelStringInput | null;
-  testLocation?: ModelStringInput | null;
   reportNum?: ModelStringInput | null;
   lotNum?: ModelStringInput | null;
   customerName?: ModelStringInput | null;
@@ -201,7 +195,6 @@ export type Report = {
   email: string;
   labLocation: string;
   hviVersion: string;
-  testLocation: string;
   reportNum: string;
   lotNum: string;
   customerName: string;
@@ -221,7 +214,6 @@ export type UpdateReportInput = {
   email?: string | null;
   labLocation?: string | null;
   hviVersion?: string | null;
-  testLocation?: string | null;
   reportNum?: string | null;
   lotNum?: string | null;
   customerName?: string | null;
@@ -239,13 +231,11 @@ export type DeleteReportInput = {
 export type CreateUserInfoInput = {
   id?: string | null;
   labLocation: string;
-  countryCode: string;
   hviVersion: string;
 };
 
 export type ModelUserInfoConditionInput = {
   labLocation?: ModelStringInput | null;
-  countryCode?: ModelStringInput | null;
   hviVersion?: ModelStringInput | null;
   and?: Array<ModelUserInfoConditionInput | null> | null;
   or?: Array<ModelUserInfoConditionInput | null> | null;
@@ -256,7 +246,6 @@ export type UserInfo = {
   __typename: "UserInfo";
   id: string;
   labLocation: string;
-  countryCode: string;
   hviVersion: string;
   createdAt: string;
   updatedAt: string;
@@ -266,7 +255,6 @@ export type UserInfo = {
 export type UpdateUserInfoInput = {
   id: string;
   labLocation?: string | null;
-  countryCode?: string | null;
   hviVersion?: string | null;
 };
 
@@ -276,7 +264,6 @@ export type DeleteUserInfoInput = {
 
 export type ModelReportTemplateFilterInput = {
   templateId?: ModelIDInput | null;
-  countryCode?: ModelStringInput | null;
   localCompanyName?: ModelStringInput | null;
   localCompanyNameTranslation?: ModelStringInput | null;
   letterHeadImageName?: ModelStringInput | null;
@@ -306,7 +293,6 @@ export type ModelReportFilterInput = {
   email?: ModelStringInput | null;
   labLocation?: ModelStringInput | null;
   hviVersion?: ModelStringInput | null;
-  testLocation?: ModelStringInput | null;
   reportNum?: ModelStringInput | null;
   lotNum?: ModelStringInput | null;
   customerName?: ModelStringInput | null;
@@ -344,7 +330,6 @@ export enum ModelSortDirection {
 export type ModelUserInfoFilterInput = {
   id?: ModelIDInput | null;
   labLocation?: ModelStringInput | null;
-  countryCode?: ModelStringInput | null;
   hviVersion?: ModelStringInput | null;
   and?: Array<ModelUserInfoFilterInput | null> | null;
   or?: Array<ModelUserInfoFilterInput | null> | null;
@@ -359,7 +344,6 @@ export type ModelUserInfoConnection = {
 
 export type ModelSubscriptionReportTemplateFilterInput = {
   templateId?: ModelSubscriptionIDInput | null;
-  countryCode?: ModelSubscriptionStringInput | null;
   localCompanyName?: ModelSubscriptionStringInput | null;
   localCompanyNameTranslation?: ModelSubscriptionStringInput | null;
   letterHeadImageName?: ModelSubscriptionStringInput | null;
@@ -412,7 +396,6 @@ export type ModelSubscriptionReportFilterInput = {
   email?: ModelSubscriptionStringInput | null;
   labLocation?: ModelSubscriptionStringInput | null;
   hviVersion?: ModelSubscriptionStringInput | null;
-  testLocation?: ModelSubscriptionStringInput | null;
   reportNum?: ModelSubscriptionStringInput | null;
   lotNum?: ModelSubscriptionStringInput | null;
   customerName?: ModelSubscriptionStringInput | null;
@@ -428,7 +411,6 @@ export type ModelSubscriptionReportFilterInput = {
 export type ModelSubscriptionUserInfoFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   labLocation?: ModelSubscriptionStringInput | null;
-  countryCode?: ModelSubscriptionStringInput | null;
   hviVersion?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionUserInfoFilterInput | null> | null;
   or?: Array<ModelSubscriptionUserInfoFilterInput | null> | null;
@@ -437,7 +419,6 @@ export type ModelSubscriptionUserInfoFilterInput = {
 export type CreateReportTemplateMutation = {
   __typename: "ReportTemplate";
   templateId: string;
-  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -459,7 +440,6 @@ export type CreateReportTemplateMutation = {
 export type UpdateReportTemplateMutation = {
   __typename: "ReportTemplate";
   templateId: string;
-  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -481,7 +461,6 @@ export type UpdateReportTemplateMutation = {
 export type DeleteReportTemplateMutation = {
   __typename: "ReportTemplate";
   templateId: string;
-  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -507,7 +486,6 @@ export type CreateReportMutation = {
   email: string;
   labLocation: string;
   hviVersion: string;
-  testLocation: string;
   reportNum: string;
   lotNum: string;
   customerName: string;
@@ -528,7 +506,6 @@ export type UpdateReportMutation = {
   email: string;
   labLocation: string;
   hviVersion: string;
-  testLocation: string;
   reportNum: string;
   lotNum: string;
   customerName: string;
@@ -549,7 +526,6 @@ export type DeleteReportMutation = {
   email: string;
   labLocation: string;
   hviVersion: string;
-  testLocation: string;
   reportNum: string;
   lotNum: string;
   customerName: string;
@@ -567,7 +543,6 @@ export type CreateUserInfoMutation = {
   __typename: "UserInfo";
   id: string;
   labLocation: string;
-  countryCode: string;
   hviVersion: string;
   createdAt: string;
   updatedAt: string;
@@ -578,7 +553,6 @@ export type UpdateUserInfoMutation = {
   __typename: "UserInfo";
   id: string;
   labLocation: string;
-  countryCode: string;
   hviVersion: string;
   createdAt: string;
   updatedAt: string;
@@ -589,7 +563,6 @@ export type DeleteUserInfoMutation = {
   __typename: "UserInfo";
   id: string;
   labLocation: string;
-  countryCode: string;
   hviVersion: string;
   createdAt: string;
   updatedAt: string;
@@ -599,7 +572,6 @@ export type DeleteUserInfoMutation = {
 export type GetReportTemplateQuery = {
   __typename: "ReportTemplate";
   templateId: string;
-  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -623,7 +595,6 @@ export type ListReportTemplatesQuery = {
   items: Array<{
     __typename: "ReportTemplate";
     templateId: string;
-    countryCode: string;
     localCompanyName?: string | null;
     localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
@@ -651,7 +622,6 @@ export type GetReportQuery = {
   email: string;
   labLocation: string;
   hviVersion: string;
-  testLocation: string;
   reportNum: string;
   lotNum: string;
   customerName: string;
@@ -674,7 +644,6 @@ export type ListReportsQuery = {
     email: string;
     labLocation: string;
     hviVersion: string;
-    testLocation: string;
     reportNum: string;
     lotNum: string;
     customerName: string;
@@ -699,7 +668,6 @@ export type ReportsByAttachmentUrlAndNameQuery = {
     email: string;
     labLocation: string;
     hviVersion: string;
-    testLocation: string;
     reportNum: string;
     lotNum: string;
     customerName: string;
@@ -719,7 +687,6 @@ export type GetUserInfoQuery = {
   __typename: "UserInfo";
   id: string;
   labLocation: string;
-  countryCode: string;
   hviVersion: string;
   createdAt: string;
   updatedAt: string;
@@ -732,7 +699,6 @@ export type ListUserInfosQuery = {
     __typename: "UserInfo";
     id: string;
     labLocation: string;
-    countryCode: string;
     hviVersion: string;
     createdAt: string;
     updatedAt: string;
@@ -744,7 +710,6 @@ export type ListUserInfosQuery = {
 export type OnCreateReportTemplateSubscription = {
   __typename: "ReportTemplate";
   templateId: string;
-  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -766,7 +731,6 @@ export type OnCreateReportTemplateSubscription = {
 export type OnUpdateReportTemplateSubscription = {
   __typename: "ReportTemplate";
   templateId: string;
-  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -788,7 +752,6 @@ export type OnUpdateReportTemplateSubscription = {
 export type OnDeleteReportTemplateSubscription = {
   __typename: "ReportTemplate";
   templateId: string;
-  countryCode: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
@@ -814,7 +777,6 @@ export type OnCreateReportSubscription = {
   email: string;
   labLocation: string;
   hviVersion: string;
-  testLocation: string;
   reportNum: string;
   lotNum: string;
   customerName: string;
@@ -835,7 +797,6 @@ export type OnUpdateReportSubscription = {
   email: string;
   labLocation: string;
   hviVersion: string;
-  testLocation: string;
   reportNum: string;
   lotNum: string;
   customerName: string;
@@ -856,7 +817,6 @@ export type OnDeleteReportSubscription = {
   email: string;
   labLocation: string;
   hviVersion: string;
-  testLocation: string;
   reportNum: string;
   lotNum: string;
   customerName: string;
@@ -874,7 +834,6 @@ export type OnCreateUserInfoSubscription = {
   __typename: "UserInfo";
   id: string;
   labLocation: string;
-  countryCode: string;
   hviVersion: string;
   createdAt: string;
   updatedAt: string;
@@ -885,7 +844,6 @@ export type OnUpdateUserInfoSubscription = {
   __typename: "UserInfo";
   id: string;
   labLocation: string;
-  countryCode: string;
   hviVersion: string;
   createdAt: string;
   updatedAt: string;
@@ -896,7 +854,6 @@ export type OnDeleteUserInfoSubscription = {
   __typename: "UserInfo";
   id: string;
   labLocation: string;
-  countryCode: string;
   hviVersion: string;
   createdAt: string;
   updatedAt: string;
@@ -915,7 +872,6 @@ export class APIService {
         createReportTemplate(input: $input, condition: $condition) {
           __typename
           templateId
-          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -953,7 +909,6 @@ export class APIService {
         updateReportTemplate(input: $input, condition: $condition) {
           __typename
           templateId
-          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -991,7 +946,6 @@ export class APIService {
         deleteReportTemplate(input: $input, condition: $condition) {
           __typename
           templateId
-          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -1033,7 +987,6 @@ export class APIService {
           email
           labLocation
           hviVersion
-          testLocation
           reportNum
           lotNum
           customerName
@@ -1070,7 +1023,6 @@ export class APIService {
           email
           labLocation
           hviVersion
-          testLocation
           reportNum
           lotNum
           customerName
@@ -1107,7 +1059,6 @@ export class APIService {
           email
           labLocation
           hviVersion
-          testLocation
           reportNum
           lotNum
           customerName
@@ -1141,7 +1092,6 @@ export class APIService {
           __typename
           id
           labLocation
-          countryCode
           hviVersion
           createdAt
           updatedAt
@@ -1168,7 +1118,6 @@ export class APIService {
           __typename
           id
           labLocation
-          countryCode
           hviVersion
           createdAt
           updatedAt
@@ -1195,7 +1144,6 @@ export class APIService {
           __typename
           id
           labLocation
-          countryCode
           hviVersion
           createdAt
           updatedAt
@@ -1218,7 +1166,6 @@ export class APIService {
         getReportTemplate(id: $id) {
           __typename
           templateId
-          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -1256,7 +1203,6 @@ export class APIService {
           items {
             __typename
             templateId
-            countryCode
             localCompanyName
             localCompanyNameTranslation
             letterHeadImageName
@@ -1301,7 +1247,6 @@ export class APIService {
           email
           labLocation
           hviVersion
-          testLocation
           reportNum
           lotNum
           customerName
@@ -1338,7 +1283,6 @@ export class APIService {
             email
             labLocation
             hviVersion
-            testLocation
             reportNum
             lotNum
             customerName
@@ -1394,7 +1338,6 @@ export class APIService {
             email
             labLocation
             hviVersion
-            testLocation
             reportNum
             lotNum
             customerName
@@ -1441,7 +1384,6 @@ export class APIService {
           __typename
           id
           labLocation
-          countryCode
           hviVersion
           createdAt
           updatedAt
@@ -1468,7 +1410,6 @@ export class APIService {
             __typename
             id
             labLocation
-            countryCode
             hviVersion
             createdAt
             updatedAt
@@ -1504,7 +1445,6 @@ export class APIService {
         onCreateReportTemplate(filter: $filter, owner: $owner) {
           __typename
           templateId
-          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -1551,7 +1491,6 @@ export class APIService {
         onUpdateReportTemplate(filter: $filter, owner: $owner) {
           __typename
           templateId
-          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -1598,7 +1537,6 @@ export class APIService {
         onDeleteReportTemplate(filter: $filter, owner: $owner) {
           __typename
           templateId
-          countryCode
           localCompanyName
           localCompanyNameTranslation
           letterHeadImageName
@@ -1647,7 +1585,6 @@ export class APIService {
           email
           labLocation
           hviVersion
-          testLocation
           reportNum
           lotNum
           customerName
@@ -1689,7 +1626,6 @@ export class APIService {
           email
           labLocation
           hviVersion
-          testLocation
           reportNum
           lotNum
           customerName
@@ -1731,7 +1667,6 @@ export class APIService {
           email
           labLocation
           hviVersion
-          testLocation
           reportNum
           lotNum
           customerName
@@ -1770,7 +1705,6 @@ export class APIService {
           __typename
           id
           labLocation
-          countryCode
           hviVersion
           createdAt
           updatedAt
@@ -1802,7 +1736,6 @@ export class APIService {
           __typename
           id
           labLocation
-          countryCode
           hviVersion
           createdAt
           updatedAt
@@ -1834,7 +1767,6 @@ export class APIService {
           __typename
           id
           labLocation
-          countryCode
           hviVersion
           createdAt
           updatedAt

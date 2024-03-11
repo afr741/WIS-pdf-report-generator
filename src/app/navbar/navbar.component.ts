@@ -18,7 +18,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public isModalOpen: boolean = false;
   public userCategory: string = '';
   public userEmail: string = '';
-  public selectedCountry: string = '';
   public selectedLab: string = '';
   public selectedHviVersion: string = '';
   public userList: any = [];
@@ -35,7 +34,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     'https://www.telerik.com/kendo-angular-ui-develop/components/navigation/appbar/assets/kendoka-angular.png';
 
   public lab = ['Dushanbe', 'Bokhtar', 'Khujand'];
-  public country = ['Tajikistan', 'India', 'Vietnam'];
+  // public country = ['Tajikistan', 'India', 'Vietnam'];
   public hviVersions = ['v1', 'v2', 'v3'];
   constructor(
     private authService: AuthService,
@@ -71,7 +70,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.isPreferenceSet = true;
         this.userList = user.items;
         this.userId = user.items[0]?.id;
-        this.selectedCountry = user.items[0]?.countryCode;
         this.selectedLab = user.items[0]?.labLocation;
         this.selectedHviVersion = user.items[0]?.hviVersion;
       } else {
@@ -114,7 +112,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public createUserPreference() {
     this.api.CreateUserInfo({
       labLocation: this.selectedLab,
-      countryCode: this.selectedCountry,
       hviVersion: this.selectedHviVersion,
     });
     this.isPreferenceSet = true;
@@ -122,21 +119,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   public updateUserPreference() {
     if (
-      this.userList[0].countryCode !== this.selectedCountry ||
       this.userList[0].labLocation !== this.selectedLab ||
       this.userList[0].hviVersion !== this.selectedHviVersion
     ) {
       this.api.UpdateUserInfo({
         id: this.userId,
         labLocation: this.selectedLab,
-        countryCode: this.selectedCountry,
         hviVersion: this.selectedHviVersion,
       });
     }
   }
 
   public closeModal(): void {
-    if (this.selectedLab !== '' && this.selectedCountry !== '') {
+    if (this.selectedLab !== '') {
       if (this.userList.length === 0) {
         this.createUserPreference();
       } else {
@@ -157,10 +152,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     console.log('lab valueChange', value);
     this.selectedLab = value;
   }
-  public countryValueChange(value: any): void {
-    console.log('counttry valueChange', value);
-    this.selectedCountry = value;
-  }
+  // public countryValueChange(value: any): void {
+  //   console.log('counttry valueChange', value);
+  //   this.selectedCountry = value;
+  // }
   public hviValueChange(value: any): void {
     console.log('hvi valueChange', value);
     this.selectedHviVersion = value;

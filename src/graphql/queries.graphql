@@ -3,7 +3,6 @@
 query GetReportTemplate($id: ID!) {
   getReportTemplate(id: $id) {
     templateId
-    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -32,7 +31,6 @@ query ListReportTemplates(
   listReportTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       templateId
-      countryCode
       localCompanyName
       localCompanyNameTranslation
       letterHeadImageName
@@ -63,7 +61,6 @@ query GetReport($id: ID!) {
     email
     labLocation
     hviVersion
-    testLocation
     reportNum
     lotNum
     customerName
@@ -91,7 +88,6 @@ query ListReports(
       email
       labLocation
       hviVersion
-      testLocation
       reportNum
       lotNum
       customerName
@@ -132,7 +128,6 @@ query ReportsByAttachmentUrlAndName(
       email
       labLocation
       hviVersion
-      testLocation
       reportNum
       lotNum
       customerName
@@ -155,7 +150,6 @@ query GetUserInfo($id: ID!) {
   getUserInfo(id: $id) {
     id
     labLocation
-    countryCode
     hviVersion
     createdAt
     updatedAt
@@ -173,7 +167,6 @@ query ListUserInfos(
     items {
       id
       labLocation
-      countryCode
       hviVersion
       createdAt
       updatedAt

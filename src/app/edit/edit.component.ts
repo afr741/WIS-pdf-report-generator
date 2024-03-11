@@ -33,7 +33,6 @@ export class EditComponent implements OnInit, OnDestroy {
   public error?: string | null = null;
   public userId: string = '';
   public selectedHviVersion: string = '';
-  public selectedCountry: string = '';
   public isLoading: boolean = false;
   public templateInfos: Array<ReportTemplate> = [];
   private modifyUserPreferenceSubscription: ZenObservable.Subscription | null =
@@ -162,7 +161,6 @@ export class EditComponent implements OnInit, OnDestroy {
     if (this.activeTemplateInfo && this.userInfo) {
       let modifiedReport: UpdateReportTemplateInput = {
         ...rest,
-        countryCode: this.userInfo.countryCode,
         labLocation: this.selectedLab,
         id: this.selectedLab,
       };
@@ -190,12 +188,12 @@ export class EditComponent implements OnInit, OnDestroy {
     } else {
       let modifiedReport: CreateReportTemplateInput = {
         ...rest,
-        countryCode: this.selectedLab,
         labLocation: this.selectedLab,
         stampImageName: stampImageNamePredefined,
         letterHeadImageName: letterHeadImageNamePredefined,
         id: this.selectedLab,
         templateId: this.selectedLab,
+        email: this.selectedLab,
       };
       console.log('updateReportWithAttachment modifiedReport:', modifiedReport);
       this.createReportWithAttachment(modifiedReport);

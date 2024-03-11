@@ -6,7 +6,6 @@ subscription OnCreateReportTemplate(
 ) {
   onCreateReportTemplate(filter: $filter, owner: $owner) {
     templateId
-    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -33,7 +32,6 @@ subscription OnUpdateReportTemplate(
 ) {
   onUpdateReportTemplate(filter: $filter, owner: $owner) {
     templateId
-    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -60,7 +58,6 @@ subscription OnDeleteReportTemplate(
 ) {
   onDeleteReportTemplate(filter: $filter, owner: $owner) {
     templateId
-    countryCode
     localCompanyName
     localCompanyNameTranslation
     letterHeadImageName
@@ -91,7 +88,6 @@ subscription OnCreateReport(
     email
     labLocation
     hviVersion
-    testLocation
     reportNum
     lotNum
     customerName
@@ -117,7 +113,6 @@ subscription OnUpdateReport(
     email
     labLocation
     hviVersion
-    testLocation
     reportNum
     lotNum
     customerName
@@ -143,7 +138,6 @@ subscription OnDeleteReport(
     email
     labLocation
     hviVersion
-    testLocation
     reportNum
     lotNum
     customerName
@@ -166,7 +160,6 @@ subscription OnCreateUserInfo(
   onCreateUserInfo(filter: $filter, owner: $owner) {
     id
     labLocation
-    countryCode
     hviVersion
     createdAt
     updatedAt
@@ -182,7 +175,6 @@ subscription OnUpdateUserInfo(
   onUpdateUserInfo(filter: $filter, owner: $owner) {
     id
     labLocation
-    countryCode
     hviVersion
     createdAt
     updatedAt
@@ -198,7 +190,6 @@ subscription OnDeleteUserInfo(
   onDeleteUserInfo(filter: $filter, owner: $owner) {
     id
     labLocation
-    countryCode
     hviVersion
     createdAt
     updatedAt

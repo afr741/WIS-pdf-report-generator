@@ -83,6 +83,7 @@ export class PdfComponent implements OnInit {
     this.updateUserPreferenceSubscription = this.api
       .OnUpdateUserInfoListener()
       .subscribe((user: any) => {
+        this.isLoading = true;
         const updatedUser = user.value.data.onUpdateUserInfo;
         this.selectedHviVersion = updatedUser.hviVersion;
         this.selectedLab = updatedUser.labLocation;
@@ -335,6 +336,7 @@ export class PdfComponent implements OnInit {
     //   bodyEndIndex
     // );
 
+    //render docDefinition
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
     let docDefinition = {
       pageSize: 'A4',
@@ -464,7 +466,6 @@ export class PdfComponent implements OnInit {
         },
       },
     };
-
     this.pdfData = docDefinition;
     this.isLoading = false;
   }
