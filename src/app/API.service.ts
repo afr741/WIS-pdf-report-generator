@@ -162,6 +162,8 @@ export type CreateReportInput = {
   id?: string | null;
   name: string;
   email: string;
+  labLocation: string;
+  hviVersion: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -176,6 +178,8 @@ export type CreateReportInput = {
 export type ModelReportConditionInput = {
   name?: ModelStringInput | null;
   email?: ModelStringInput | null;
+  labLocation?: ModelStringInput | null;
+  hviVersion?: ModelStringInput | null;
   testLocation?: ModelStringInput | null;
   reportNum?: ModelStringInput | null;
   lotNum?: ModelStringInput | null;
@@ -195,6 +199,8 @@ export type Report = {
   id: string;
   name: string;
   email: string;
+  labLocation: string;
+  hviVersion: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -213,6 +219,8 @@ export type UpdateReportInput = {
   id: string;
   name?: string | null;
   email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
   testLocation?: string | null;
   reportNum?: string | null;
   lotNum?: string | null;
@@ -296,6 +304,8 @@ export type ModelReportFilterInput = {
   id?: ModelIDInput | null;
   name?: ModelStringInput | null;
   email?: ModelStringInput | null;
+  labLocation?: ModelStringInput | null;
+  hviVersion?: ModelStringInput | null;
   testLocation?: ModelStringInput | null;
   reportNum?: ModelStringInput | null;
   lotNum?: ModelStringInput | null;
@@ -400,6 +410,8 @@ export type ModelSubscriptionReportFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   name?: ModelSubscriptionStringInput | null;
   email?: ModelSubscriptionStringInput | null;
+  labLocation?: ModelSubscriptionStringInput | null;
+  hviVersion?: ModelSubscriptionStringInput | null;
   testLocation?: ModelSubscriptionStringInput | null;
   reportNum?: ModelSubscriptionStringInput | null;
   lotNum?: ModelSubscriptionStringInput | null;
@@ -493,6 +505,8 @@ export type CreateReportMutation = {
   id: string;
   name: string;
   email: string;
+  labLocation: string;
+  hviVersion: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -512,6 +526,8 @@ export type UpdateReportMutation = {
   id: string;
   name: string;
   email: string;
+  labLocation: string;
+  hviVersion: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -531,6 +547,8 @@ export type DeleteReportMutation = {
   id: string;
   name: string;
   email: string;
+  labLocation: string;
+  hviVersion: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -631,6 +649,8 @@ export type GetReportQuery = {
   id: string;
   name: string;
   email: string;
+  labLocation: string;
+  hviVersion: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -652,6 +672,8 @@ export type ListReportsQuery = {
     id: string;
     name: string;
     email: string;
+    labLocation: string;
+    hviVersion: string;
     testLocation: string;
     reportNum: string;
     lotNum: string;
@@ -675,6 +697,8 @@ export type ReportsByAttachmentUrlAndNameQuery = {
     id: string;
     name: string;
     email: string;
+    labLocation: string;
+    hviVersion: string;
     testLocation: string;
     reportNum: string;
     lotNum: string;
@@ -788,6 +812,8 @@ export type OnCreateReportSubscription = {
   id: string;
   name: string;
   email: string;
+  labLocation: string;
+  hviVersion: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -807,6 +833,8 @@ export type OnUpdateReportSubscription = {
   id: string;
   name: string;
   email: string;
+  labLocation: string;
+  hviVersion: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -826,6 +854,8 @@ export type OnDeleteReportSubscription = {
   id: string;
   name: string;
   email: string;
+  labLocation: string;
+  hviVersion: string;
   testLocation: string;
   reportNum: string;
   lotNum: string;
@@ -1001,6 +1031,8 @@ export class APIService {
           id
           name
           email
+          labLocation
+          hviVersion
           testLocation
           reportNum
           lotNum
@@ -1036,6 +1068,8 @@ export class APIService {
           id
           name
           email
+          labLocation
+          hviVersion
           testLocation
           reportNum
           lotNum
@@ -1071,6 +1105,8 @@ export class APIService {
           id
           name
           email
+          labLocation
+          hviVersion
           testLocation
           reportNum
           lotNum
@@ -1263,6 +1299,8 @@ export class APIService {
           id
           name
           email
+          labLocation
+          hviVersion
           testLocation
           reportNum
           lotNum
@@ -1298,6 +1336,8 @@ export class APIService {
             id
             name
             email
+            labLocation
+            hviVersion
             testLocation
             reportNum
             lotNum
@@ -1352,6 +1392,8 @@ export class APIService {
             id
             name
             email
+            labLocation
+            hviVersion
             testLocation
             reportNum
             lotNum
@@ -1603,6 +1645,8 @@ export class APIService {
           id
           name
           email
+          labLocation
+          hviVersion
           testLocation
           reportNum
           lotNum
@@ -1643,6 +1687,8 @@ export class APIService {
           id
           name
           email
+          labLocation
+          hviVersion
           testLocation
           reportNum
           lotNum
@@ -1683,6 +1729,8 @@ export class APIService {
           id
           name
           email
+          labLocation
+          hviVersion
           testLocation
           reportNum
           lotNum

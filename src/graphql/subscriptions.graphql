@@ -89,6 +89,8 @@ subscription OnCreateReport(
     id
     name
     email
+    labLocation
+    hviVersion
     testLocation
     reportNum
     lotNum
@@ -113,6 +115,8 @@ subscription OnUpdateReport(
     id
     name
     email
+    labLocation
+    hviVersion
     testLocation
     reportNum
     lotNum
@@ -137,6 +141,8 @@ subscription OnDeleteReport(
     id
     name
     email
+    labLocation
+    hviVersion
     testLocation
     reportNum
     lotNum

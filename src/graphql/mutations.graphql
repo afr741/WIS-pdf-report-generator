@@ -89,6 +89,8 @@ mutation CreateReport(
     id
     name
     email
+    labLocation
+    hviVersion
     testLocation
     reportNum
     lotNum
@@ -113,6 +115,8 @@ mutation UpdateReport(
     id
     name
     email
+    labLocation
+    hviVersion
     testLocation
     reportNum
     lotNum
@@ -137,6 +141,8 @@ mutation DeleteReport(
     id
     name
     email
+    labLocation
+    hviVersion
     testLocation
     reportNum
     lotNum

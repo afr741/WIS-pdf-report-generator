@@ -56,7 +56,6 @@ export class EditComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService
   ) {
     this.createForm = this.fb.group({
-      selectedLab: [this.selectedLab, Validators.required],
       localCompanyName: ['', Validators.required],
       localCompanyNameTranslation: ['', Validators.required],
       letterHeadImage: [null, Validators.required],
@@ -80,8 +79,8 @@ export class EditComponent implements OnInit, OnDestroy {
       .subscribe((user: any) => {
         console.log('OnUpdateUserInfoListener', user);
         const updatedUser = user.value.data.onUpdateUserInfo;
+        this.userInfo = updatedUser;
         this.selectedLab = updatedUser.labLocation;
-
         this.fetchTemplateData();
       });
 
@@ -120,7 +119,7 @@ export class EditComponent implements OnInit, OnDestroy {
         this.templateInfos = event.items as ReportTemplate[];
         if (this.templateInfos.length > 0) {
           const foundEntry = this.templateInfos.find(
-            (item) => item.id == this.selectedLab
+            (item) => item.labLocation == this.selectedLab
           );
           console.log('EDIT COMP, foundEntry', foundEntry);
           if (foundEntry) {
@@ -139,6 +138,7 @@ export class EditComponent implements OnInit, OnDestroy {
             this.createForm.patchValue(fieldsToPrefill);
           } else {
             this.createForm.reset();
+            this.activeTemplateInfo = undefined;
             this.displayStatus(false);
           }
         }
@@ -157,14 +157,14 @@ export class EditComponent implements OnInit, OnDestroy {
     console.log('report template', report);
     let stampImageNamePredefined = 'wis-stamp';
     let letterHeadImageNamePredefined = 'wis-letterhead';
-    const { stampImage, letterHeadImage, selectedLab, ...rest } = report;
+    const { stampImage, letterHeadImage, ...rest } = report;
 
     if (this.activeTemplateInfo && this.userInfo) {
       let modifiedReport: UpdateReportTemplateInput = {
         ...rest,
         countryCode: this.userInfo.countryCode,
         labLocation: this.selectedLab,
-        id: this.activeTemplateInfo.id,
+        id: this.selectedLab,
       };
 
       if (this.selectedFileLetterHead || this.selectedStamp) {
@@ -197,6 +197,7 @@ export class EditComponent implements OnInit, OnDestroy {
         id: this.selectedLab,
         templateId: this.selectedLab,
       };
+      console.log('updateReportWithAttachment modifiedReport:', modifiedReport);
       this.createReportWithAttachment(modifiedReport);
     }
   }

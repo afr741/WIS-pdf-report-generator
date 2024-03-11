@@ -34,6 +34,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   private currentReport: Report | null = null;
   public jsonData: any = null;
   public selectedLab: any = '';
+  public selectedHviVersion: any = '';
   public reportEmail: string = '';
   constructor(
     private authService: AuthService,
@@ -45,6 +46,8 @@ export class UploadComponent implements OnInit, OnDestroy {
     this.createForm = this.fb.group({
       name: ['', Validators.required],
       testLocation: ['', Validators.required],
+      hviVersion: ['', Validators.required],
+      labLocation: ['', Validators.required],
       reportNum: ['', Validators.required],
       email: ['', Validators.required],
       lotNum: ['', Validators.required],
@@ -77,6 +80,7 @@ export class UploadComponent implements OnInit, OnDestroy {
         console.log('OnUpdateUserInfoListener', user);
         const updatedUser = user.value.data.onUpdateUserInfo;
         this.selectedLab = updatedUser.labLocation;
+        this.selectedHviVersion = updatedUser.hviVersion;
       });
     this.createSubscription = this.api
       .OnCreateReportListener()
@@ -135,6 +139,8 @@ export class UploadComponent implements OnInit, OnDestroy {
         report.dataRows = [JSON.stringify(this.jsonData)];
         report.email = this.reportEmail;
         report.testLocation = this.selectedLab;
+        report.labLocation = this.selectedLab;
+        report.hviVersion = this.selectedHviVersion;
         this.currentReport = report;
         console.log('datarows', this.jsonData, 'jsondata', this.jsonData);
 

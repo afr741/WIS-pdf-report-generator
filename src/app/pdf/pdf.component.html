@@ -1,5 +1,5 @@
 <div class="pdf-wrapper">
-  <div *ngIf="!isLoading && error == null">
+  <div *ngIf="!isLoading && error == null && this.reports.length > 0">
     <div class="pdf-ready-section">
       <h1>Your report is ready!</h1>
       <div class="button-section">
@@ -43,8 +43,8 @@
           [rounded]="'medium'"
           [fillMode]="'solid'"
           [themeColor]="'info'"
-          (click)="handleEditTemplate()"
           *ngIf="isManagerUp"
+          (click)="handleEditTemplate()"
         >
           Edit Template
         </button>
@@ -52,20 +52,11 @@
     </div>
     <h3>Previous Reports:</h3>
     <kendo-grid [kendoGridBinding]="reports" [filterable]="true" [height]="800">
-      <kendo-grid-column field="email" title="owner email" *ngIf="isManagerUp">
-      </kendo-grid-column>
-      <kendo-grid-column
-        field="testLocation"
-        title="testLocation"
-        *ngIf="isManagerUp"
-      >
+      <kendo-grid-column field="email" title="owner email"> </kendo-grid-column>
+      <kendo-grid-column field="labLocation" title="labLocation">
       </kendo-grid-column>
 
-      <kendo-grid-column
-        field="customerName"
-        title="customerName"
-        *ngIf="isManagerUp"
-      >
+      <kendo-grid-column field="customerName" title="customerName">
       </kendo-grid-column>
 
       <kendo-grid-column field="id" title="Report ID" [filterable]="false">
@@ -130,8 +121,10 @@
     </div>
   </div>
   <!-- </ng-template> -->
-  <div class="error-section" *ngIf="error">
-    <p class="alert alert-danger" role="alert">{{ error }}</p>
+  <div class="error-section" *ngIf="error || this.reports.length == 0">
+    <p class="alert alert-danger" role="alert">
+      {{ error ? error : "No reports found!" }}
+    </p>
     <button
       type="button"
       kendoButton
@@ -141,7 +134,7 @@
       [themeColor]="'warning'"
       (click)="handlBackButton()"
     >
-      Try again
+      Create again
     </button>
   </div>
 </div>

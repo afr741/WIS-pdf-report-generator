@@ -54,6 +54,7 @@ export class PdfComponent implements OnInit {
   public isLoading: boolean = true;
   public qrImage: any = null;
   public qrImageURL: string = '';
+  public currentUserEmail: string = '';
   public activeTemplateInfo: ReportTemplate | undefined = undefined;
   public error: string | null = null;
   public letterHeadPreviewUrl: string = '';
@@ -77,27 +78,15 @@ export class PdfComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  async ngOnInit() {
-    // this.router.events.subscribe((event: any) => {
-    //   console.log('router event', event);
-
-    //   if (
-    //     (event instanceof NavigationEnd && event.url == '/pdf') ||
-    //     event.routerEvent.url == '/pdf'
-    //   ) {
-    //     // We've finished navigating
-    //     fetchTemplateData().then(() => fetchData());
-    //   }
-    // });
-
-    let pollingAttempts = 0;
-
+  ngOnInit() {
+    this.isLoading = true;
     this.updateUserPreferenceSubscription = this.api
       .OnUpdateUserInfoListener()
       .subscribe((user: any) => {
         const updatedUser = user.value.data.onUpdateUserInfo;
         this.selectedHviVersion = updatedUser.hviVersion;
-        fetchTemplateData().then(() => fetchData());
+        this.selectedLab = updatedUser.labLocation;
+        fetchTemplateData();
 
         // console.log('userList update ng init', this.userList);
       });
@@ -105,112 +94,89 @@ export class PdfComponent implements OnInit {
       console.log('user lab', res);
       this.isManagerUp = res.userGroup.includes('managers');
       this.isSuperUser = res.userGroup.includes('admins');
+      this.currentUserEmail = res.email;
     });
 
     this.api.ListUserInfos().then((user) => {
       this.selectedHviVersion = user.items[0]?.hviVersion;
       this.selectedLab = user.items[0]?.labLocation;
-
-      //list all user nfo and select baserd on  report
-      ///////////////////tbd
-
       console.log('list user', user);
     });
-    const fetchData = async () => {
-      await this.api
+    const fetchData = () => {
+      this.api
         .ListReports()
         .then((event) => {
-          this.reports = event.items as Report[];
-          this.reports
+          if (event.items.length == 0) {
+            this.reports = [];
+          }
+          this.reports = (event.items as Report[])
             .sort((a, b) => {
+              // sort by most recent date
               let dateA: any = new Date(a.updatedAt);
               let dateB: any = new Date(b.updatedAt);
               return dateB - dateA;
             })
             .filter((report: any) => {
-              if (this.isManagerUp && !this.isSuperUser) {
-                //filter for managers based on report/manager test/lab location
-                return report.testLocation == this.selectedLab;
-              } else {
+              //show report list based on access level
+              if (this.isSuperUser) {
                 return true;
               }
-            });
-
-          this.reports = this.reports.map(
-            (report, index) =>
-              (report = {
-                ...report,
-                updatedAt: new Date(report.updatedAt).toDateString(),
-              })
-          );
-          console.log('this.reports', this.reports);
-
-          if (this.isManagerUp && !this.isSuperUser) {
-            this.reports = this.reports.filter((report: any) => {
-              console.log('filter fuxn', report.testLocation, this.selectedLab);
-              return report.testLocation == this.selectedLab;
-            });
-            console.log('yeaaah that would be great', this.reports);
-          }
-
-          if (this.reports[0].dataRows == null) {
-            if (pollingAttempts < 5) {
-              // Limit the number of polling attempts
-              pollingAttempts++;
-              setTimeout(fetchData, 3000);
-            } else {
-              console.log('Data not available after 5 polling attempts.');
-              this.isLoading = false;
-              this.error = 'Sorry, unable to extract data, please try again';
-              this.displayStatus(false);
-            }
-          } else {
-            if (this.selectedHviVersion) {
-              console.log('sorted this.reports[0]', this.reports[0]);
-              this.handleProcessingVersion(this.reports[0]);
-            }
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      console.log('sorted reports', this.reports);
-    };
-    const fetchTemplateData = async () => {
-      await this.api
-        .ListReportTemplates()
-        .then((event) => {
-          console.log('template info event', event);
-          this.templateInfo = event.items as ReportTemplate[];
-          if (this.templateInfo.length > 0) {
-            const foundEntry = this.templateInfo.find(
-              (item) => (item.labLocation = this.selectedLab)
+              if (this.isManagerUp) {
+                return report.labLocation == this.selectedLab;
+              }
+              return report.email == this.currentUserEmail;
+            })
+            .map(
+              (report, index) =>
+                (report = {
+                  ...report,
+                  updatedAt: new Date(report.updatedAt).toDateString(),
+                })
             );
-            this.activeTemplateInfo = foundEntry;
-            this.assignActiveTemplate(this.activeTemplateInfo);
+
+          console.log('this.reports', this.reports);
+        })
+        .then(() => {
+          if (this.selectedHviVersion && this.reports.length > 0) {
+            // this.isLoading = false;
+            this.openAndDownloadCallBack(this.reports[0]);
           }
         })
         .catch((err) => {
           console.log(err);
-          this.error = err;
-          this.displayStatus(false);
-          this.isLoading = false;
         });
+    };
+
+    //get template info
+    const fetchTemplateData = () => {
+      this.api.ListReportTemplates().then((event) => {
+        console.log('template info event', event);
+        this.templateInfo = event.items as ReportTemplate[];
+        if (this.templateInfo.length > 0) {
+          const foundEntry = this.templateInfo.find(
+            (item) => (item.labLocation = this.selectedLab)
+          );
+          this.activeTemplateInfo = foundEntry;
+          this.assignActiveTemplate(this.activeTemplateInfo).then(() =>
+            fetchData()
+          );
+        }
+      });
     };
 
     try {
-      fetchTemplateData().then(() => fetchData());
+      fetchTemplateData();
     } catch (error) {
       // Handle errors if any of the async functions fail
       this.displayStatus(false);
-      this.error = 'Error fetching, try again';
+      this.error = `Error fetching: ${error}`;
       this.isLoading = false;
     }
   }
 
   async assignActiveTemplate(templateInfo: any) {
     try {
-      if (templateInfo.letterHeadImageName) {
+      if (templateInfo && templateInfo.letterHeadImageName) {
         this.letterHeadPreviewUrl = await Storage.get(
           templateInfo.letterHeadImageName
         );
@@ -219,7 +185,7 @@ export class PdfComponent implements OnInit {
         );
       }
 
-      if (templateInfo.stampImageName) {
+      if (templateInfo && templateInfo.stampImageName) {
         this.stampPreviewUrl = await Storage.get(templateInfo.stampImageName);
         this.stampImage = await this.getBase64ImageFromURL(
           this.stampPreviewUrl
@@ -241,7 +207,6 @@ export class PdfComponent implements OnInit {
   makeUrlFriendly(encryptedText: string): string {
     // URL-encode the base64 string
     const urlFriendlyText = encodeURIComponent(encryptedText);
-
     return urlFriendlyText;
   }
 
@@ -252,11 +217,15 @@ export class PdfComponent implements OnInit {
       textToEncrypt,
       this.secretKey
     ).toString();
+
     const ecnryptedURLParam: string = this.makeUrlFriendly(encryptedText);
+
     const appURL = window.location.origin;
+
     // console.log('encrypted url', ecnryptedURLParam, ' current url', appURL);
     this.qrImageURL = `${appURL}/qrcode?code=${ecnryptedURLParam}`;
     this.qrImage = await QRCode.toDataURL(this.qrImageURL);
+
     return { qrImage: this.qrImage, qrURL: this.qrImageURL };
   }
 
@@ -286,7 +255,7 @@ export class PdfComponent implements OnInit {
   }
 
   async processPDFDataV1(report: Report) {
-    if (!report || !this.activeTemplateInfo) return;
+    if (!this.activeTemplateInfo) return;
 
     let {
       dataRows,
@@ -501,7 +470,7 @@ export class PdfComponent implements OnInit {
   }
 
   async processPDFDataV2(report: Report) {
-    if (!report || !this.activeTemplateInfo) return;
+    if (!this.activeTemplateInfo) return;
 
     let {
       dataRows,
@@ -710,7 +679,7 @@ export class PdfComponent implements OnInit {
   }
 
   async processPDFDataV3(report: Report) {
-    if (!report || !this.activeTemplateInfo) return;
+    if (!this.activeTemplateInfo) return;
 
     let {
       dataRows,
@@ -919,46 +888,23 @@ export class PdfComponent implements OnInit {
 
   async handleProcessingVersion(dataItem: any) {
     let version = this.selectedHviVersion;
-    console.log(
-      'handleProcessingVersion',
-      'version:',
-      version,
-      'activeTemplateInfo:',
-      this.activeTemplateInfo,
-      'dataItem:',
-      dataItem
-    );
-
-    try {
-      if (
-        !dataItem ||
-        !dataItem.dataRows ||
-        (!this.activeTemplateInfo && !this.isLoading)
-      ) {
+    switch (version) {
+      case 'v1':
+        this.processPDFDataV1(dataItem);
+        break;
+      case 'v2':
+        this.processPDFDataV2(dataItem);
+        break;
+      case 'v3':
+        this.processPDFDataV3(dataItem);
+        break;
+      default:
+        console.log(`version doesnt exist!`);
         this.displayStatus(false);
-        this.error = `Unable to render, try again`;
-      } else {
-        switch (version) {
-          case 'v1':
-            return this.processPDFDataV1(dataItem);
-            break;
-          case 'v2':
-            return this.processPDFDataV2(dataItem);
-          case 'v3':
-            return this.processPDFDataV3(dataItem);
-            break;
-          default:
-            console.log(`version doesnt exist!`);
-            this.displayStatus(false);
-            this.error = 'version does not exist';
-            this.isLoading = false;
-        }
-      }
-    } catch (error) {
-      this.error = `${error}`;
-      this.displayStatus(false);
-      this.isLoading = false;
+        this.error = 'version does not exist';
+        this.isLoading = false;
     }
+    this.isLoading = false;
   }
 
   handlBackButton() {
@@ -966,13 +912,12 @@ export class PdfComponent implements OnInit {
   }
 
   async openAndDownloadCallBack(dataItem: any) {
-    console.log('openPDF', dataItem);
+    console.log('openAndDownloadCallBack dataitem', dataItem);
     if (dataItem.dataRows === null) {
       this.displayStatus(false);
       this.error = 'Row are not processed!';
     } else {
       this.error = null;
-      this.displayStatus(true);
       await this.handleProcessingVersion(dataItem);
     }
   }

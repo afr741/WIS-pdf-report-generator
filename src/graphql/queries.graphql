@@ -61,6 +61,8 @@ query GetReport($id: ID!) {
     id
     name
     email
+    labLocation
+    hviVersion
     testLocation
     reportNum
     lotNum
@@ -87,6 +89,8 @@ query ListReports(
       id
       name
       email
+      labLocation
+      hviVersion
       testLocation
       reportNum
       lotNum
@@ -126,6 +130,8 @@ query ReportsByAttachmentUrlAndName(
       id
       name
       email
+      labLocation
+      hviVersion
       testLocation
       reportNum
       lotNum
