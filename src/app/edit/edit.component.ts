@@ -193,7 +193,6 @@ export class EditComponent implements OnInit, OnDestroy {
         letterHeadImageName: letterHeadImageNamePredefined,
         id: this.selectedLab,
         templateId: this.selectedLab,
-        email: this.selectedLab,
       };
       console.log('updateReportWithAttachment modifiedReport:', modifiedReport);
       this.createReportWithAttachment(modifiedReport);

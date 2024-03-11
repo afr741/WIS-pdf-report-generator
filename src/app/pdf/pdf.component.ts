@@ -325,19 +325,36 @@ export class PdfComponent implements OnInit {
       bodyStartIndex + 1,
       bodyEndIndex + 1
     );
-    const numberOfSamples = extractedRowsBody.length - 4;
-
-    // console.log('extractedRows', extractedRows);
-    // console.log('extractedRowsBody,', extractedRowsBody);
-    // console.log(
-    //   'bodyStartIndex',
-    //   bodyStartIndex,
-    //   'bodyEndIndex',
-    //   bodyEndIndex
-    // );
+    const numberOfSamples = extractedRowsBody.length - 7;
 
     //render docDefinition
+
+    this.renderPDF(
+      testLocation,
+      customerName,
+      reportNum,
+      stations,
+      variety,
+      numberOfSamples,
+      lotNum,
+      extractedRowsBody,
+      formatedDate
+    );
+  }
+
+  public async renderPDF(
+    testLocation: any,
+    customerName: any,
+    reportNum: any,
+    stations: any,
+    variety: any,
+    numberOfSamples: any,
+    lotNum: any,
+    extractedRowsBody: any,
+    formatedDate: any
+  ) {
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
+    if (!this.activeTemplateInfo) return;
     let docDefinition = {
       pageSize: 'A4',
       background: [
@@ -539,144 +556,19 @@ export class PdfComponent implements OnInit {
       bodyStartIndex,
       bodyEndIndex + 1
     );
-    const numberOfSamples = extractedRowsBody.length - 4;
+    const numberOfSamples = extractedRowsBody.length - 7;
 
-    console.log('extractedRows', extractedRows);
-    console.log('extractedRowsBody,', extractedRowsBody);
-    console.log('bodyStartIndex', bodyStartIndex, 'bodyEndIndex', bodyEndIndex);
-
-    const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
-    let docDefinition = {
-      pageSize: 'A4',
-      background: [
-        {
-          image: await this.stampImage,
-          fit: [150, 150],
-          absolutePosition: { x: 380, y: 660 },
-        },
-      ],
-      content: [
-        {
-          width: 520,
-          margin: [0, 10],
-          image: await this.letterHeadImage,
-        },
-        {
-          style: 'header',
-          layout: 'noBorders',
-          table: {
-            widths: [140, 140, 140, 140, 140],
-            body: [
-              ['Test Location', testLocation, 'Recepient', customerName],
-              ['CI Number', reportNum, 'ORIGIN', origin],
-              ['CI Report Number', reportNum, 'Station(As advised)', stations],
-              ['Date', formatedDate(), 'Variety(As advised)', variety],
-              [
-                'Lot number',
-                lotNum,
-                { text: 'Samples drawn by customer', bold: true },
-                `${numberOfSamples} samples`,
-              ],
-            ],
-          },
-        },
-        {
-          style: 'dataTable',
-          layout: {
-            hLineWidth: function (i: any, node: any) {
-              if (i === 0 || i === node.table.body.length) {
-                return 0;
-              }
-              return i === node.table.headerRows ? 2 : 1;
-            },
-            vLineWidth: () => 0,
-          },
-          table: {
-            headerRows: 1,
-            // widths: columnWidthArray,
-            // heights: 1,
-            body: extractedRowsBody,
-          },
-        },
-
-        { text: '\n\nRemarks', style: 'remarks' },
-        {
-          style: 'remarksBullets',
-          ol: REMARKS.part1,
-        },
-        {
-          style: 'remarksBullets',
-          text: REMARKS.part2,
-        },
-        {
-          style: 'remarksBullets',
-          ol: REMARKS.part3,
-        },
-        {
-          text: `${this.activeTemplateInfo.localCompanyName}\n ${this.activeTemplateInfo.localCompanyNameTranslation}`,
-          style: 'contactsHeader',
-        },
-
-        {
-          table: {
-            widths: [170, 140, 140],
-            body: [
-              [
-                {
-                  style: 'contactsColumns',
-                  columns: [
-                    {
-                      width: 80,
-                      text: `${this.activeTemplateInfo.address}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
-                    },
-                    {
-                      width: 80,
-                      text: `${this.activeTemplateInfo.addressTranslation}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
-                    },
-                  ],
-                },
-
-                {
-                  link: qrURL,
-                  image: qrImage,
-                  fit: [90, 90],
-                },
-              ],
-            ],
-          },
-          layout: 'noBorders',
-        },
-      ],
-      styles: {
-        header: {
-          fontSize: 8,
-        },
-        dataTable: {
-          margin: [15, 5],
-          fontSize: 6,
-        },
-        qrCodeText: {
-          fontSize: 8,
-        },
-        remarks: {
-          fontSize: 6,
-        },
-        remarksBullets: {
-          fontSize: 6,
-        },
-        contactsHeader: {
-          fontSize: 7,
-          bold: true,
-          margin: [0, 10, 0, 3],
-        },
-        contactsColumns: {
-          fontSize: 6,
-        },
-      },
-    };
-
-    this.pdfData = docDefinition;
-    this.isLoading = false;
+    this.renderPDF(
+      testLocation,
+      customerName,
+      reportNum,
+      stations,
+      variety,
+      numberOfSamples,
+      lotNum,
+      extractedRowsBody,
+      formatedDate
+    );
   }
 
   async processPDFDataV3(report: Report) {
@@ -747,144 +639,18 @@ export class PdfComponent implements OnInit {
       bodyStartIndex,
       bodyEndIndex + 1
     );
-    const numberOfSamples = extractedRowsBody.length - 4;
-
-    console.log('extractedRows', extractedRows);
-    console.log('extractedRowsBody,', extractedRowsBody);
-    console.log('bodyStartIndex', bodyStartIndex, 'bodyEndIndex', bodyEndIndex);
-
-    const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
-    let docDefinition = {
-      pageSize: 'A4',
-      background: [
-        {
-          image: await this.stampImage,
-          fit: [150, 150],
-          absolutePosition: { x: 380, y: 660 },
-        },
-      ],
-      content: [
-        {
-          width: 520,
-          margin: [0, 10],
-          image: await this.letterHeadImage,
-        },
-        {
-          style: 'header',
-          layout: 'noBorders',
-          table: {
-            widths: [140, 140, 140, 140, 140],
-            body: [
-              ['Test Location', testLocation, 'Recepient', customerName],
-              ['CI Number', reportNum, 'ORIGIN', origin],
-              ['CI Report Number', reportNum, 'Station(As advised)', stations],
-              ['Date', formatedDate(), 'Variety(As advised)', variety],
-              [
-                'Lot number',
-                lotNum,
-                { text: 'Samples drawn by customer', bold: true },
-                `${numberOfSamples} samples`,
-              ],
-            ],
-          },
-        },
-        {
-          style: 'dataTable',
-          layout: {
-            hLineWidth: function (i: any, node: any) {
-              if (i === 0 || i === node.table.body.length) {
-                return 0;
-              }
-              return i === node.table.headerRows ? 2 : 1;
-            },
-            vLineWidth: () => 0,
-          },
-          table: {
-            headerRows: 1,
-            // widths: columnWidthArray,
-            // heights: 1,
-            body: extractedRowsBody,
-          },
-        },
-
-        { text: '\n\nRemarks', style: 'remarks' },
-        {
-          style: 'remarksBullets',
-          ol: REMARKS.part1,
-        },
-        {
-          style: 'remarksBullets',
-          text: REMARKS.part2,
-        },
-        {
-          style: 'remarksBullets',
-          ol: REMARKS.part3,
-        },
-        {
-          text: `${this.activeTemplateInfo.localCompanyName}\n ${this.activeTemplateInfo.localCompanyNameTranslation}`,
-          style: 'contactsHeader',
-        },
-
-        {
-          table: {
-            widths: [170, 140, 140],
-            body: [
-              [
-                {
-                  style: 'contactsColumns',
-                  columns: [
-                    {
-                      width: 80,
-                      text: `${this.activeTemplateInfo.address}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
-                    },
-                    {
-                      width: 80,
-                      text: `${this.activeTemplateInfo.addressTranslation}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
-                    },
-                  ],
-                },
-
-                {
-                  link: qrURL,
-                  image: qrImage,
-                  fit: [90, 90],
-                },
-              ],
-            ],
-          },
-          layout: 'noBorders',
-        },
-      ],
-      styles: {
-        header: {
-          fontSize: 8,
-        },
-        dataTable: {
-          margin: [15, 5],
-          fontSize: 6,
-        },
-        qrCodeText: {
-          fontSize: 8,
-        },
-        remarks: {
-          fontSize: 6,
-        },
-        remarksBullets: {
-          fontSize: 6,
-        },
-        contactsHeader: {
-          fontSize: 7,
-          bold: true,
-          margin: [0, 10, 0, 3],
-        },
-        contactsColumns: {
-          fontSize: 6,
-        },
-      },
-    };
-
-    this.pdfData = docDefinition;
-    this.isLoading = false;
+    const numberOfSamples = extractedRowsBody.length - 7;
+    this.renderPDF(
+      testLocation,
+      customerName,
+      reportNum,
+      stations,
+      variety,
+      numberOfSamples,
+      lotNum,
+      extractedRowsBody,
+      formatedDate
+    );
   }
 
   async handleProcessingVersion(dataItem: any) {

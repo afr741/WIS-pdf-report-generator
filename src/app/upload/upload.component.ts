@@ -88,6 +88,13 @@ export class UploadComponent implements OnInit, OnDestroy {
         this.reports = [newReport, ...this.reports];
         console.log('sub created newReport', newReport);
       });
+
+    this.api.ListUserInfos().then((user: any) => {
+      if (user.items.length > 0) {
+        this.selectedLab = user.items[0].labLocation;
+      }
+    });
+
     this.api.ListReports().then((reports) => {
       console.log('reports', reports);
     });

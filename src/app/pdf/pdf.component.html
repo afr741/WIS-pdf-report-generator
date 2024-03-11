@@ -52,15 +52,15 @@
     </div>
     <h3>Previous Reports:</h3>
     <kendo-grid [kendoGridBinding]="reports" [filterable]="true" [height]="800">
-      <kendo-grid-column field="email" title="owner email"> </kendo-grid-column>
-      <kendo-grid-column field="labLocation" title="labLocation">
+      <kendo-grid-column field="email" title="Owner email"> </kendo-grid-column>
+      <kendo-grid-column field="labLocation" title="Lab Location">
       </kendo-grid-column>
 
-      <kendo-grid-column field="customerName" title="customerName">
+      <kendo-grid-column field="customerName" title="Customer Name">
       </kendo-grid-column>
 
-      <kendo-grid-column field="id" title="Report ID" [filterable]="false">
-      </kendo-grid-column>
+      <!-- <kendo-grid-column field="id" title="Report ID" [filterable]="false">
+      </kendo-grid-column> -->
       <kendo-grid-column field="name" title="Report Name"> </kendo-grid-column>
       <kendo-grid-column field="origin" title="Origin" filter="text">
       </kendo-grid-column>
