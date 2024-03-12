@@ -156,6 +156,9 @@ export class EditComponent implements OnInit, OnDestroy {
     console.log('report template', report);
     let stampImageNamePredefined = 'wis-stamp';
     let letterHeadImageNamePredefined = 'wis-letterhead';
+
+    let generatedStampImageName = `${stampImageNamePredefined}-${this.selectedLab}`;
+    let generatedLetterHeadImageName = `${letterHeadImageNamePredefined}-${this.selectedLab}`;
     const { stampImage, letterHeadImage, ...rest } = report;
 
     if (this.activeTemplateInfo && this.userInfo) {
@@ -169,13 +172,13 @@ export class EditComponent implements OnInit, OnDestroy {
         try {
           if (this.selectedFileLetterHead) {
             const letterheadUploadResponse = await Storage.put(
-              letterHeadImageNamePredefined,
+              generatedLetterHeadImageName,
               this.selectedFileLetterHead
             );
           }
           if (this.selectedStamp) {
             const stampUploadResponse = await Storage.put(
-              stampImageNamePredefined,
+              generatedStampImageName,
               this.selectedStamp
             );
           }
@@ -189,8 +192,8 @@ export class EditComponent implements OnInit, OnDestroy {
       let modifiedReport: CreateReportTemplateInput = {
         ...rest,
         labLocation: this.selectedLab,
-        stampImageName: stampImageNamePredefined,
-        letterHeadImageName: letterHeadImageNamePredefined,
+        stampImageName: generatedStampImageName,
+        letterHeadImageName: generatedLetterHeadImageName,
         id: this.selectedLab,
         templateId: this.selectedLab,
       };

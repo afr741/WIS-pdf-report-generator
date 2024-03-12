@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../AuthService';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { APIService, Report } from '../API.service';
 import { bellIcon, menuIcon, SVGIcon } from '@progress/kendo-svg-icons';
 import { ZenObservable } from 'zen-observable-ts';
+import { Storage } from 'aws-amplify';
+
 // const logo = require('../../assets/images/wis-logo.jpeg').default as string;
 @Component({
   selector: 'app-navbar',
@@ -32,7 +34,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // public wisLogo: any = logo;
   public kendokaAvatar =
     'https://www.telerik.com/kendo-angular-ui-develop/components/navigation/appbar/assets/kendoka-angular.png';
-
+  public sectionName: any = '';
+  public wislogo: any;
   public lab = ['Dushanbe', 'Bokhtar', 'Khujand'];
   // public country = ['Tajikistan', 'India', 'Vietnam'];
   public hviVersions = ['v1', 'v2', 'v3'];
@@ -43,6 +46,34 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ) {}
 
   public async ngOnInit() {
+    this.wislogo = await Storage.get('wis.jpg');
+
+    this.router.events.subscribe((event: any) => {
+      if (event instanceof NavigationEnd) {
+        let navUrl = event.url.split('/')[1];
+        switch (navUrl) {
+          case '':
+            this.sectionName = 'Upload section';
+            break;
+          case 'upload':
+            this.sectionName = 'Upload section';
+            break;
+          case 'pdf':
+            this.sectionName = 'Generated Reports';
+            break;
+          case 'edit':
+            this.sectionName = 'Edit Template';
+            break;
+          case 'qrcode':
+            this.sectionName = 'QrCode Section';
+            break;
+          default:
+            this.sectionName = '';
+            break;
+        }
+      }
+    });
+
     this.createUserPreferenceSubscription = this.api
       .OnCreateUserInfoListener()
       .subscribe((user: any) => {

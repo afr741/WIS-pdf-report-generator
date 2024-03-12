@@ -338,7 +338,176 @@ export class PdfComponent implements OnInit {
       numberOfSamples,
       lotNum,
       extractedRowsBody,
-      formatedDate
+      formatedDate,
+      origin
+    );
+  }
+
+  async processPDFDataV2(report: Report) {
+    if (!this.activeTemplateInfo) return;
+
+    let {
+      dataRows,
+      reportNum,
+      lotNum,
+      customerName,
+      stations,
+      variety,
+      createdAt,
+    } = report;
+    let { testLocation, origin } = this.activeTemplateInfo;
+    console.log('processpdfdata dataRows', dataRows);
+
+    let formatedDate = () => {
+      let createdDate = new Date(createdAt);
+      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
+      let date = `${createdDate.getFullYear()}.${month}.${
+        createdDate.getDate() < 10 ? 0 : ''
+      }${createdDate.getDate()}.`;
+
+      return date;
+    };
+
+    if (!dataRows || dataRows[0] === null) {
+      this.displayStatus(false);
+      this.error = 'Faied to extract data rows!';
+
+      return;
+    }
+
+    let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
+
+    // number of elements based on elments in this row
+    const keys = Object.keys(parsedRawData[6]);
+
+    const averageRow = parsedRawData[33];
+    // Convert array of objects to array of arrays
+    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+      return keys.map((key) => {
+        let cellValue = obj[key];
+        if (index === 34 && key === '__EMPTY_1') {
+          // console.log('averageRow', Object.values(averageRow)[0]);
+          return Object.values(averageRow)[0];
+        }
+        let roundedCellValue = isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(2);
+        return roundedCellValue || '';
+      });
+    });
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = extractedRows.findIndex((array: any) =>
+      array.includes('SCI')
+    );
+
+    // to find the end of data body using "Average" word
+    let bodyEndIndex = extractedRows.findIndex((array: any) =>
+      array.some(
+        (element: any) => typeof element === 'string' && element.includes('Max')
+      )
+    );
+
+    let extractedRowsBody = extractedRows.slice(
+      bodyStartIndex,
+      bodyEndIndex + 1
+    );
+    const numberOfSamples = extractedRowsBody.length - 7;
+
+    this.renderPDF(
+      testLocation,
+      customerName,
+      reportNum,
+      stations,
+      variety,
+      numberOfSamples,
+      lotNum,
+      extractedRowsBody,
+      formatedDate,
+      origin
+    );
+  }
+
+  async processPDFDataV3(report: Report) {
+    if (!this.activeTemplateInfo) return;
+
+    let {
+      dataRows,
+      reportNum,
+      lotNum,
+      customerName,
+      stations,
+      variety,
+      createdAt,
+    } = report;
+    let { testLocation, origin } = this.activeTemplateInfo;
+    console.log('processpdfdata dataRows', dataRows);
+
+    let formatedDate = () => {
+      let createdDate = new Date(createdAt);
+      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
+      let date = `${createdDate.getFullYear()}.${month}.${
+        createdDate.getDate() < 10 ? 0 : ''
+      }${createdDate.getDate()}.`;
+
+      return date;
+    };
+
+    if (!dataRows || dataRows[0] === null) {
+      this.displayStatus(false);
+      this.error = 'Faied to extract data rows!';
+      return;
+    }
+
+    let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
+
+    // number of elements based on elments in this row
+    const keys = Object.keys(parsedRawData[5]);
+
+    // const averageRow = parsedRawData[33];
+    // Convert array of objects to array of arrays
+    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+      return keys.map((key) => {
+        let cellValue = obj[key];
+        // if (index === 34 && key === '__EMPTY_1') {
+        //   // console.log('averageRow', Object.values(averageRow)[0]);
+        //   return Object.values(averageRow)[0];
+        // }
+        let roundedCellValue = isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(2);
+        return roundedCellValue || '';
+      });
+    });
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = extractedRows.findIndex((array: any) =>
+      array.includes('Print Time')
+    );
+
+    // to find the end of data body using "Average" word
+    let bodyEndIndex = extractedRows.findIndex((array: any) =>
+      array.some(
+        (element: any) => typeof element === 'string' && element.includes('Max')
+      )
+    );
+
+    let extractedRowsBody = extractedRows.slice(
+      bodyStartIndex,
+      bodyEndIndex + 1
+    );
+    const numberOfSamples = extractedRowsBody.length - 7;
+    this.renderPDF(
+      testLocation,
+      customerName,
+      reportNum,
+      stations,
+      variety,
+      numberOfSamples,
+      lotNum,
+      extractedRowsBody,
+      formatedDate,
+      origin
     );
   }
 
@@ -351,7 +520,8 @@ export class PdfComponent implements OnInit {
     numberOfSamples: any,
     lotNum: any,
     extractedRowsBody: any,
-    formatedDate: any
+    formatedDate: any,
+    origin: any
   ) {
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
     if (!this.activeTemplateInfo) return;
@@ -485,172 +655,6 @@ export class PdfComponent implements OnInit {
     };
     this.pdfData = docDefinition;
     this.isLoading = false;
-  }
-
-  async processPDFDataV2(report: Report) {
-    if (!this.activeTemplateInfo) return;
-
-    let {
-      dataRows,
-      reportNum,
-      lotNum,
-      customerName,
-      stations,
-      variety,
-      createdAt,
-    } = report;
-    let { testLocation, origin } = this.activeTemplateInfo;
-    console.log('processpdfdata dataRows', dataRows);
-
-    let formatedDate = () => {
-      let createdDate = new Date(createdAt);
-      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
-      let date = `${createdDate.getFullYear()}.${month}.${
-        createdDate.getDate() < 10 ? 0 : ''
-      }${createdDate.getDate()}.`;
-
-      return date;
-    };
-
-    if (!dataRows || dataRows[0] === null) {
-      this.displayStatus(false);
-      this.error = 'Faied to extract data rows!';
-
-      return;
-    }
-
-    let parsedRawData = JSON.parse(dataRows[0]);
-    console.log('parsedRawData', parsedRawData);
-
-    // number of elements based on elments in this row
-    const keys = Object.keys(parsedRawData[6]);
-
-    const averageRow = parsedRawData[33];
-    // Convert array of objects to array of arrays
-    const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      return keys.map((key) => {
-        let cellValue = obj[key];
-        if (index === 34 && key === '__EMPTY_1') {
-          // console.log('averageRow', Object.values(averageRow)[0]);
-          return Object.values(averageRow)[0];
-        }
-        let roundedCellValue = isNaN(cellValue)
-          ? cellValue
-          : Number(cellValue).toFixed(2);
-        return roundedCellValue || '';
-      });
-    });
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes('SCI')
-    );
-
-    // to find the end of data body using "Average" word
-    let bodyEndIndex = extractedRows.findIndex((array: any) =>
-      array.some(
-        (element: any) => typeof element === 'string' && element.includes('Max')
-      )
-    );
-
-    let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex,
-      bodyEndIndex + 1
-    );
-    const numberOfSamples = extractedRowsBody.length - 7;
-
-    this.renderPDF(
-      testLocation,
-      customerName,
-      reportNum,
-      stations,
-      variety,
-      numberOfSamples,
-      lotNum,
-      extractedRowsBody,
-      formatedDate
-    );
-  }
-
-  async processPDFDataV3(report: Report) {
-    if (!this.activeTemplateInfo) return;
-
-    let {
-      dataRows,
-      reportNum,
-      lotNum,
-      customerName,
-      stations,
-      variety,
-      createdAt,
-    } = report;
-    let { testLocation, origin } = this.activeTemplateInfo;
-    console.log('processpdfdata dataRows', dataRows);
-
-    let formatedDate = () => {
-      let createdDate = new Date(createdAt);
-      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
-      let date = `${createdDate.getFullYear()}.${month}.${
-        createdDate.getDate() < 10 ? 0 : ''
-      }${createdDate.getDate()}.`;
-
-      return date;
-    };
-
-    if (!dataRows || dataRows[0] === null) {
-      this.displayStatus(false);
-      this.error = 'Faied to extract data rows!';
-      return;
-    }
-
-    let parsedRawData = JSON.parse(dataRows[0]);
-    console.log('parsedRawData', parsedRawData);
-
-    // number of elements based on elments in this row
-    const keys = Object.keys(parsedRawData[5]);
-
-    // const averageRow = parsedRawData[33];
-    // Convert array of objects to array of arrays
-    const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      return keys.map((key) => {
-        let cellValue = obj[key];
-        // if (index === 34 && key === '__EMPTY_1') {
-        //   // console.log('averageRow', Object.values(averageRow)[0]);
-        //   return Object.values(averageRow)[0];
-        // }
-        let roundedCellValue = isNaN(cellValue)
-          ? cellValue
-          : Number(cellValue).toFixed(2);
-        return roundedCellValue || '';
-      });
-    });
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes('Print Time')
-    );
-
-    // to find the end of data body using "Average" word
-    let bodyEndIndex = extractedRows.findIndex((array: any) =>
-      array.some(
-        (element: any) => typeof element === 'string' && element.includes('Max')
-      )
-    );
-
-    let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex,
-      bodyEndIndex + 1
-    );
-    const numberOfSamples = extractedRowsBody.length - 7;
-    this.renderPDF(
-      testLocation,
-      customerName,
-      reportNum,
-      stations,
-      variety,
-      numberOfSamples,
-      lotNum,
-      extractedRowsBody,
-      formatedDate
-    );
   }
 
   async handleProcessingVersion(dataItem: any) {
