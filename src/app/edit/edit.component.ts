@@ -70,13 +70,10 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.api.ListReportTemplates().then((event) => {
-      console.log('this.templateInfos on init', event);
-    });
     this.modifyUserPreferenceSubscription = this.api
       .OnUpdateUserInfoListener()
       .subscribe((user: any) => {
-        console.log('OnUpdateUserInfoListener', user);
+        // console.log('OnUpdateUserInfoListener', user);
         const updatedUser = user.value.data.onUpdateUserInfo;
         this.userInfo = updatedUser;
         this.selectedLab = updatedUser.labLocation;
@@ -84,23 +81,20 @@ export class EditComponent implements OnInit, OnDestroy {
       });
 
     try {
-      const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
-      const stampImageFromS3 = await Storage.get('wis-stamp');
-      this.letterHeadPreviewUrl = letterHeadImageFromS3;
-      this.stampPreviewUrl = stampImageFromS3;
-      await this.api.ListUserInfos().then((user: any) => {
-        if (user.items.length > 0) {
-          console.log('user.items', user.items);
-          this.userInfo = user.items[0];
-          this.selectedLab = user.items[0].labLocation;
-          console.log('selectedLab', this.selectedLab);
-        }
-      });
+      await this.api
+        .ListUserInfos()
+        .then((user: any) => {
+          if (user.items.length > 0) {
+            // console.log('user.items', user.items);
+            this.userInfo = user.items[0];
+            this.selectedLab = user.items[0].labLocation;
+            console.log('selectedLab', this.selectedLab);
+          }
+        })
+        .then(() => this.fetchTemplateData());
     } catch (err) {
       console.log(err);
     }
-
-    this.fetchTemplateData(); // Start the initial data fetch.
   }
 
   ngOnDestroy() {
@@ -111,16 +105,17 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   public fetchTemplateData = async () => {
+    this.isLoading = true;
     this.api
       .ListReportTemplates()
-      .then((event) => {
+      .then(async (event) => {
         console.log('this.templateInfos fetchTemplateData event', event);
         this.templateInfos = event.items as ReportTemplate[];
         if (this.templateInfos.length > 0) {
           const foundEntry = this.templateInfos.find(
             (item) => item.labLocation == this.selectedLab
           );
-          console.log('EDIT COMP, foundEntry', foundEntry);
+          // console.log('EDIT COMP, foundEntry', foundEntry);
           if (foundEntry) {
             this.activeTemplateInfo = foundEntry;
             const {
@@ -135,6 +130,24 @@ export class EditComponent implements OnInit, OnDestroy {
 
             console.log('fieldsToPrefill:', fieldsToPrefill);
             this.createForm.patchValue(fieldsToPrefill);
+            if (fieldsToPrefill.stampImageName) {
+              Storage.get(
+                `${fieldsToPrefill.stampImageName}-${this.selectedLab}`
+              ).then((res) => {
+                if (res) {
+                  console.log('stampImageFromS3  res', res);
+                  this.stampPreviewUrl = res;
+                }
+              });
+            }
+
+            const letterHeadImageFromS3 = await Storage.get(
+              this.activeTemplateInfo &&
+                this.activeTemplateInfo.letterHeadImageName
+                ? this.activeTemplateInfo.letterHeadImageName
+                : 'wis-letterhead'
+            );
+            this.letterHeadPreviewUrl = letterHeadImageFromS3;
           } else {
             this.createForm.reset();
             this.activeTemplateInfo = undefined;
@@ -149,7 +162,6 @@ export class EditComponent implements OnInit, OnDestroy {
         this.displayStatus(false);
         this.isLoading = false;
       });
-    console.log('sorted templates', this.templateInfos);
   };
 
   public async onCreate(report: any) {
@@ -160,7 +172,8 @@ export class EditComponent implements OnInit, OnDestroy {
     let generatedStampImageName = `${stampImageNamePredefined}-${this.selectedLab}`;
     let generatedLetterHeadImageName = `${letterHeadImageNamePredefined}-${this.selectedLab}`;
     const { stampImage, letterHeadImage, ...rest } = report;
-
+    this.isLoading = true;
+    //update report
     if (this.activeTemplateInfo && this.userInfo) {
       let modifiedReport: UpdateReportTemplateInput = {
         ...rest,
@@ -189,6 +202,7 @@ export class EditComponent implements OnInit, OnDestroy {
       }
       this.updateReportWithAttachment(modifiedReport);
     } else {
+      //create new report
       let modifiedReport: CreateReportTemplateInput = {
         ...rest,
         labLocation: this.selectedLab,
@@ -248,13 +262,13 @@ export class EditComponent implements OnInit, OnDestroy {
         console.log('Error updating template...', e);
         this.error = 'Error updating template';
       });
+    this.isLoading = false;
     // }
   }
 
   private createReportWithAttachment(
     reportTemplate: CreateReportTemplateInput
   ) {
-    // console.log('createReportWithAttachment reportTempalte ', reportTemplate);
     this.api
       .CreateReportTemplate(reportTemplate)
       .then(() => {
@@ -266,7 +280,7 @@ export class EditComponent implements OnInit, OnDestroy {
         console.log('Error creating template...', e);
         this.error = 'Error creating template';
       });
-    // }
+    this.isLoading = false;
   }
   public displayStatus(isUpdated: boolean): void {
     this.notificationService.show({
@@ -280,31 +294,6 @@ export class EditComponent implements OnInit, OnDestroy {
       closable: true,
     });
   }
-  // public async labValueChange(value: any) {
-  //   // console.log('lab valueChange', value);
-  //   this.selectedLab = value;
-  //   this.isLoading = true;
-  //   if (this.userInfo !== null) {
-  //     const { id, countryCode, hviVersion } = this.userInfo;
-  //     try {
-  //       await this.api
-  //         .UpdateUserInfo({
-  //           id: id,
-  //           labLocation: value,
-  //           countryCode: countryCode,
-  //           hviVersion: hviVersion,
-  //         })
-  //         .then((response) => {
-  //           console.log('update user iffom', response);
-  //           this.fetchTemplateData();
-  //         });
-  //     } catch (err) {
-  //       console.log(err);
-  //       this.error = `${err}`;
-  //       this.displayStatus(false);
-  //     }
-  //   }
-  // }
 
   backToUpload(): void {
     this.router.navigate(['/upload']);

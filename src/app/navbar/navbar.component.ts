@@ -37,6 +37,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public sectionName: any = '';
   public wislogo: any;
   public lab = ['Dushanbe', 'Bokhtar', 'Khujand'];
+
+  // public lab = [
+  //   { code: 'TJV-DSH', name: 'Dushanbe' },
+  //   { code: 'TJV-BOK', name: 'Bokhtar' },
+  //   { code: 'TJV-KJD', name: 'Khujand' },
+  // ];
   // public country = ['Tajikistan', 'India', 'Vietnam'];
   public hviVersions = ['v1', 'v2', 'v3'];
   constructor(

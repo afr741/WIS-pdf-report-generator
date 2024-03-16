@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
       if (error.code == 'UserNotFoundException') {
         this.error = error.message;
       }
-      this.error = error.message;
+      this.error = error;
       console.log(error);
     }
     return null;
