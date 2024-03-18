@@ -15,8 +15,6 @@ import {
   LoaderSize,
 } from '@progress/kendo-angular-indicators';
 
-// import letterHead from '../../assets/images/letterhead.png';
-// const logo = require('../../assets/images/letterhead.png').default as string;
 const REMARKS = {
   part1: [
     'Note: Samples were NOT drawn by WIS.',
@@ -34,8 +32,6 @@ const REMARKS = {
     'A sample moisture level between 6.75% and 8.25%',
     'Standard instrument tolerance applicable',
   ],
-  part4: 'ЧСП "Точикистон-ВИС (Санчиши мустакили пахта)"',
-  part5: 'JSC "Tajikistan-WIS (Independent inspection 0f cotton)"',
 };
 
 @Component({
@@ -83,11 +79,12 @@ export class PdfComponent implements OnInit {
     this.updateUserPreferenceSubscription = this.api
       .OnUpdateUserInfoListener()
       .subscribe((user: any) => {
-        this.isLoading = true;
         const updatedUser = user.value.data.onUpdateUserInfo;
         this.selectedHviVersion = updatedUser.hviVersion;
-        this.selectedLab = updatedUser.labLocation;
-        fetchTemplateData();
+        if (this.selectedLab !== updatedUser.labLocation) {
+          this.selectedLab = updatedUser.labLocation;
+          fetchTemplateData();
+        }
 
         // console.log('userList update ng init', this.userList);
       });
@@ -98,11 +95,22 @@ export class PdfComponent implements OnInit {
       this.currentUserEmail = res.email;
     });
 
-    this.api.ListUserInfos().then((user) => {
-      this.selectedHviVersion = user.items[0]?.hviVersion;
-      this.selectedLab = user.items[0]?.labLocation;
-      console.log('list user', user);
-    });
+    this.api
+      .ListUserInfos()
+      .then((user) => {
+        this.selectedHviVersion = user.items[0]?.hviVersion;
+        this.selectedLab = user.items[0]?.labLocation;
+      })
+      .then(() => {
+        try {
+          fetchTemplateData().then(() => fetchData());
+        } catch (error) {
+          // Handle errors if any of the async functions fail
+          this.displayStatus(false);
+          this.error = `Error fetching: ${error}`;
+          this.isLoading = false;
+        }
+      });
     const fetchData = () => {
       this.api
         .ListReports()
@@ -139,8 +147,8 @@ export class PdfComponent implements OnInit {
         })
         .then(() => {
           if (this.selectedHviVersion && this.reports.length > 0) {
-            // this.isLoading = false;
-            this.openAndDownloadCallBack(this.reports[0]);
+            this.isLoading = false;
+            // this.openAndDownloadCallBack(this.reports[0]);
           }
         })
         .catch((err) => {
@@ -149,54 +157,49 @@ export class PdfComponent implements OnInit {
     };
 
     //get template info
-    const fetchTemplateData = () => {
-      this.api.ListReportTemplates().then((event) => {
-        console.log('template info event', event);
-        this.templateInfo = event.items as ReportTemplate[];
-        if (this.templateInfo.length > 0) {
+    const fetchTemplateData = async () => {
+      this.isLoading = true;
+      this.api
+        .ListReportTemplates()
+        .then((event) => {
+          console.log('template info event', event);
+          this.templateInfo = event.items as ReportTemplate[];
           const foundEntry = this.templateInfo.find(
-            (item) => (item.labLocation = this.selectedLab)
+            (item) => item.labLocation == this.selectedLab
           );
           this.activeTemplateInfo = foundEntry;
-          this.assignActiveTemplate(this.activeTemplateInfo).then(() =>
-            fetchData()
-          );
-        }
-      });
-    };
 
-    try {
-      fetchTemplateData();
-    } catch (error) {
-      // Handle errors if any of the async functions fail
-      this.displayStatus(false);
-      this.error = `Error fetching: ${error}`;
-      this.isLoading = false;
-    }
+          console.log('found template info', foundEntry);
+        })
+        .then(() => {
+          this.fetchTemplateImages();
+        });
+    };
   }
 
-  async assignActiveTemplate(templateInfo: any) {
-    try {
-      if (templateInfo && templateInfo.letterHeadImageName) {
-        this.letterHeadPreviewUrl = await Storage.get(
-          templateInfo.letterHeadImageName
-        );
-        this.letterHeadImage = await this.getBase64ImageFromURL(
-          this.letterHeadPreviewUrl
-        );
-      }
+  fetchTemplateImages() {
+    // console.log('this.activeTemplateInfo', this.activeTemplateInfo);
+    setTimeout(async () => {
+      if (this.activeTemplateInfo) {
+        if (this.activeTemplateInfo.letterHeadImageName) {
+          this.letterHeadPreviewUrl = await Storage.get(
+            this.activeTemplateInfo.letterHeadImageName
+          );
+          this.letterHeadImage = await this.getBase64ImageFromURL(
+            this.letterHeadPreviewUrl
+          );
+        }
 
-      if (templateInfo && templateInfo.stampImageName) {
-        this.stampPreviewUrl = await Storage.get(templateInfo.stampImageName);
-        this.stampImage = await this.getBase64ImageFromURL(
-          this.stampPreviewUrl
-        );
+        if (this.activeTemplateInfo.stampImageName) {
+          this.stampPreviewUrl = await Storage.get(
+            this.activeTemplateInfo.stampImageName
+          );
+          this.stampImage = await this.getBase64ImageFromURL(
+            this.stampPreviewUrl
+          );
+        }
       }
-    } catch (error) {
-      this.displayStatus(false);
-      this.error = `${error}`;
-      this.isLoading = false;
-    }
+    }, 1000);
   }
   ngOnDestroy() {
     if (this.updateUserPreferenceSubscription) {
@@ -211,8 +214,8 @@ export class PdfComponent implements OnInit {
     return urlFriendlyText;
   }
 
-  async generateQRCodeImageAndURL() {
-    const textToEncrypt = this.reports[0].id;
+  async generateQRCodeImageAndURL(id: any) {
+    const textToEncrypt = id;
 
     const encryptedText = CryptoJS.AES.encrypt(
       textToEncrypt,
@@ -256,8 +259,6 @@ export class PdfComponent implements OnInit {
   }
 
   async processPDFDataV1(report: Report) {
-    if (!this.activeTemplateInfo) return;
-
     let {
       dataRows,
       reportNum,
@@ -266,20 +267,8 @@ export class PdfComponent implements OnInit {
       stations,
       variety,
       createdAt,
+      id,
     } = report;
-
-    let { testLocation, origin } = this.activeTemplateInfo;
-    console.log('processpdfdata dataRows', dataRows);
-
-    let formatedDate = () => {
-      let createdDate = new Date(createdAt);
-      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
-      let date = `${createdDate.getFullYear()}.${month}.${
-        createdDate.getDate() < 10 ? 0 : ''
-      }${createdDate.getDate()}.`;
-
-      return date;
-    };
 
     if (!dataRows || dataRows[0] === null) {
       this.displayStatus(false);
@@ -291,16 +280,26 @@ export class PdfComponent implements OnInit {
     console.log('parsedRawData', parsedRawData);
 
     // number of elements based on elments in this row
-    const keys = Object.keys(parsedRawData[7]);
+    const keys = Object.keys(parsedRawData[7]).sort((a, b) => {
+      const numA = parseInt(a.match(/\d+/)![0]);
+      const numB = parseInt(b.match(/\d+/)![0]);
+      return numA - numB;
+    });
 
     const averageRow = parsedRawData[33];
+    const n24row = parsedRawData[34];
     // Convert array of objects to array of arrays
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      return keys.map((key) => {
+      return keys.map((key, keyIndex) => {
         let cellValue = obj[key];
+        //replaces row that has rowCOunt with final stats row
         if (index === 34 && key === '__EMPTY_1') {
-          // console.log('averageRow', Object.values(averageRow)[0]);
-          return Object.values(averageRow)[0];
+          return averageRow.__EMPTY;
+        }
+        if (index === 34 && key === '__EMPTY_4') {
+          const finalValue = n24row.__EMPTY_1.match(/\d+/) + n24row.__EMPTY_4;
+          console.log('finalValue', finalValue);
+          return finalValue;
         }
         let roundedCellValue = isNaN(cellValue)
           ? cellValue
@@ -325,27 +324,23 @@ export class PdfComponent implements OnInit {
       bodyStartIndex + 1,
       bodyEndIndex + 1
     );
-    const numberOfSamples = extractedRowsBody.length - 7;
+
+    extractedRowsBody.splice(extractedRowsBody.length - 2, 1);
 
     //render docDefinition
-
-    this.renderPDF(
-      testLocation,
+    await this.renderPDF(
       customerName,
       reportNum,
       stations,
       variety,
-      numberOfSamples,
       lotNum,
       extractedRowsBody,
-      formatedDate,
-      origin
+      createdAt,
+      id
     );
   }
 
   async processPDFDataV2(report: Report) {
-    if (!this.activeTemplateInfo) return;
-
     let {
       dataRows,
       reportNum,
@@ -354,19 +349,10 @@ export class PdfComponent implements OnInit {
       stations,
       variety,
       createdAt,
+      id,
     } = report;
-    let { testLocation, origin } = this.activeTemplateInfo;
-    console.log('processpdfdata dataRows', dataRows);
 
-    let formatedDate = () => {
-      let createdDate = new Date(createdAt);
-      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
-      let date = `${createdDate.getFullYear()}.${month}.${
-        createdDate.getDate() < 10 ? 0 : ''
-      }${createdDate.getDate()}.`;
-
-      return date;
-    };
+    console.log('processpdfdata dataRows v2', dataRows);
 
     if (!dataRows || dataRows[0] === null) {
       this.displayStatus(false);
@@ -379,17 +365,29 @@ export class PdfComponent implements OnInit {
     console.log('parsedRawData', parsedRawData);
 
     // number of elements based on elments in this row
-    const keys = Object.keys(parsedRawData[6]);
+
+    const keys = Object.keys(parsedRawData[6]).sort((a, b) => {
+      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+      return numA - numB;
+    });
+    console.log('keys v2', keys);
 
     const averageRow = parsedRawData[33];
     // Convert array of objects to array of arrays
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      return keys.map((key) => {
+      return keys.map((key, keyIndex) => {
         let cellValue = obj[key];
         if (index === 34 && key === '__EMPTY_1') {
           // console.log('averageRow', Object.values(averageRow)[0]);
           return Object.values(averageRow)[0];
         }
+        //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
+        if (obj.__EMPTY && keyIndex == 1) {
+          // console.log('KEY OF ROW 31', obj.__EMPTY);
+          return obj.__EMPTY;
+        }
+
         let roundedCellValue = isNaN(cellValue)
           ? cellValue
           : Number(cellValue).toFixed(2);
@@ -412,25 +410,20 @@ export class PdfComponent implements OnInit {
       bodyStartIndex,
       bodyEndIndex + 1
     );
-    const numberOfSamples = extractedRowsBody.length - 7;
 
-    this.renderPDF(
-      testLocation,
+    await this.renderPDF(
       customerName,
       reportNum,
       stations,
       variety,
-      numberOfSamples,
       lotNum,
       extractedRowsBody,
-      formatedDate,
-      origin
+      createdAt,
+      id
     );
   }
 
   async processPDFDataV3(report: Report) {
-    if (!this.activeTemplateInfo) return;
-
     let {
       dataRows,
       reportNum,
@@ -439,19 +432,8 @@ export class PdfComponent implements OnInit {
       stations,
       variety,
       createdAt,
+      id,
     } = report;
-    let { testLocation, origin } = this.activeTemplateInfo;
-    console.log('processpdfdata dataRows', dataRows);
-
-    let formatedDate = () => {
-      let createdDate = new Date(createdAt);
-      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
-      let date = `${createdDate.getFullYear()}.${month}.${
-        createdDate.getDate() < 10 ? 0 : ''
-      }${createdDate.getDate()}.`;
-
-      return date;
-    };
 
     if (!dataRows || dataRows[0] === null) {
       this.displayStatus(false);
@@ -460,20 +442,25 @@ export class PdfComponent implements OnInit {
     }
 
     let parsedRawData = JSON.parse(dataRows[0]);
-    console.log('parsedRawData', parsedRawData);
+    console.log('parsedRawData v3', parsedRawData);
 
     // number of elements based on elments in this row
-    const keys = Object.keys(parsedRawData[5]);
 
-    // const averageRow = parsedRawData[33];
-    // Convert array of objects to array of arrays
+    const keys = Object.keys(parsedRawData[5]).sort((a, b) => {
+      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+      return numA - numB;
+    });
+    // console.log('keys v3', keys);
+
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      return keys.map((key) => {
+      //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
+      return keys.map((key, keyIndex) => {
+        if (obj.__EMPTY && keyIndex == 1) {
+          // console.log('KEY OF ROW 31', obj.__EMPTY);
+          return obj.__EMPTY;
+        }
         let cellValue = obj[key];
-        // if (index === 34 && key === '__EMPTY_1') {
-        //   // console.log('averageRow', Object.values(averageRow)[0]);
-        //   return Object.values(averageRow)[0];
-        // }
         let roundedCellValue = isNaN(cellValue)
           ? cellValue
           : Number(cellValue).toFixed(2);
@@ -493,50 +480,124 @@ export class PdfComponent implements OnInit {
     );
 
     let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex,
+      bodyStartIndex + 1,
       bodyEndIndex + 1
     );
-    const numberOfSamples = extractedRowsBody.length - 7;
-    this.renderPDF(
-      testLocation,
+    await this.renderPDF(
       customerName,
       reportNum,
       stations,
       variety,
-      numberOfSamples,
       lotNum,
       extractedRowsBody,
-      formatedDate,
-      origin
+      createdAt,
+      id
     );
   }
 
+  async handleProcessingVersion(dataItem: any) {
+    let version = this.selectedHviVersion;
+
+    switch (version) {
+      case 'v1':
+        this.processPDFDataV1(dataItem);
+        break;
+      case 'v2':
+        this.processPDFDataV2(dataItem);
+        break;
+      case 'v3':
+        this.processPDFDataV3(dataItem);
+        break;
+      default:
+        console.log(`version doesnt exist!`);
+        this.displayStatus(false);
+        this.error = 'version does not exist';
+        this.isLoading = false;
+    }
+    this.isLoading = false;
+  }
   public async renderPDF(
-    testLocation: any,
     customerName: any,
     reportNum: any,
     stations: any,
     variety: any,
-    numberOfSamples: any,
     lotNum: any,
     extractedRowsBody: any,
-    formatedDate: any,
-    origin: any
+    createdAt: any,
+    id: any
   ) {
-    const { qrImage, qrURL } = await this.generateQRCodeImageAndURL();
-    if (!this.activeTemplateInfo) return;
+    const { qrImage, qrURL } = await this.generateQRCodeImageAndURL(id);
+
+    console.log('extractedRowsBody', extractedRowsBody);
+    let qrImageProcessed = this.getBase64ImageFromURL(qrImage);
+    let testLocation = '';
+    let origin = '';
+    if (this.activeTemplateInfo?.testLocation) {
+      testLocation = this.activeTemplateInfo?.testLocation;
+    }
+    if (this.activeTemplateInfo?.origin) {
+      origin = this.activeTemplateInfo?.origin;
+    }
+
+    let formatedDate = () => {
+      let createdDate = new Date(createdAt);
+      const month = (createdDate.getMonth() + 1).toString().padStart(2, '0');
+      let date = `${createdDate.getFullYear()}.${month}.${
+        createdDate.getDate() < 10 ? 0 : ''
+      }${createdDate.getDate()}.`;
+
+      return date;
+    };
+
+    const numberOfSamples =
+      extractedRowsBody.length -
+      (this.selectedHviVersion == 'v1'
+        ? 3
+        : this.selectedHviVersion == 'v2'
+        ? 9
+        : 9);
+    if (extractedRowsBody.length == 0) {
+      this.displayStatus(false);
+    }
+    // if (!this.activeTemplateInfo) return;
+    let phone: any = '';
+    let address: any = '';
+    let addressTranslation: any = '';
+    let fax: any = '';
+    let email: any = '';
+    let localCompanyName: any = '';
+    let localCompanyNameTranslation: any = '';
+
+    if (this.activeTemplateInfo) {
+      phone = this.activeTemplateInfo.phone;
+      address = this.activeTemplateInfo.address;
+      addressTranslation = this.activeTemplateInfo.addressTranslation;
+      fax = this.activeTemplateInfo.fax;
+      email = this.activeTemplateInfo.email;
+      localCompanyName = this.activeTemplateInfo.localCompanyName;
+      localCompanyNameTranslation =
+        this.activeTemplateInfo.localCompanyNameTranslation;
+    }
+
+    console.log('stamp image name', this.activeTemplateInfo!.stampImageName);
     let docDefinition = {
       pageSize: 'A4',
       background: [
-        {
+        this.stampImage && {
           image: await this.stampImage,
           fit: [150, 150],
-          absolutePosition: { x: 380, y: 660 },
+          absolutePosition: { x: 410, y: 680 },
+        },
+        {
+          link: qrURL,
+          image: await qrImageProcessed,
+          fit: [90, 90],
+          absolutePosition: { x: 280, y: 700 },
         },
       ],
       content: [
-        {
-          width: 520,
+        this.letterHeadImage && {
+          width: 500,
           margin: [0, 10],
           image: await this.letterHeadImage,
         },
@@ -592,7 +653,7 @@ export class PdfComponent implements OnInit {
           ol: REMARKS.part3,
         },
         {
-          text: `${this.activeTemplateInfo.localCompanyName}\n ${this.activeTemplateInfo.localCompanyNameTranslation}`,
+          text: `${localCompanyName}\n ${localCompanyNameTranslation}`,
           style: 'contactsHeader',
         },
 
@@ -606,19 +667,13 @@ export class PdfComponent implements OnInit {
                   columns: [
                     {
                       width: 80,
-                      text: `${this.activeTemplateInfo.address}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
+                      text: `${address}, \nPh ${phone} \nFx ${fax}\nEm ${email}\n www.wiscontrol.com`,
                     },
                     {
                       width: 80,
-                      text: `${this.activeTemplateInfo.addressTranslation}, \nPh ${this.activeTemplateInfo.phone} \nFx ${this.activeTemplateInfo.fax}\nEm ${this.activeTemplateInfo.email}\n www.wiscontrol.com`,
+                      text: `${addressTranslation}, \nPh ${phone} \nFx ${fax}\nEm ${email}\n www.wiscontrol.com`,
                     },
                   ],
-                },
-
-                {
-                  link: qrURL,
-                  image: qrImage,
-                  fit: [90, 90],
                 },
               ],
             ],
@@ -657,47 +712,34 @@ export class PdfComponent implements OnInit {
     this.isLoading = false;
   }
 
-  async handleProcessingVersion(dataItem: any) {
-    let version = this.selectedHviVersion;
-    switch (version) {
-      case 'v1':
-        this.processPDFDataV1(dataItem);
-        break;
-      case 'v2':
-        this.processPDFDataV2(dataItem);
-        break;
-      case 'v3':
-        this.processPDFDataV3(dataItem);
-        break;
-      default:
-        console.log(`version doesnt exist!`);
-        this.displayStatus(false);
-        this.error = 'version does not exist';
-        this.isLoading = false;
-    }
-    this.isLoading = false;
-  }
-
   handlBackButton() {
     this.router.navigate(['/upload']);
   }
 
   async openAndDownloadCallBack(dataItem: any) {
-    console.log('openAndDownloadCallBack dataitem', dataItem);
+    // console.log('openAndDownloadCallBack dataitem', dataItem);
     if (dataItem.dataRows === null) {
-      this.displayStatus(false);
+      console.log('failed to process!', dataItem.dataRows);
       this.error = 'Row are not processed!';
+      this.displayStatus(false);
     } else {
+      console.log('all good!', dataItem);
       this.error = null;
-      await this.handleProcessingVersion(dataItem);
+      this.handleProcessingVersion(dataItem);
     }
   }
   async openPDF(dataItem: any) {
-    await this.openAndDownloadCallBack(dataItem).then(() =>
-      pdfMake
-        .createPdf(this.pdfData, undefined, undefined, pdfFonts.pdfMake.vfs)
-        .open()
-    );
+    await this.openAndDownloadCallBack(dataItem)
+      .then(() => {
+        if (this.pdfData !== null)
+          pdfMake
+            .createPdf(this.pdfData, undefined, undefined, pdfFonts.pdfMake.vfs)
+            .open();
+      })
+      .catch((e) => {
+        this.error = e;
+        this.displayStatus(false);
+      });
 
     // this.pdfData = null;
   }
