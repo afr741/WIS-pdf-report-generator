@@ -7,25 +7,6 @@
 .qr-data-grid {
   min-width: 1920px;
 }
-.qr-data-grid {
-  .k-grid-aria-root {
-    .k-grid-container {
-      .k-grid-content {
-        .k-grid-table-wrap {
-          .k-grid-table {
-            .k-table-tbody {
-              .k-table-row {
-                .k-table-td {
-                  padding-inline: 35px;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
 
 td {
   padding-inline: 20px;

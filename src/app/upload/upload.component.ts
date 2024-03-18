@@ -92,6 +92,7 @@ export class UploadComponent implements OnInit, OnDestroy {
     this.api.ListUserInfos().then((user: any) => {
       if (user.items.length > 0) {
         this.selectedLab = user.items[0].labLocation;
+        this.selectedHviVersion = user.items[0].hviVersion;
       }
     });
 

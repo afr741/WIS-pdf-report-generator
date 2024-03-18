@@ -291,6 +291,10 @@ export class PdfComponent implements OnInit {
     // Convert array of objects to array of arrays
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
       return keys.map((key, keyIndex) => {
+        let original = [0, 1, 14, 17];
+        let isOneDec = [3, 4, 8, 10, 11, 12, 13, 15];
+        let isTwoDec = [5, 6, 9, 16];
+        let isThreeDec = [7];
         let cellValue = obj[key];
         //replaces row that has rowCOunt with final stats row
         if (index === 34 && key === '__EMPTY_1') {
@@ -301,9 +305,19 @@ export class PdfComponent implements OnInit {
           console.log('finalValue', finalValue);
           return finalValue;
         }
-        let roundedCellValue = isNaN(cellValue)
+        let roundedCellValue = original.includes(keyIndex)
           ? cellValue
-          : Number(cellValue).toFixed(2);
+          : isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(
+              isOneDec.includes(keyIndex)
+                ? 1
+                : isTwoDec.includes(keyIndex)
+                ? 2
+                : isThreeDec.includes(keyIndex)
+                ? 3
+                : 0
+            );
         return roundedCellValue || '';
       });
     });
@@ -371,12 +385,16 @@ export class PdfComponent implements OnInit {
       const numB = parseInt(b.match(/\d+/)?.[0] || '0');
       return numA - numB;
     });
-    console.log('keys v2', keys);
+    // console.log('keys v2', keys);
 
     const averageRow = parsedRawData[33];
     // Convert array of objects to array of arrays
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
       return keys.map((key, keyIndex) => {
+        let original = [16];
+        let isOneDec = [8, 9, 10, 11, 12, 14];
+        let isTwoDec = [3, 4, 6, 7, 13, 15];
+        let isThreeDec = [5];
         let cellValue = obj[key];
         if (index === 34 && key === '__EMPTY_1') {
           // console.log('averageRow', Object.values(averageRow)[0]);
@@ -388,9 +406,19 @@ export class PdfComponent implements OnInit {
           return obj.__EMPTY;
         }
 
-        let roundedCellValue = isNaN(cellValue)
+        let roundedCellValue = original.includes(keyIndex)
           ? cellValue
-          : Number(cellValue).toFixed(2);
+          : isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(
+              isOneDec.includes(keyIndex)
+                ? 1
+                : isTwoDec.includes(keyIndex)
+                ? 2
+                : isThreeDec.includes(keyIndex)
+                ? 3
+                : 0
+            );
         return roundedCellValue || '';
       });
     });
@@ -461,9 +489,24 @@ export class PdfComponent implements OnInit {
           return obj.__EMPTY;
         }
         let cellValue = obj[key];
-        let roundedCellValue = isNaN(cellValue)
+        let original = [16];
+        let isOneDec = [8, 9, 10, 11, 12, 14];
+        let isTwoDec = [3, 4, 6, 7, 13, 15];
+        let isThreeDec = [5];
+
+        let roundedCellValue = original.includes(keyIndex)
           ? cellValue
-          : Number(cellValue).toFixed(2);
+          : isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(
+              isOneDec.includes(keyIndex)
+                ? 1
+                : isTwoDec.includes(keyIndex)
+                ? 2
+                : isThreeDec.includes(keyIndex)
+                ? 3
+                : 0
+            );
         return roundedCellValue || '';
       });
     });
