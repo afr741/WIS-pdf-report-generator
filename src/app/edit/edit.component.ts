@@ -131,9 +131,7 @@ export class EditComponent implements OnInit, OnDestroy {
             console.log('fieldsToPrefill:', fieldsToPrefill);
             this.createForm.patchValue(fieldsToPrefill);
             if (fieldsToPrefill.stampImageName) {
-              Storage.get(
-                `${fieldsToPrefill.stampImageName}-${this.selectedLab}`
-              ).then((res) => {
+              Storage.get(`${fieldsToPrefill.stampImageName}`).then((res) => {
                 if (res) {
                   console.log('stampImageFromS3  res', res);
                   this.stampPreviewUrl = res;
@@ -211,7 +209,6 @@ export class EditComponent implements OnInit, OnDestroy {
         id: this.selectedLab,
         templateId: this.selectedLab,
       };
-      console.log('updateReportWithAttachment modifiedReport:', modifiedReport);
       this.createReportWithAttachment(modifiedReport);
     }
   }
