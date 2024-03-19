@@ -82,6 +82,7 @@
             [rounded]="'small'"
             [fillMode]="'solid'"
             [themeColor]="'success'"
+            [disabled]="isButtonDisabled"
             (click)="openPDF(dataItem)"
           >
             Open
@@ -93,6 +94,7 @@
             [rounded]="'small'"
             [fillMode]="'solid'"
             [themeColor]="'warning'"
+            [disabled]="isButtonDisabled"
             (click)="downloadPDF(dataItem)"
           >
             Download

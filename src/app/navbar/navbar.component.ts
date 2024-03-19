@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // public wisLogo: any = logo;
   public kendokaAvatar =
     'https://www.telerik.com/kendo-angular-ui-develop/components/navigation/appbar/assets/kendoka-angular.png';
-  public sectionName: any = '';
+  public sectionName: string = '';
   public wislogo: any;
   public lab = ['Dushanbe', 'Bokhtar', 'Khujand'];
 
@@ -53,30 +53,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   public async ngOnInit() {
     this.wislogo = await Storage.get('wis.jpg');
+    this.setSectionName(this.router.url);
 
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
-        let navUrl = event.url.split('/')[1];
-        switch (navUrl) {
-          case '':
-            this.sectionName = 'Upload section';
-            break;
-          case 'upload':
-            this.sectionName = 'Upload section';
-            break;
-          case 'pdf':
-            this.sectionName = 'Generated Reports';
-            break;
-          case 'edit':
-            this.sectionName = 'Edit Template';
-            break;
-          case 'qrcode':
-            this.sectionName = 'QrCode Section';
-            break;
-          default:
-            this.sectionName = '';
-            break;
-        }
+        this.setSectionName(event.url);
       }
     });
 
@@ -130,6 +111,28 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.modifyUserPreferenceSubscription.unsubscribe();
     }
     this.modifyUserPreferenceSubscription = null;
+  }
+
+  setSectionName(url: string) {
+    let navUrl = url.split('/')[1];
+    switch (navUrl) {
+      case '':
+      case 'upload':
+        this.sectionName = 'Upload section';
+        break;
+      case 'pdf':
+        this.sectionName = 'Generated Reports';
+        break;
+      case 'edit':
+        this.sectionName = 'Edit Template';
+        break;
+      case 'qrcode':
+        this.sectionName = 'QrCode Section';
+        break;
+      default:
+        this.sectionName = '';
+        break;
+    }
   }
   async handleLogOut() {
     await this.authService

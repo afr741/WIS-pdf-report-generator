@@ -59,6 +59,7 @@ export class PdfComponent implements OnInit {
   public stampImage: any = null;
   public isManagerUp: boolean = false;
   public isSuperUser: boolean = false;
+  public isButtonDisabled: boolean = false;
 
   private updateUserPreferenceSubscription: ZenObservable.Subscription | null =
     null;
@@ -83,7 +84,7 @@ export class PdfComponent implements OnInit {
         this.selectedHviVersion = updatedUser.hviVersion;
         if (this.selectedLab !== updatedUser.labLocation) {
           this.selectedLab = updatedUser.labLocation;
-          fetchTemplateData();
+          fetchTemplateData().then(() => fetchData());
         }
 
         // console.log('userList update ng init', this.userList);
@@ -177,29 +178,28 @@ export class PdfComponent implements OnInit {
     };
   }
 
-  fetchTemplateImages() {
+  async fetchTemplateImages() {
     // console.log('this.activeTemplateInfo', this.activeTemplateInfo);
-    setTimeout(async () => {
-      if (this.activeTemplateInfo) {
-        if (this.activeTemplateInfo.letterHeadImageName) {
-          this.letterHeadPreviewUrl = await Storage.get(
-            this.activeTemplateInfo.letterHeadImageName
-          );
-          this.letterHeadImage = await this.getBase64ImageFromURL(
-            this.letterHeadPreviewUrl
-          );
-        }
 
-        if (this.activeTemplateInfo.stampImageName) {
-          this.stampPreviewUrl = await Storage.get(
-            this.activeTemplateInfo.stampImageName
-          );
-          this.stampImage = await this.getBase64ImageFromURL(
-            this.stampPreviewUrl
-          );
-        }
+    if (this.activeTemplateInfo) {
+      if (this.activeTemplateInfo.letterHeadImageName) {
+        this.letterHeadPreviewUrl = await Storage.get(
+          this.activeTemplateInfo.letterHeadImageName
+        );
+        this.letterHeadImage = await this.getBase64ImageFromURL(
+          this.letterHeadPreviewUrl
+        );
       }
-    }, 1000);
+
+      if (this.activeTemplateInfo.stampImageName) {
+        this.stampPreviewUrl = await Storage.get(
+          this.activeTemplateInfo.stampImageName
+        );
+        this.stampImage = await this.getBase64ImageFromURL(
+          this.stampPreviewUrl
+        );
+      }
+    }
   }
   ngOnDestroy() {
     if (this.updateUserPreferenceSubscription) {
@@ -543,13 +543,13 @@ export class PdfComponent implements OnInit {
 
     switch (version) {
       case 'v1':
-        this.processPDFDataV1(dataItem);
+        await this.processPDFDataV1(dataItem);
         break;
       case 'v2':
-        this.processPDFDataV2(dataItem);
+        await this.processPDFDataV2(dataItem);
         break;
       case 'v3':
-        this.processPDFDataV3(dataItem);
+        await this.processPDFDataV3(dataItem);
         break;
       default:
         console.log(`version doesnt exist!`);
@@ -729,7 +729,7 @@ export class PdfComponent implements OnInit {
           fontSize: 8,
         },
         dataTable: {
-          margin: [15, 5],
+          margin: [0, 15],
           fontSize: 6,
         },
         qrCodeText: {
@@ -774,10 +774,14 @@ export class PdfComponent implements OnInit {
   async openPDF(dataItem: any) {
     await this.openAndDownloadCallBack(dataItem)
       .then(() => {
-        if (this.pdfData !== null)
+        // if (this.pdfData !== null)
+        this.isButtonDisabled = true;
+        setTimeout(() => {
           pdfMake
             .createPdf(this.pdfData, undefined, undefined, pdfFonts.pdfMake.vfs)
             .open();
+          this.isButtonDisabled = false;
+        }, 2000);
       })
       .catch((e) => {
         this.error = e;
@@ -788,11 +792,16 @@ export class PdfComponent implements OnInit {
   }
 
   async downloadPDF(dataItem: any) {
-    await this.openAndDownloadCallBack(dataItem).then(() =>
-      pdfMake
-        .createPdf(this.pdfData, undefined, undefined, pdfFonts.pdfMake.vfs)
-        .download()
-    );
+    await this.openAndDownloadCallBack(dataItem).then(() => {
+      this.isButtonDisabled = true;
+
+      setTimeout(() => {
+        pdfMake
+          .createPdf(this.pdfData, undefined, undefined, pdfFonts.pdfMake.vfs)
+          .download();
+        this.isButtonDisabled = false;
+      }, 2000);
+    });
 
     // this.pdfData = null;
   }
