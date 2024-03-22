@@ -392,9 +392,9 @@ export class PdfComponent implements OnInit {
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
       return keys.map((key, keyIndex) => {
         let original = [16];
-        let isOneDec = [8, 9, 10, 11, 12, 14];
-        let isTwoDec = [3, 4, 6, 7, 13, 15];
-        let isThreeDec = [5];
+        let isOneDec = [3, 7, 9, 10, 11, 12, 14];
+        let isTwoDec = [4, 5, 8, 13, 15];
+        let isThreeDec = [6];
         let cellValue = obj[key];
         if (index === 34 && key === '__EMPTY_1') {
           // console.log('averageRow', Object.values(averageRow)[0]);
@@ -490,9 +490,9 @@ export class PdfComponent implements OnInit {
         }
         let cellValue = obj[key];
         let original = [16];
-        let isOneDec = [8, 9, 10, 11, 12, 14];
-        let isTwoDec = [3, 4, 6, 7, 13, 15];
-        let isThreeDec = [5];
+        let isOneDec = [4, 8, 10, 11, 12, 13, 14];
+        let isTwoDec = [3, 5, 6, 9, 15];
+        let isThreeDec = [7];
 
         let roundedCellValue = original.includes(keyIndex)
           ? cellValue
@@ -622,7 +622,6 @@ export class PdfComponent implements OnInit {
         this.activeTemplateInfo.localCompanyNameTranslation;
     }
 
-    console.log('stamp image name', this.activeTemplateInfo!.stampImageName);
     let docDefinition = {
       pageSize: 'A4',
       background: [

@@ -122,16 +122,16 @@ export class QrcodeComponent implements OnInit {
 
         if (hviVersion == 'v2') {
           original = [16];
-          isOneDec = [8, 9, 10, 11, 12, 14];
-          isTwoDec = [3, 4, 6, 7, 13, 15];
-          isThreeDec = [5];
+          isOneDec = [3, 7, 9, 10, 11, 12, 14];
+          isTwoDec = [4, 5, 8, 13, 15];
+          isThreeDec = [6];
         }
 
         if (hviVersion == 'v3') {
           original = [16];
-          isOneDec = [8, 9, 10, 11, 12, 14];
-          isTwoDec = [3, 4, 6, 7, 13, 15];
-          isThreeDec = [5];
+          isOneDec = [4, 8, 10, 11, 12, 13, 14];
+          isTwoDec = [3, 5, 6, 9, 15];
+          isThreeDec = [7];
         }
 
         let roundedCellValue = original.includes(keyIndex)
