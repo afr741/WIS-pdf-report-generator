@@ -81,18 +81,20 @@ export class QrcodeComponent implements OnInit {
       }
     );
 
-    const averageRow = parsedRawData[33];
-    const n24row = parsedRawData[34];
+    const averageRow =
+      parsedRawData[parsedRawData.length - (hviVersion == 'v2' ? 7 : 3)];
+    const n24row = parsedRawData[parsedRawData.length - 2];
+    console.log('average row', averageRow);
     // Convert array of objects to array of arrays
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
       return keys.map((key, keyIndex) => {
         let cellValue = obj[key];
 
         if (hviVersion == 'v1') {
-          if (index === 34 && key === '__EMPTY_1') {
+          if (index === parsedRawData.length - 2 && key === '__EMPTY_1') {
             return averageRow.__EMPTY;
           }
-          if (index === 34 && key === '__EMPTY_4') {
+          if (index === parsedRawData.length - 2 && key === '__EMPTY_4') {
             const finalValue = n24row.__EMPTY_1.match(/\d+/) + n24row.__EMPTY_4;
             console.log('finalValue', finalValue);
             return finalValue;
@@ -100,10 +102,6 @@ export class QrcodeComponent implements OnInit {
         }
 
         if (hviVersion == 'v2') {
-          if (index === 34 && key === '__EMPTY_1') {
-            // console.log('averageRow', Object.values(averageRow)[0]);
-            return Object.values(averageRow)[0];
-          }
           //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
           if (obj.__EMPTY && keyIndex == 1) {
             // console.log('KEY OF ROW 31', obj.__EMPTY);
@@ -150,6 +148,8 @@ export class QrcodeComponent implements OnInit {
         return roundedCellValue || '';
       });
     });
+
+    console.log('extracted rows', extractedRows);
     // to find the start of data body using keyword based on HVI version
     let startRowKeyWord =
       hviVersion == 'v1' ? 'Time' : hviVersion == 'v2' ? 'SCI' : 'Print Time';
@@ -165,7 +165,7 @@ export class QrcodeComponent implements OnInit {
           typeof element === 'string' && element.includes(endRowKeyWord)
       )
     );
-
+    console.log('bodyStartIndex', bodyStartIndex, 'bodyEndIndex', bodyEndIndex);
     let extractedRowsBody = extractedRows.slice(
       bodyStartIndex + (hviVersion == 'v2' ? 0 : 1),
       bodyEndIndex + (hviVersion == 'v1' ? 2 : 1)
