@@ -338,8 +338,8 @@ export class PdfComponent implements OnInit {
       bodyEndIndex
     );
 
-    // extractedRowsBody.splice(extractedRowsBody.length - 2, 1);
-
+    let emptyRow = extractedRowsBody.splice(extractedRowsBody.length - 2, 1);
+    console.log('emptyRow', emptyRow);
     //render docDefinition
     await this.renderPDF(
       customerName,

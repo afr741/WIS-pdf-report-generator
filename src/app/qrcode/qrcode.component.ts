@@ -171,10 +171,32 @@ export class QrcodeComponent implements OnInit {
       bodyEndIndex + (hviVersion == 'v1' ? 2 : 1)
     );
     if (hviVersion == 'v1') {
-      extractedRowsBody.splice(extractedRowsBody.length - 2, 1);
+      //removing empty row
+      let emptyRow = extractedRowsBody.splice(extractedRowsBody.length - 2, 1);
+      let lastRow = extractedRowsBody[extractedRowsBody.length - 1];
+      const arrayOfArrays = lastRow.map((str: any) => str.split('\n'));
+
+      // Rotate the array of arrays so that the first element of each sub-array are in the same array
+      const rotatedArray = arrayOfArrays.reduce((acc: any, arr: any) => {
+        arr.forEach((element: any, index: any) => {
+          if (!acc[index]) {
+            acc[index] = [];
+          }
+          acc[index].push(element);
+        });
+        return acc;
+      }, []);
+      for (let i = 1; i < rotatedArray.length; i++) {
+        // Insert an empty string at index 4 for each array except the first one
+        rotatedArray[i].splice(3, 0, '');
+      }
+      extractedRowsBody.splice(extractedRowsBody.length - 1, 1);
+      let modifiedRowsBody = [...extractedRowsBody, ...rotatedArray];
+      console.log('extractedRowsBody after splice', modifiedRowsBody);
+      this.dataRows = modifiedRowsBody;
+    } else {
+      this.dataRows = extractedRowsBody;
     }
-    console.log('extractedRowsBody', extractedRowsBody);
-    this.dataRows = extractedRowsBody;
   }
 
   async ngOnInit() {
