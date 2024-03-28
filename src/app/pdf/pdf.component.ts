@@ -279,8 +279,13 @@ export class PdfComponent implements OnInit {
     let parsedRawData = JSON.parse(dataRows[0]);
     console.log('parsedRawData', parsedRawData);
 
-    // number of elements based on elments in this row
-    const keys = Object.keys(parsedRawData[7]).sort((a, b) => {
+    // number of elements based on elements in the row where "Bale ID" is located
+    const headerRowIndex = parsedRawData.findIndex((array: any) =>
+      Object.values(array).includes('Bale ID')
+    );
+
+    console.log('headerRowIndex', headerRowIndex);
+    const keys = Object.keys(parsedRawData[headerRowIndex]).sort((a, b) => {
       const numA = parseInt(a.match(/\d+/)![0]);
       const numB = parseInt(b.match(/\d+/)![0]);
       return numA - numB;
@@ -377,9 +382,14 @@ export class PdfComponent implements OnInit {
     let parsedRawData = JSON.parse(dataRows[0]);
     console.log('parsedRawData', parsedRawData);
 
-    // number of elements based on elments in this row
+    // number of elements based on elements in the row where "Bale ID" is located
+    const headerRowIndex = parsedRawData.findIndex((array: any) =>
+      Object.values(array).includes('Bale ID')
+    );
 
-    const keys = Object.keys(parsedRawData[6]).sort((a, b) => {
+    console.log('headerRowIndex', headerRowIndex);
+
+    const keys = Object.keys(parsedRawData[headerRowIndex]).sort((a, b) => {
       const numA = parseInt(a.match(/\d+/)?.[0] || '0');
       const numB = parseInt(b.match(/\d+/)?.[0] || '0');
       return numA - numB;
@@ -418,12 +428,7 @@ export class PdfComponent implements OnInit {
         return roundedCellValue || '';
       });
     });
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes('SCI')
-    );
 
-    // to find the end of data body using "Average" word
     let bodyEndIndex = extractedRows.findIndex((array: any) =>
       array.some(
         (element: any) => typeof element === 'string' && element.includes('Max')
@@ -431,7 +436,7 @@ export class PdfComponent implements OnInit {
     );
 
     let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex,
+      headerRowIndex,
       bodyEndIndex + 1
     );
 
@@ -468,9 +473,13 @@ export class PdfComponent implements OnInit {
     let parsedRawData = JSON.parse(dataRows[0]);
     console.log('parsedRawData v3', parsedRawData);
 
-    // number of elements based on elments in this row
+    const headerRowIndex = parsedRawData.findIndex((array: any) =>
+      Object.values(array).includes('Bale ID')
+    );
 
-    const keys = Object.keys(parsedRawData[5]).sort((a, b) => {
+    console.log('headerRowIndex', headerRowIndex);
+
+    const keys = Object.keys(parsedRawData[headerRowIndex]).sort((a, b) => {
       const numA = parseInt(a.match(/\d+/)?.[0] || '0');
       const numB = parseInt(b.match(/\d+/)?.[0] || '0');
       return numA - numB;
@@ -506,10 +515,6 @@ export class PdfComponent implements OnInit {
         return roundedCellValue || '';
       });
     });
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes('Print Time')
-    );
 
     // to find the end of data body using "Average" word
     let bodyEndIndex = extractedRows.findIndex((array: any) =>
@@ -519,7 +524,7 @@ export class PdfComponent implements OnInit {
     );
 
     let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex + 1,
+      headerRowIndex,
       bodyEndIndex + 1
     );
     await this.renderPDF(

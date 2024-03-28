@@ -71,15 +71,17 @@ export class QrcodeComponent implements OnInit {
     console.log('parsedRawData', parsedRawData);
 
     // number of elements based on elments in this row
-    let parsedFirstRowIndex =
-      hviVersion == 'v1' ? 7 : hviVersion == 'v2' ? 6 : 5;
-    const keys = Object.keys(parsedRawData[parsedFirstRowIndex]).sort(
-      (a, b) => {
-        const numA = parseInt(a.match(/\d+/)?.[0] || '0');
-        const numB = parseInt(b.match(/\d+/)?.[0] || '0');
-        return numA - numB;
-      }
+    const headerRowIndex = parsedRawData.findIndex((array: any) =>
+      Object.values(array).includes('Bale ID')
     );
+
+    console.log('headerRowIndex', headerRowIndex);
+
+    const keys = Object.keys(parsedRawData[headerRowIndex]).sort((a, b) => {
+      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+      return numA - numB;
+    });
 
     const averageRow =
       parsedRawData[parsedRawData.length - (hviVersion == 'v2' ? 7 : 3)];
@@ -151,11 +153,11 @@ export class QrcodeComponent implements OnInit {
 
     console.log('extracted rows', extractedRows);
     // to find the start of data body using keyword based on HVI version
-    let startRowKeyWord =
-      hviVersion == 'v1' ? 'Time' : hviVersion == 'v2' ? 'SCI' : 'Print Time';
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes(startRowKeyWord)
-    );
+    // let startRowKeyWord =
+    //   hviVersion == 'v1' ? 'Time' : hviVersion == 'v2' ? 'SCI' : 'Print Time';
+    // let bodyStartIndex = extractedRows.findIndex((array: any) =>
+    //   array.includes(startRowKeyWord)
+    // );
 
     // to find the end of data body using "Average" and "Max" word
     let endRowKeyWord = hviVersion == 'v1' ? 'Average' : 'Max';
@@ -165,11 +167,12 @@ export class QrcodeComponent implements OnInit {
           typeof element === 'string' && element.includes(endRowKeyWord)
       )
     );
-    console.log('bodyStartIndex', bodyStartIndex, 'bodyEndIndex', bodyEndIndex);
+    console.log('bodyStartIndex', headerRowIndex, 'bodyEndIndex', bodyEndIndex);
     let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex + (hviVersion == 'v2' ? 0 : 1),
+      headerRowIndex,
       bodyEndIndex + (hviVersion == 'v1' ? 2 : 1)
     );
+    console.log('extractedRowsBody', extractedRowsBody);
     if (hviVersion == 'v1') {
       //removing empty row
       let emptyRow = extractedRowsBody.splice(extractedRowsBody.length - 2, 1);
