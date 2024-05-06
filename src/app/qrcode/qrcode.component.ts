@@ -207,15 +207,20 @@ export class QrcodeComponent implements OnInit {
 
     this.decodeQueryParam(queryParams['code']);
 
-    await this.api.GetReport(this.decodedID).then((event) => {
-      console.log('decodeid', this.decodedID);
-      this.dbEntryData = [event];
-      this.dateCreated = new Date(this.dbEntryData[0].createdAt).toDateString();
+    await this.api
+      .GetReport(this.decodedID)
+      .then((event) => {
+        console.log('decodeid', this.decodedID);
+        this.dbEntryData = [event];
+        this.dateCreated = new Date(
+          this.dbEntryData[0].createdAt
+        ).toDateString();
 
-      console.log('dbEntryData', this.dbEntryData);
-      this.parseData(this.dbEntryData[0].dataRows);
-      this.isLoading = false;
-    });
+        console.log('dbEntryData', this.dbEntryData);
+        this.parseData(this.dbEntryData[0].dataRows);
+        this.isLoading = false;
+      })
+      .catch((e) => console.log('api error:', e));
     const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
     this.letterHeadPreviewUrl = letterHeadImageFromS3;
   }
