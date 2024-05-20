@@ -4,6 +4,7 @@ import { APIService, Report } from '../API.service';
 import { ActivatedRoute } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 import { Storage } from 'aws-amplify';
+import { API, GraphQLQuery, GRAPHQL_AUTH_MODE } from '@aws-amplify/api';
 import {
   LoaderType,
   LoaderThemeColor,
@@ -205,22 +206,58 @@ export class QrcodeComponent implements OnInit {
   async ngOnInit() {
     const queryParams = this.route.snapshot.queryParams;
 
-    this.decodeQueryParam(queryParams['code']);
+    const fetchProducts = async () => {
+      try {
+        const productsData = await API.graphql({
+          query: `query GetReport($id: ID!) {
+        getReport(id: $id) {
+          __typename
+          id
+          name
+          email
+          labLocation
+          hviVersion
+          reportNum
+          lotNum
+          customerName
+          origin
+          stations
+          variety
+          attachmentUrl
+          dataRows
+          createdAt
+          updatedAt
+          owner
+        }
+      }`,
+          variables: { id: this.decodedID },
+          authMode: GRAPHQL_AUTH_MODE.API_KEY,
+        });
+        console.log('productsData', productsData);
+        return productsData;
+      } catch (error) {
+        return error;
+      }
+    };
 
-    await this.api
-      .GetReport(this.decodedID)
-      .then((event) => {
-        console.log('decodeid', this.decodedID);
-        this.dbEntryData = [event];
+    this.decodeQueryParam(queryParams['code']);
+    console.log('this.decodedID', this.decodedID);
+
+    fetchProducts()
+      .then((res: any) => {
+        console.log('res, res', res);
+        const retrievedReport = res.data.getReport;
+        console.log('retrievedReport', retrievedReport);
+        this.dbEntryData = [retrievedReport];
         this.dateCreated = new Date(
           this.dbEntryData[0].createdAt
         ).toDateString();
-
         console.log('dbEntryData', this.dbEntryData);
         this.parseData(this.dbEntryData[0].dataRows);
         this.isLoading = false;
       })
-      .catch((e) => console.log('api error:', e));
+      .catch((error) => console.error(error));
+
     const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
     this.letterHeadPreviewUrl = letterHeadImageFromS3;
   }

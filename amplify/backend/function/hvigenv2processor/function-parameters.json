@@ -16,14 +16,6 @@
         "Subscription"
       ]
     },
-    "auth": {
-      "hvigend8bb609a": [
-        "create",
-        "read",
-        "update",
-        "delete"
-      ]
-    },
     "storage": {
       "ReportTemplate:@model(appsync)": [
         "create",

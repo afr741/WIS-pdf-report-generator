@@ -55,6 +55,9 @@ export type ModelReportTemplateConditionInput = {
   and?: Array<ModelReportTemplateConditionInput | null> | null;
   or?: Array<ModelReportTemplateConditionInput | null> | null;
   not?: ModelReportTemplateConditionInput | null;
+  createdAt?: ModelStringInput | null;
+  updatedAt?: ModelStringInput | null;
+  owner?: ModelStringInput | null;
 };
 
 export type ModelIDInput = {
@@ -186,6 +189,9 @@ export type ModelReportConditionInput = {
   and?: Array<ModelReportConditionInput | null> | null;
   or?: Array<ModelReportConditionInput | null> | null;
   not?: ModelReportConditionInput | null;
+  createdAt?: ModelStringInput | null;
+  updatedAt?: ModelStringInput | null;
+  owner?: ModelStringInput | null;
 };
 
 export type Report = {
@@ -240,6 +246,9 @@ export type ModelUserInfoConditionInput = {
   and?: Array<ModelUserInfoConditionInput | null> | null;
   or?: Array<ModelUserInfoConditionInput | null> | null;
   not?: ModelUserInfoConditionInput | null;
+  createdAt?: ModelStringInput | null;
+  updatedAt?: ModelStringInput | null;
+  owner?: ModelStringInput | null;
 };
 
 export type UserInfo = {
@@ -276,9 +285,13 @@ export type ModelReportTemplateFilterInput = {
   testLocation?: ModelStringInput | null;
   origin?: ModelStringInput | null;
   labLocation?: ModelStringInput | null;
+  id?: ModelIDInput | null;
+  createdAt?: ModelStringInput | null;
+  updatedAt?: ModelStringInput | null;
   and?: Array<ModelReportTemplateFilterInput | null> | null;
   or?: Array<ModelReportTemplateFilterInput | null> | null;
   not?: ModelReportTemplateFilterInput | null;
+  owner?: ModelStringInput | null;
 };
 
 export type ModelReportTemplateConnection = {
@@ -301,9 +314,12 @@ export type ModelReportFilterInput = {
   variety?: ModelStringInput | null;
   attachmentUrl?: ModelStringInput | null;
   dataRows?: ModelStringInput | null;
+  createdAt?: ModelStringInput | null;
+  updatedAt?: ModelStringInput | null;
   and?: Array<ModelReportFilterInput | null> | null;
   or?: Array<ModelReportFilterInput | null> | null;
   not?: ModelReportFilterInput | null;
+  owner?: ModelStringInput | null;
 };
 
 export type ModelReportConnection = {
@@ -331,9 +347,12 @@ export type ModelUserInfoFilterInput = {
   id?: ModelIDInput | null;
   labLocation?: ModelStringInput | null;
   hviVersion?: ModelStringInput | null;
+  createdAt?: ModelStringInput | null;
+  updatedAt?: ModelStringInput | null;
   and?: Array<ModelUserInfoFilterInput | null> | null;
   or?: Array<ModelUserInfoFilterInput | null> | null;
   not?: ModelUserInfoFilterInput | null;
+  owner?: ModelStringInput | null;
 };
 
 export type ModelUserInfoConnection = {
@@ -356,8 +375,12 @@ export type ModelSubscriptionReportTemplateFilterInput = {
   testLocation?: ModelSubscriptionStringInput | null;
   origin?: ModelSubscriptionStringInput | null;
   labLocation?: ModelSubscriptionStringInput | null;
+  id?: ModelSubscriptionIDInput | null;
+  createdAt?: ModelSubscriptionStringInput | null;
+  updatedAt?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionReportTemplateFilterInput | null> | null;
   or?: Array<ModelSubscriptionReportTemplateFilterInput | null> | null;
+  owner?: ModelStringInput | null;
 };
 
 export type ModelSubscriptionIDInput = {
@@ -404,16 +427,22 @@ export type ModelSubscriptionReportFilterInput = {
   variety?: ModelSubscriptionStringInput | null;
   attachmentUrl?: ModelSubscriptionStringInput | null;
   dataRows?: ModelSubscriptionStringInput | null;
+  createdAt?: ModelSubscriptionStringInput | null;
+  updatedAt?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionReportFilterInput | null> | null;
   or?: Array<ModelSubscriptionReportFilterInput | null> | null;
+  owner?: ModelStringInput | null;
 };
 
 export type ModelSubscriptionUserInfoFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   labLocation?: ModelSubscriptionStringInput | null;
   hviVersion?: ModelSubscriptionStringInput | null;
+  createdAt?: ModelSubscriptionStringInput | null;
+  updatedAt?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionUserInfoFilterInput | null> | null;
   or?: Array<ModelSubscriptionUserInfoFilterInput | null> | null;
+  owner?: ModelStringInput | null;
 };
 
 export type CreateReportTemplateMutation = {

@@ -15,7 +15,7 @@
           "additionalAuthenticationProviders": [
             {
               "apiKeyConfig": {
-                "apiKeyExpirationDate": "2025-02-01T19:20:27.585Z",
+                "apiKeyExpirationDate": "2025-05-20T03:22:39.272Z",
                 "apiKeyExpirationDays": 365,
                 "description": "hvigen-dev_api_key"
               },
@@ -92,13 +92,6 @@
       "dependsOn": [
         {
           "attributes": [
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "hvigenphasetwolayer"
-        },
-        {
-          "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput",
             "GraphQLAPIKeyOutput"
@@ -108,10 +101,10 @@
         },
         {
           "attributes": [
-            "UserPoolId"
+            "Arn"
           ],
-          "category": "auth",
-          "resourceName": "hvigend8bb609a"
+          "category": "function",
+          "resourceName": "hvigenphasetwolayer"
         }
       ],
       "providerPlugin": "awscloudformation",
