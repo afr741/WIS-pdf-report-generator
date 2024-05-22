@@ -2,9 +2,12 @@ type ReportTemplate
   @model
   @auth(
     rules: [
-      { allow: public, operations: [read] }
-      { allow: owner, operations: [create, update, read] }
-      { allow: groups, groups: ["admins", "labs", "managers"] }
+      # allow owners ability to update and delete their these messages (user pools)
+      { allow: owner }
+      # allow all authenticated users to access this data
+      { allow: private, provider: userPools }
+      # allow all guest users (not authenticated) to access this data
+      { allow: public, provider: apiKey }
     ]
   ) {
   templateId: ID!
@@ -26,9 +29,12 @@ type Report
   @model
   @auth(
     rules: [
-      { allow: public, operations: [read] }
-      { allow: owner, operations: [create, update, read] }
-      { allow: groups, groups: ["admins", "labs", "managers"] }
+      # allow owners ability to update and delete their these messages (user pools)
+      { allow: owner }
+      # allow all authenticated users to access this data
+      { allow: private, provider: userPools }
+      # allow all guest users (not authenticated) to access this data
+      { allow: public, provider: apiKey }
     ]
   ) {
   id: ID!
@@ -49,7 +55,16 @@ type Report
 
 type UserInfo
   @model
-  @auth(rules: [{ allow: public, operations: [read] }, { allow: owner }]) {
+  @auth(
+    rules: [
+      # allow owners ability to update and delete their these messages (user pools)
+      { allow: owner }
+      # allow all authenticated users to access this data
+      { allow: private, provider: userPools }
+      # allow all guest users (not authenticated) to access this data
+      { allow: public, provider: apiKey }
+    ]
+  ) {
   id: ID!
   labLocation: String!
   hviVersion: String!

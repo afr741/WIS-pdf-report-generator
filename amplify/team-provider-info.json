@@ -1,14 +1,14 @@
 {
-  "phasetwo": {
+  "phasethree": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-hvigen-phasetwo-01056-authRole",
-      "UnauthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvigen-phasetwo-01056-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvigen-phasetwo-01056-authRole",
+      "AuthRoleName": "amplify-hvigen-phasethree-a1162-authRole",
+      "UnauthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvigen-phasethree-a1162-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::169759725246:role/amplify-hvigen-phasethree-a1162-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-hvigen-phasetwo-01056-deployment",
-      "UnauthRoleName": "amplify-hvigen-phasetwo-01056-unauthRole",
-      "StackName": "amplify-hvigen-phasetwo-01056",
-      "StackId": "arn:aws:cloudformation:us-east-1:169759725246:stack/amplify-hvigen-phasetwo-01056/853d8be0-cf84-11ee-b85e-12648b12e967",
+      "DeploymentBucketName": "amplify-hvigen-phasethree-a1162-deployment",
+      "UnauthRoleName": "amplify-hvigen-phasethree-a1162-unauthRole",
+      "StackName": "amplify-hvigen-phasethree-a1162",
+      "StackId": "arn:aws:cloudformation:us-east-1:169759725246:stack/amplify-hvigen-phasethree-a1162/fcb0cb40-1487-11ef-b91d-0e64095fc4c9",
       "AmplifyAppId": "d275476ssy5cup"
     },
     "categories": {
@@ -16,21 +16,18 @@
         "hvigend8bb609a": {},
         "userPoolGroups": {}
       },
-      "storage": {
-        "hvipdfgeneratorstorage": {}
-      },
       "function": {
-        "hvigenv2processor": {
-          "deploymentBucketName": "amplify-hvigen-phasetwo-01056-deployment",
-          "s3Key": "amplify-builds/hvigenv2processor-6a36596354752b633550-build.zip"
-        },
         "hvigenphasetwolayer": {
-          "deploymentBucketName": "amplify-hvigen-phasetwo-01056-deployment",
-          "s3Key": "amplify-builds/hvigenphasetwolayer-LambdaLayerVersion994fb65b-build.zip"
+          "deploymentBucketName": "amplify-hvigen-phasethree-a1162-deployment",
+          "s3Key": "amplify-builds/hvigenphasetwolayer-LambdaLayerVersion86a4c723-build.zip"
+        },
+        "hvigenv2processor": {
+          "deploymentBucketName": "amplify-hvigen-phasethree-a1162-deployment",
+          "s3Key": "amplify-builds/hvigenv2processor-6a36596354752b633550-build.zip"
         }
       },
-      "api": {
-        "hvigen": {}
+      "storage": {
+        "hvipdfgeneratorstorage": {}
       }
     }
   }
