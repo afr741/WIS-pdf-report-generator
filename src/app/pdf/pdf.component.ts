@@ -4,6 +4,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { AuthService } from '../AuthService';
 import * as CryptoJS from 'crypto-js';
 import { APIService, Report, ReportTemplate } from '../API.service';
+import { PdfparseService } from '../pdfparse.service';
 import { Router, NavigationEnd } from '@angular/router';
 import * as QRCode from 'qrcode';
 import { Storage } from 'aws-amplify';
@@ -15,24 +16,7 @@ import {
   LoaderSize,
 } from '@progress/kendo-angular-indicators';
 
-const REMARKS = {
-  part1: [
-    'Note: Samples were NOT drawn by WIS.',
-    'Samples tested will be stored for 3 months only, after which they will be disposed of at Wakefield’s discretion, unless otherwise instructed.',
-    'All comments and queries of results shown in this report should be made in writing within thirty days of the issue of this report.',
-    'The report shall not be used for Litigation or Publicity.',
-    "If reguired WIS may send its own personal to draw the samples at customer's cost.",
-  ],
-  part2:
-    'This report reflects only the results of test carried out on samples submitted to us and tested on S.I.T.C. instruments on the date(s) mentioned and at the location shown, does not certify to any description given and is issued without prejudice. In all instance only the English version of this report is to be considered definitive and correct. Test and lab conditions The tests were made under the conditions laid down in the Guideline for Instrument Testing of Cotton, published by; ICAC Task Force on Commercial Standardization of Instrument Testing of Cotton (CSITC) and ITMF International Committee on Cotton Testing Methods (ICCTM)',
-  part3: [
-    'HVI Calibration Cottons used for calibration.',
-    'A laboratory temperature of 21° ± 1° C',
-    'A relative humidity of 65 ± 2%',
-    'A sample moisture level between 6.75% and 8.25%',
-    'Standard instrument tolerance applicable',
-  ],
-};
+import { REMARKS } from './staticTemplateData';
 
 @Component({
   selector: 'app-pdf',
@@ -48,8 +32,6 @@ export class PdfComponent implements OnInit {
   public reportUserEmail: string = '';
   private secretKey: string = 'wis';
   public isLoading: boolean = true;
-  public qrImage: any = null;
-  public qrImageURL: string = '';
   public currentUserEmail: string = '';
   public activeTemplateInfo: ReportTemplate | undefined = undefined;
   public error: string | null = null;
@@ -72,7 +54,8 @@ export class PdfComponent implements OnInit {
     private api: APIService,
     public router: Router,
     private notificationService: NotificationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private pdfService: PdfparseService
   ) {}
 
   ngOnInit() {
@@ -107,9 +90,7 @@ export class PdfComponent implements OnInit {
           fetchTemplateData().then(() => fetchData());
         } catch (error) {
           // Handle errors if any of the async functions fail
-          this.displayStatus(false);
-          this.error = `Error fetching: ${error}`;
-          this.isLoading = false;
+          this.handleShowError(error);
         }
       });
     const fetchData = () => {
@@ -149,7 +130,6 @@ export class PdfComponent implements OnInit {
         .then(() => {
           if (this.selectedHviVersion && this.reports.length > 0) {
             this.isLoading = false;
-            // this.openAndDownloadCallBack(this.reports[0]);
           }
         })
         .catch((err) => {
@@ -169,8 +149,6 @@ export class PdfComponent implements OnInit {
             (item) => item.labLocation == this.selectedLab
           );
           this.activeTemplateInfo = foundEntry;
-
-          console.log('found template info', foundEntry);
         })
         .then(() => {
           this.fetchTemplateImages();
@@ -179,8 +157,6 @@ export class PdfComponent implements OnInit {
   }
 
   async fetchTemplateImages() {
-    // console.log('this.activeTemplateInfo', this.activeTemplateInfo);
-
     if (this.activeTemplateInfo) {
       if (this.activeTemplateInfo.letterHeadImageName) {
         this.letterHeadPreviewUrl = await Storage.get(
@@ -227,10 +203,10 @@ export class PdfComponent implements OnInit {
     const appURL = window.location.origin;
 
     // console.log('encrypted url', ecnryptedURLParam, ' current url', appURL);
-    this.qrImageURL = `${appURL}/qrcode?code=${ecnryptedURLParam}`;
-    this.qrImage = await QRCode.toDataURL(this.qrImageURL);
+    const fetchedImageURL = `${appURL}/qrcode?code=${ecnryptedURLParam}`;
+    const fetchedImage = await QRCode.toDataURL(fetchedImageURL);
 
-    return { qrImage: this.qrImage, qrURL: this.qrImageURL };
+    return { qrImage: fetchedImage, qrURL: fetchedImageURL };
   }
 
   getBase64ImageFromURL(url: string = '../../assets/images/letterhead.png') {
@@ -258,90 +234,8 @@ export class PdfComponent implements OnInit {
     });
   }
 
-  async processPDFDataV1(report: Report) {
-    let {
-      dataRows,
-      reportNum,
-      lotNum,
-      customerName,
-      stations,
-      variety,
-      createdAt,
-      id,
-    } = report;
-
-    if (!dataRows || dataRows[0] === null) {
-      this.displayStatus(false);
-      this.error = 'Faied to extract data rows!';
-      return;
-    }
-
-    let parsedRawData = JSON.parse(dataRows[0]);
-    console.log('parsedRawData', parsedRawData);
-
-    // number of elements based on elments in this row
-    const keys = Object.keys(parsedRawData[7]).sort((a, b) => {
-      const numA = parseInt(a.match(/\d+/)![0]);
-      const numB = parseInt(b.match(/\d+/)![0]);
-      return numA - numB;
-    });
-
-    const averageRow = parsedRawData[parsedRawData.length - 3];
-    const n24row = parsedRawData[parsedRawData.length - 2];
-    // console.log('average row', averageRow, 'n24row', n24row);
-    // Convert array of objects to array of arrays
-    const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      return keys.map((key, keyIndex) => {
-        let original = [0, 1, 14, 17];
-        let isOneDec = [3, 4, 8, 10, 11, 12, 13, 15];
-        let isTwoDec = [5, 6, 9, 16];
-        let isThreeDec = [7];
-        let cellValue = obj[key];
-        //replaces row that has rowCOunt with final stats row
-        if (index === parsedRawData.length - 2 && key === '__EMPTY_1') {
-          return averageRow.__EMPTY;
-        }
-        if (index === parsedRawData.length - 2 && key === '__EMPTY_4') {
-          const finalValue = n24row.__EMPTY_1.match(/\d+/) + n24row.__EMPTY_4;
-          console.log('finalValue', finalValue);
-          return finalValue;
-        }
-        let roundedCellValue = original.includes(keyIndex)
-          ? cellValue
-          : isNaN(cellValue)
-          ? cellValue
-          : Number(cellValue).toFixed(
-              isOneDec.includes(keyIndex)
-                ? 1
-                : isTwoDec.includes(keyIndex)
-                ? 2
-                : isThreeDec.includes(keyIndex)
-                ? 3
-                : 0
-            );
-        return roundedCellValue || '';
-      });
-    });
-
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes('Time')
-    );
-
-    // to find the end of data body using "Average" word
-    let bodyEndIndex = extractedRows.length - 1;
-
-    console.log('bodyStartIndex', bodyStartIndex, 'bodyEndIndex', bodyEndIndex);
-
-    let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex + 1,
-      bodyEndIndex
-    );
-
-    let emptyRow = extractedRowsBody.splice(extractedRowsBody.length - 2, 1);
-    console.log('emptyRow', emptyRow);
-    //render docDefinition
-    await this.renderPDF(
+  public async renderPDF(res: any) {
+    const {
       customerName,
       reportNum,
       stations,
@@ -349,226 +243,12 @@ export class PdfComponent implements OnInit {
       lotNum,
       extractedRowsBody,
       createdAt,
-      id
-    );
-  }
-
-  async processPDFDataV2(report: Report) {
-    let {
-      dataRows,
-      reportNum,
-      lotNum,
-      customerName,
-      stations,
-      variety,
-      createdAt,
       id,
-    } = report;
-
-    console.log('processpdfdata dataRows v2', dataRows);
-
-    if (!dataRows || dataRows[0] === null) {
-      this.displayStatus(false);
-      this.error = 'Faied to extract data rows!';
-
-      return;
-    }
-
-    let parsedRawData = JSON.parse(dataRows[0]);
-    console.log('parsedRawData', parsedRawData);
-
-    // number of elements based on elments in this row
-
-    const keys = Object.keys(parsedRawData[6]).sort((a, b) => {
-      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
-      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
-      return numA - numB;
-    });
-    // console.log('keys v2', keys);
-
-    const averageRow = parsedRawData[parsedRawData.length - 6];
-    // Convert array of objects to array of arrays
-    const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      return keys.map((key, keyIndex) => {
-        let original = [16];
-        let isOneDec = [3, 7, 9, 10, 11, 12, 14];
-        let isTwoDec = [4, 5, 8, 13, 15];
-        let isThreeDec = [6];
-        let cellValue = obj[key];
-
-        //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
-        if (obj.__EMPTY && keyIndex == 1) {
-          // console.log('KEY OF ROW 31', obj.__EMPTY);
-          return obj.__EMPTY;
-        }
-
-        let roundedCellValue = original.includes(keyIndex)
-          ? cellValue
-          : isNaN(cellValue)
-          ? cellValue
-          : Number(cellValue).toFixed(
-              isOneDec.includes(keyIndex)
-                ? 1
-                : isTwoDec.includes(keyIndex)
-                ? 2
-                : isThreeDec.includes(keyIndex)
-                ? 3
-                : 0
-            );
-        return roundedCellValue || '';
-      });
-    });
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes('SCI')
-    );
-
-    // to find the end of data body using "Average" word
-    let bodyEndIndex = extractedRows.findIndex((array: any) =>
-      array.some(
-        (element: any) => typeof element === 'string' && element.includes('Max')
-      )
-    );
-
-    let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex,
-      bodyEndIndex + 1
-    );
-
-    await this.renderPDF(
-      customerName,
-      reportNum,
-      stations,
-      variety,
-      lotNum,
-      extractedRowsBody,
-      createdAt,
-      id
-    );
-  }
-
-  async processPDFDataV3(report: Report) {
-    let {
-      dataRows,
-      reportNum,
-      lotNum,
-      customerName,
-      stations,
-      variety,
-      createdAt,
-      id,
-    } = report;
-
-    if (!dataRows || dataRows[0] === null) {
-      this.displayStatus(false);
-      this.error = 'Faied to extract data rows!';
-      return;
-    }
-
-    let parsedRawData = JSON.parse(dataRows[0]);
-    console.log('parsedRawData v3', parsedRawData);
-
-    // number of elements based on elments in this row
-
-    const keys = Object.keys(parsedRawData[5]).sort((a, b) => {
-      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
-      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
-      return numA - numB;
-    });
-    // console.log('keys v3', keys);
-
-    const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
-      return keys.map((key, keyIndex) => {
-        if (obj.__EMPTY && keyIndex == 1) {
-          // console.log('KEY OF ROW 31', obj.__EMPTY);
-          return obj.__EMPTY;
-        }
-        let cellValue = obj[key];
-        let original = [16];
-        let isOneDec = [4, 8, 10, 11, 12, 13, 14];
-        let isTwoDec = [3, 5, 6, 9, 15];
-        let isThreeDec = [7];
-
-        let roundedCellValue = original.includes(keyIndex)
-          ? cellValue
-          : isNaN(cellValue)
-          ? cellValue
-          : Number(cellValue).toFixed(
-              isOneDec.includes(keyIndex)
-                ? 1
-                : isTwoDec.includes(keyIndex)
-                ? 2
-                : isThreeDec.includes(keyIndex)
-                ? 3
-                : 0
-            );
-        return roundedCellValue || '';
-      });
-    });
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes('Print Time')
-    );
-
-    // to find the end of data body using "Average" word
-    let bodyEndIndex = extractedRows.findIndex((array: any) =>
-      array.some(
-        (element: any) => typeof element === 'string' && element.includes('Max')
-      )
-    );
-
-    let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex + 1,
-      bodyEndIndex + 1
-    );
-    await this.renderPDF(
-      customerName,
-      reportNum,
-      stations,
-      variety,
-      lotNum,
-      extractedRowsBody,
-      createdAt,
-      id
-    );
-  }
-
-  async handleProcessingVersion(dataItem: any) {
-    let version = this.selectedHviVersion;
-
-    switch (version) {
-      case 'v1':
-        await this.processPDFDataV1(dataItem);
-        break;
-      case 'v2':
-        await this.processPDFDataV2(dataItem);
-        break;
-      case 'v3':
-        await this.processPDFDataV3(dataItem);
-        break;
-      default:
-        console.log(`version doesnt exist!`);
-        this.displayStatus(false);
-        this.error = 'version does not exist';
-        this.isLoading = false;
-    }
-    this.isLoading = false;
-  }
-  public async renderPDF(
-    customerName: any,
-    reportNum: any,
-    stations: any,
-    variety: any,
-    lotNum: any,
-    extractedRowsBody: any,
-    createdAt: any,
-    id: any
-  ) {
+    } = res;
+    console.log('extractedRowsBody', extractedRowsBody);
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL(id);
 
-    console.log('extractedRowsBody', extractedRowsBody);
-    let qrImageProcessed = this.getBase64ImageFromURL(qrImage);
+    let qrImageProcessed = await this.getBase64ImageFromURL(qrImage);
     let testLocation = '';
     let origin = '';
     if (this.activeTemplateInfo?.testLocation) {
@@ -750,26 +430,25 @@ export class PdfComponent implements OnInit {
     this.isLoading = false;
   }
 
-  handlBackButton() {
-    this.router.navigate(['/upload']);
-  }
-
   async openAndDownloadCallBack(dataItem: any) {
-    // console.log('openAndDownloadCallBack dataitem', dataItem);
     if (dataItem.dataRows === null) {
-      console.log('failed to process!', dataItem.dataRows);
-      this.error = 'Row are not processed!';
-      this.displayStatus(false);
+      this.handleShowError('Row are not processed');
     } else {
-      console.log('all good!', dataItem);
       this.error = null;
-      this.handleProcessingVersion(dataItem);
+      await this.pdfService
+        .handleProcessingVersion(
+          dataItem,
+          this.selectedHviVersion,
+          this.handleShowError
+        )
+        .then((res) => {
+          this.renderPDF(res);
+        });
     }
   }
   async openPDF(dataItem: any) {
     await this.openAndDownloadCallBack(dataItem)
       .then(() => {
-        // if (this.pdfData !== null)
         this.isButtonDisabled = true;
         setTimeout(() => {
           pdfMake
@@ -779,11 +458,8 @@ export class PdfComponent implements OnInit {
         }, 2000);
       })
       .catch((e) => {
-        this.error = e;
-        this.displayStatus(false);
+        this.handleShowError(e);
       });
-
-    // this.pdfData = null;
   }
 
   async downloadPDF(dataItem: any) {
@@ -797,9 +473,12 @@ export class PdfComponent implements OnInit {
         this.isButtonDisabled = false;
       }, 2000);
     });
-
-    // this.pdfData = null;
   }
+
+  handlBackButton() {
+    this.router.navigate(['/upload']);
+  }
+
   handleEditTemplate(): void {
     this.router.navigate(['/edit']);
   }
@@ -812,5 +491,11 @@ export class PdfComponent implements OnInit {
       type: { style: isUpdated ? 'success' : 'error', icon: true },
       closable: true,
     });
+  }
+
+  handleShowError(errorText: any) {
+    this.displayStatus(false);
+    this.error = errorText ? `${errorText}` : 'error occured!';
+    this.isLoading = false;
   }
 }
