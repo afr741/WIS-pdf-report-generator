@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AuthService } from '../AuthService';
-import { Router, NavigationEnd } from '@angular/router';
 import { APIService, Report } from '../API.service';
-import { bellIcon, menuIcon, SVGIcon } from '@progress/kendo-svg-icons';
-import { ZenObservable } from 'zen-observable-ts';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { SVGIcon, bellIcon, menuIcon } from '@progress/kendo-svg-icons';
+
+import { AuthService } from '../AuthService';
 import { Storage } from 'aws-amplify';
+import { ZenObservable } from 'zen-observable-ts';
 
 // const logo = require('../../assets/images/wis-logo.jpeg').default as string;
 @Component({
@@ -36,15 +37,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     'https://www.telerik.com/kendo-angular-ui-develop/components/navigation/appbar/assets/kendoka-angular.png';
   public sectionName: string = '';
   public wislogo: any;
-  public lab = ['Dushanbe', 'Bokhtar', 'Khujand'];
-
-  // public lab = [
-  //   { code: 'TJV-DSH', name: 'Dushanbe' },
-  //   { code: 'TJV-BOK', name: 'Bokhtar' },
-  //   { code: 'TJV-KJD', name: 'Khujand' },
-  // ];
-  // public country = ['Tajikistan', 'India', 'Vietnam'];
-  public hviVersions = ['v1', 'v2', 'v3'];
+  public labNameList = [];
+  public hviVersionsList = [];
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -78,11 +72,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .subscribe((user: any) => {
         const updatedUser = user.value.data.onUpdateUserInfo;
         this.userList = [updatedUser];
-        console.log('userList subscription', this.userList);
+        // console.log('userList subscription', this.userList);
       });
 
     await this.api.ListUserInfos().then((user: any) => {
-      console.log('user list', user);
+      // console.log('user list', user);
 
       if (user.items.length > 0) {
         this.isPreferenceSet = true;
@@ -93,6 +87,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
       } else {
         this.openModal();
       }
+    });
+    await this.api.ListLabs().then((labs: any) => {
+      // console.log('labs', labs);
+      this.labNameList = labs.items.map((item: any) => {
+        return item.label;
+      });
+      this.hviVersionsList = labs.items
+        .map((item: any) => {
+          return item.defaultHVIProcessingVersion;
+        })
+        .sort();
     });
 
     const emailAndLab = await this.authService.getUserEmailAndLab();
@@ -192,10 +197,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     console.log('lab valueChange', value);
     this.selectedLab = value;
   }
-  // public countryValueChange(value: any): void {
-  //   console.log('counttry valueChange', value);
-  //   this.selectedCountry = value;
-  // }
+
   public hviValueChange(value: any): void {
     console.log('hvi valueChange', value);
     this.selectedHviVersion = value;

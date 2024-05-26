@@ -177,3 +177,35 @@ query ListUserInfos(
     __typename
   }
 }
+
+query GetLabs($id: ID!) {
+  getLabs(id: $id) {
+    labCountry
+    labCode
+    label
+    defaultHVIProcessingVersion
+    id
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+query ListLabs($filter: ModelLabsFilterInput, $limit: Int, $nextToken: String) {
+  listLabs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      labCountry
+      labCode
+      label
+      defaultHVIProcessingVersion
+      id
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}

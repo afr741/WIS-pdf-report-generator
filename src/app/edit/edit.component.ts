@@ -26,7 +26,6 @@ import { ZenObservable } from 'zen-observable-ts';
   styleUrls: ['./edit.component.css'],
 })
 export class EditComponent implements OnInit, OnDestroy {
-  public lab = ['Dushanbe', 'Bokhtar', 'Khujand'];
   public createForm: FormGroup;
   private selectedFileLetterHead: File | null = null;
   private selectedStamp: File | null = null; // Store the selected file
@@ -88,7 +87,6 @@ export class EditComponent implements OnInit, OnDestroy {
             // console.log('user.items', user.items);
             this.userInfo = user.items[0];
             this.selectedLab = user.items[0].labLocation;
-            console.log('selectedLab', this.selectedLab);
           }
         })
         .then(() => this.fetchTemplateData());
@@ -109,7 +107,7 @@ export class EditComponent implements OnInit, OnDestroy {
     this.api
       .ListReportTemplates()
       .then(async (event) => {
-        console.log('this.templateInfos fetchTemplateData event', event);
+        // console.log('this.templateInfos fetchTemplateData event', event);
         this.templateInfos = event.items as ReportTemplate[];
         if (this.templateInfos.length > 0) {
           const foundEntry = this.templateInfos.find(
@@ -126,14 +124,13 @@ export class EditComponent implements OnInit, OnDestroy {
               templateId,
               ...fieldsToPrefill
             } = this.activeTemplateInfo;
-            console.log('activeTemplateInfo', this.activeTemplateInfo);
-
-            console.log('fieldsToPrefill:', fieldsToPrefill);
+            // console.log('activeTemplateInfo', this.activeTemplateInfo);
+            // console.log('fieldsToPrefill:', fieldsToPrefill);
             this.createForm.patchValue(fieldsToPrefill);
             if (fieldsToPrefill.stampImageName) {
               Storage.get(`${fieldsToPrefill.stampImageName}`).then((res) => {
                 if (res) {
-                  console.log('stampImageFromS3  res', res);
+                  // console.log('stampImageFromS3  res', res);
                   this.stampPreviewUrl = res;
                 }
               });
@@ -215,7 +212,6 @@ export class EditComponent implements OnInit, OnDestroy {
 
   // Handle file change event and update the formData
   onFileChangeLetterhead(event: any) {
-    console.log('File changed', event);
     const fileList: any = event.files;
     if (fileList && fileList.length > 0) {
       this.selectedFileLetterHead = fileList[0].rawFile;
@@ -223,14 +219,13 @@ export class EditComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.letterHeadPreviewUrl = e.target?.result;
-        console.log('letterhead file,', e.target?.result);
+        // console.log('letterhead file,', e.target?.result);
       };
       reader.readAsDataURL(fileList[0].rawFile);
     }
   }
 
   onFileChangeStamp(event: any) {
-    console.log('File changed', event);
     const fileList: any = event.files;
     if (fileList && fileList.length > 0) {
       this.selectedStamp = fileList[0].rawFile;
@@ -238,7 +233,7 @@ export class EditComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.stampPreviewUrl = e.target?.result;
-        console.log('letterhead file,', e.target?.result);
+        // console.log('letterhead file,', e.target?.result);
       };
       reader.readAsDataURL(fileList[0].rawFile);
     }

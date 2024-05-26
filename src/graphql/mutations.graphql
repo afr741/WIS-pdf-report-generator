@@ -197,3 +197,54 @@ mutation DeleteUserInfo(
     __typename
   }
 }
+
+mutation CreateLabs(
+  $input: CreateLabsInput!
+  $condition: ModelLabsConditionInput
+) {
+  createLabs(input: $input, condition: $condition) {
+    labCountry
+    labCode
+    label
+    defaultHVIProcessingVersion
+    id
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+mutation UpdateLabs(
+  $input: UpdateLabsInput!
+  $condition: ModelLabsConditionInput
+) {
+  updateLabs(input: $input, condition: $condition) {
+    labCountry
+    labCode
+    label
+    defaultHVIProcessingVersion
+    id
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+mutation DeleteLabs(
+  $input: DeleteLabsInput!
+  $condition: ModelLabsConditionInput
+) {
+  deleteLabs(input: $input, condition: $condition) {
+    labCountry
+    labCode
+    label
+    defaultHVIProcessingVersion
+    id
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}

@@ -197,3 +197,54 @@ subscription OnDeleteUserInfo(
     __typename
   }
 }
+
+subscription OnCreateLabs(
+  $filter: ModelSubscriptionLabsFilterInput
+  $owner: String
+) {
+  onCreateLabs(filter: $filter, owner: $owner) {
+    labCountry
+    labCode
+    label
+    defaultHVIProcessingVersion
+    id
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+subscription OnUpdateLabs(
+  $filter: ModelSubscriptionLabsFilterInput
+  $owner: String
+) {
+  onUpdateLabs(filter: $filter, owner: $owner) {
+    labCountry
+    labCode
+    label
+    defaultHVIProcessingVersion
+    id
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+subscription OnDeleteLabs(
+  $filter: ModelSubscriptionLabsFilterInput
+  $owner: String
+) {
+  onDeleteLabs(filter: $filter, owner: $owner) {
+    labCountry
+    labCode
+    label
+    defaultHVIProcessingVersion
+    id
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}

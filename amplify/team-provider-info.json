@@ -19,7 +19,7 @@
       "function": {
         "hvigenphasetwolayer": {
           "deploymentBucketName": "amplify-hvigen-phasethree-a1162-deployment",
-          "s3Key": "amplify-builds/hvigenphasetwolayer-LambdaLayerVersion86a4c723-build.zip"
+          "s3Key": "amplify-builds/hvigenphasetwolayer-LambdaLayerVersiond966712f-build.zip"
         },
         "hvigenv2processor": {
           "deploymentBucketName": "amplify-hvigen-phasethree-a1162-deployment",
@@ -28,6 +28,9 @@
       },
       "storage": {
         "hvipdfgeneratorstorage": {}
+      },
+      "api": {
+        "hvigen": {}
       }
     }
   }

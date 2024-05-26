@@ -5,7 +5,7 @@
     (close)="closeModal()"
     [minWidth]="250"
     [width]="450"
-    [height]="350"
+    [height]="450"
   >
     <kendo-dialog-messages>
       <!-- <kendo-dropdownbutton [data]="userData" fillMode="outline">
@@ -33,7 +33,7 @@
         <kendo-label text="Selected lab:">
           <br />
           <kendo-dropdownlist
-            [data]="lab"
+            [data]="labNameList"
             [value]="selectedLab"
             (selectionChange)="labValueChange($event)"
           >
@@ -55,7 +55,7 @@
         <kendo-label text="Selected HVI version:">
           <br />
           <kendo-dropdownlist
-            [data]="hviVersions"
+            [data]="hviVersionsList"
             [value]="selectedHviVersion"
             (selectionChange)="hviValueChange($event)"
           >

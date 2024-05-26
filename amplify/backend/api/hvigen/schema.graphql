@@ -69,3 +69,17 @@ type UserInfo
   labLocation: String!
   hviVersion: String!
 }
+
+type Labs
+  @model
+  @auth(
+    rules: [
+      # allow owners ability to update and delete their these messages (user pools)
+      { allow: owner }
+    ]
+  ) {
+  labCountry: String!
+  labCode: String!
+  label: String!
+  defaultHVIProcessingVersion: String!
+}
