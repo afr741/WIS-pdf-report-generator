@@ -25,7 +25,6 @@ export class PdfparseService {
     }
 
     let parsedRawData = JSON.parse(dataRows[0]);
-    console.log('parsedRawData', parsedRawData);
 
     // number of elements based on elments in this row
     const keys = Object.keys(parsedRawData[7]).sort((a, b) => {
@@ -36,7 +35,7 @@ export class PdfparseService {
 
     const averageRow = parsedRawData[parsedRawData.length - 3];
     const n24row = parsedRawData[parsedRawData.length - 2];
-    // console.log('average row', averageRow, 'n24row', n24row);
+
     // Convert array of objects to array of arrays
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
       return keys.map((key, keyIndex) => {
@@ -79,8 +78,6 @@ export class PdfparseService {
     // to find the end of data body using "Average" word
     let bodyEndIndex = extractedRows.length - 1;
 
-    console.log('bodyStartIndex', bodyStartIndex, 'bodyEndIndex', bodyEndIndex);
-
     let extractedRowsBody = extractedRows.slice(
       bodyStartIndex + 1,
       bodyEndIndex
@@ -110,15 +107,12 @@ export class PdfparseService {
       id,
     } = report;
 
-    console.log('processpdfdata dataRows v2', dataRows);
-
     if (!dataRows || dataRows[0] === null) {
       handleShowError('Failed to extract data rows!');
       return;
     }
 
     let parsedRawData = JSON.parse(dataRows[0]);
-    console.log('parsedRawData', parsedRawData);
 
     // number of elements based on elments in this row
 
@@ -127,7 +121,6 @@ export class PdfparseService {
       const numB = parseInt(b.match(/\d+/)?.[0] || '0');
       return numA - numB;
     });
-    // console.log('keys v2', keys);
 
     const averageRow = parsedRawData[parsedRawData.length - 6];
     // Convert array of objects to array of arrays
@@ -141,7 +134,6 @@ export class PdfparseService {
 
         //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
         if (obj.__EMPTY && keyIndex == 1) {
-          // console.log('KEY OF ROW 31', obj.__EMPTY);
           return obj.__EMPTY;
         }
 
@@ -208,7 +200,6 @@ export class PdfparseService {
     }
 
     let parsedRawData = JSON.parse(dataRows[0]);
-    console.log('parsedRawData v3', parsedRawData);
 
     // number of elements based on elments in this row
 
@@ -217,13 +208,11 @@ export class PdfparseService {
       const numB = parseInt(b.match(/\d+/)?.[0] || '0');
       return numA - numB;
     });
-    // console.log('keys v3', keys);
 
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
       //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
       return keys.map((key, keyIndex) => {
         if (obj.__EMPTY && keyIndex == 1) {
-          // console.log('KEY OF ROW 31', obj.__EMPTY);
           return obj.__EMPTY;
         }
         let cellValue = obj[key];

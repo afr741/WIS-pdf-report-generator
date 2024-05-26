@@ -156,6 +156,13 @@ export class PdfComponent implements OnInit {
     };
   }
 
+  ngOnDestroy() {
+    if (this.updateUserPreferenceSubscription) {
+      this.updateUserPreferenceSubscription.unsubscribe();
+    }
+    this.updateUserPreferenceSubscription = null;
+  }
+
   async fetchTemplateImages() {
     if (this.activeTemplateInfo) {
       if (this.activeTemplateInfo.letterHeadImageName) {
@@ -176,12 +183,6 @@ export class PdfComponent implements OnInit {
         );
       }
     }
-  }
-  ngOnDestroy() {
-    if (this.updateUserPreferenceSubscription) {
-      this.updateUserPreferenceSubscription.unsubscribe();
-    }
-    this.updateUserPreferenceSubscription = null;
   }
 
   makeUrlFriendly(encryptedText: string): string {
