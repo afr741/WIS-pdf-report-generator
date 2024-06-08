@@ -118,7 +118,10 @@
     </div>
   </div>
   <!-- </ng-template> -->
-  <div class="error-section" *ngIf="error || this.reports.length == 0">
+  <div
+    class="error-section"
+    *ngIf="error || (this.reports.length == 0 && !isLoading)"
+  >
     <p class="alert alert-danger" role="alert">
       {{ error ? error : "No reports found!" }}
     </p>

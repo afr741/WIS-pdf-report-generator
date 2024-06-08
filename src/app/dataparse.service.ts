@@ -16,9 +16,24 @@ export class DataparseService {
     console.log('parsedRawData', parsedRawData);
 
     // number of elements based on elements in this row
-    let parsedFirstRowIndex =
-      hviVersion == 'v1' ? 7 : hviVersion == 'v2' ? 6 : 5;
-    const keys = Object.keys(parsedRawData[parsedFirstRowIndex]).sort(
+    let parsedFirstRowIndex = () => {
+      switch (hviVersion) {
+        case 'v1':
+          return 7;
+        case 'v2':
+          return 6;
+
+        case 'v3':
+          return 5;
+
+        case 'v4':
+          return 1;
+
+        default:
+          return 1;
+      }
+    };
+    const keys = Object.keys(parsedRawData[parsedFirstRowIndex()]).sort(
       (a, b) => {
         const numA = parseInt(a.match(/\d+/)?.[0] || '0');
         const numB = parseInt(b.match(/\d+/)?.[0] || '0');
@@ -51,6 +66,13 @@ export class DataparseService {
           if (obj.__EMPTY && keyIndex == 1) {
             return obj.__EMPTY;
           }
+        }
+
+        if (hviVersion == 'v') {
+          //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
+          if (obj.__EMPTY && keyIndex == 1) {
+            return obj.__EMPTY;
+          }
         } else {
           if (obj.__EMPTY && keyIndex == 1) {
             return obj.__EMPTY;
@@ -60,6 +82,7 @@ export class DataparseService {
         let isOneDec = [3, 4, 8, 10, 11, 12, 13, 15];
         let isTwoDec = [5, 6, 9, 16];
         let isThreeDec = [7];
+        let isInteger = [7];
 
         if (hviVersion == 'v2') {
           original = [16];
@@ -74,13 +97,22 @@ export class DataparseService {
           isTwoDec = [3, 5, 6, 9, 15];
           isThreeDec = [7];
         }
+        if (hviVersion == 'v4') {
+          original = [16, 2];
+          isInteger = [0, 1, 3, 9, 10];
+          isOneDec = [4, 8, 10, 11, 12, 13, 14];
+          isTwoDec = [3, 5, 6, 9, 15];
+          isThreeDec = [7];
+        }
 
         let roundedCellValue = original.includes(keyIndex)
           ? cellValue
           : isNaN(cellValue)
           ? cellValue
           : Number(cellValue).toFixed(
-              isOneDec.includes(keyIndex)
+              isInteger.includes(keyIndex)
+                ? 0
+                : isOneDec.includes(keyIndex)
                 ? 1
                 : isTwoDec.includes(keyIndex)
                 ? 2
@@ -95,22 +127,32 @@ export class DataparseService {
     console.log('extracted rows', extractedRows);
     // to find the start of data body using keyword based on HVI version
     let startRowKeyWord =
-      hviVersion == 'v1' ? 'Time' : hviVersion == 'v2' ? 'SCI' : 'Print Time';
+      hviVersion == 'v1'
+        ? 'Time'
+        : hviVersion == 'v2'
+        ? 'SCI'
+        : hviVersion == 'v4'
+        ? 'Sample Count'
+        : 'Print Time';
     let bodyStartIndex = extractedRows.findIndex((array: any) =>
       array.includes(startRowKeyWord)
     );
 
     // to find the end of data body using "Average" and "Max" word
-    let endRowKeyWord = hviVersion == 'v1' ? 'Average' : 'Max';
-    let bodyEndIndex = extractedRows.findIndex((array: any) =>
-      array.some(
-        (element: any) =>
-          typeof element === 'string' && element.includes(endRowKeyWord)
-      )
-    );
+    let endRowKeyWord =
+      hviVersion == 'v1' ? (hviVersion == 'v4' ? 'Sample' : 'Average') : 'Max';
+    let bodyEndIndex =
+      hviVersion == 'v4'
+        ? extractedRows.length - 1
+        : extractedRows.findIndex((array: any) =>
+            array.some(
+              (element: any) =>
+                typeof element === 'string' && element.includes(endRowKeyWord)
+            )
+          );
     console.log('bodyStartIndex', bodyStartIndex, 'bodyEndIndex', bodyEndIndex);
     let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex + (hviVersion == 'v2' ? 0 : 1),
+      bodyStartIndex + (hviVersion == 'v2' || hviVersion == 'v4' ? 0 : 1),
       bodyEndIndex + (hviVersion == 'v1' ? 2 : 1)
     );
     if (hviVersion == 'v1') {

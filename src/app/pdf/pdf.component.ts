@@ -269,13 +269,24 @@ export class PdfComponent implements OnInit {
       return date;
     };
 
-    const numberOfSamples =
-      extractedRowsBody.length -
-      (this.selectedHviVersion == 'v1'
-        ? 3
-        : this.selectedHviVersion == 'v2'
-        ? 9
-        : 9);
+    const numberOfSamples = () => {
+      switch (this.selectedHviVersion) {
+        case 'v1':
+          return extractedRowsBody.length - 3;
+        case 'v2':
+          return extractedRowsBody.length - 9;
+
+        case 'v3':
+          return extractedRowsBody.length - 9;
+
+        case 'v4':
+          return extractedRowsBody.length - 1;
+
+        default:
+          return extractedRowsBody.length - 1;
+      }
+    };
+
     if (extractedRowsBody.length == 0) {
       this.displayStatus(false);
     }
@@ -334,7 +345,7 @@ export class PdfComponent implements OnInit {
                 'Lot number',
                 lotNum,
                 { text: 'Samples drawn by customer', bold: true },
-                `${numberOfSamples} samples`,
+                `${numberOfSamples()} samples`,
               ],
             ],
           },

@@ -162,6 +162,7 @@ export class UploadComponent implements OnInit, OnDestroy {
         var first_sheet_name = workbook.SheetNames[0];
         var worksheet = workbook.Sheets[first_sheet_name];
         this.jsonData = XLSX.utils.sheet_to_json(worksheet, { raw: true });
+        console.log('this.jsonData', this.jsonData);
       };
       fileReader.readAsArrayBuffer(file);
     }

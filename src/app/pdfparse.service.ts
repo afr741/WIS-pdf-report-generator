@@ -6,7 +6,7 @@ import { Report } from './API.service';
 })
 export class PdfparseService {
   constructor() {}
-
+  //Dushanbe
   processPDFDataV1(report: Report, handleShowError: any) {
     let {
       dataRows,
@@ -95,6 +95,7 @@ export class PdfparseService {
       id,
     };
   }
+  //Bohktar
   async processPDFDataV2(report: Report, handleShowError: any) {
     let {
       dataRows,
@@ -181,7 +182,7 @@ export class PdfparseService {
       id,
     };
   }
-
+  // Hujand
   async processPDFDataV3(report: Report, handleShowError: any) {
     let {
       dataRows,
@@ -264,6 +265,344 @@ export class PdfparseService {
       id,
     };
   }
+  // Vietnam
+  async processPDFDataV4(report: Report, handleShowError: any) {
+    let {
+      dataRows,
+      reportNum,
+      lotNum,
+      customerName,
+      stations,
+      variety,
+      createdAt,
+      id,
+    } = report;
+    if (!dataRows || dataRows[0] === null) {
+      handleShowError('Failed to extract data rows!');
+      return;
+    }
+
+    let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
+
+    // number of elements based on elements in this row
+
+    const keys = Object.keys(parsedRawData[1]).sort((a, b) => {
+      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+      return numA - numB;
+    });
+
+    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+      //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
+      return keys.map((key, keyIndex) => {
+        let cellValue = obj[key];
+        let original = [16, 2];
+        let isInteger = [0, 1, 3, 9, 10];
+        let isOneDec = [6, 12, 13, 14];
+        let isTwoDec = [4, 5, 8, 11, 15];
+        let isThreeDec = [7];
+
+        let roundedCellValue = original.includes(keyIndex)
+          ? cellValue
+          : isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(
+              isInteger.includes(keyIndex)
+                ? 0
+                : isOneDec.includes(keyIndex)
+                ? 1
+                : isTwoDec.includes(keyIndex)
+                ? 2
+                : isThreeDec.includes(keyIndex)
+                ? 3
+                : 9
+            );
+        return roundedCellValue;
+      });
+    });
+
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = extractedRows.findIndex((array: any) =>
+      array.includes('Sample Count')
+    );
+
+    // to find the end of data body using "Average" word
+    let bodyEndIndex = extractedRows.length;
+
+    let extractedRowsBody = extractedRows.slice(bodyStartIndex, bodyEndIndex);
+
+    console.log(
+      'extractedRows:',
+      extractedRows,
+      'keys:',
+      keys,
+      'extractedRowsBody:',
+      extractedRowsBody
+    );
+
+    return {
+      customerName,
+      reportNum,
+      stations,
+      variety,
+      lotNum,
+      extractedRowsBody,
+      createdAt,
+      id,
+    };
+  }
+  //China - Shanghai
+  async processPDFDataV5(report: Report, handleShowError: any) {
+    let {
+      dataRows,
+      reportNum,
+      lotNum,
+      customerName,
+      stations,
+      variety,
+      createdAt,
+      id,
+    } = report;
+    if (!dataRows || dataRows[0] === null) {
+      handleShowError('Failed to extract data rows!');
+      return;
+    }
+
+    let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
+
+    // number of elements based on elments in this row
+
+    const keys = Object.keys(parsedRawData[5]).sort((a, b) => {
+      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+      return numA - numB;
+    });
+
+    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+      //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
+      return keys.map((key, keyIndex) => {
+        if (obj.__EMPTY && keyIndex == 1) {
+          return obj.__EMPTY;
+        }
+        let cellValue = obj[key];
+        let original = [16];
+        let isOneDec = [4, 8, 10, 11, 12, 13, 14];
+        let isTwoDec = [3, 5, 6, 9, 15];
+        let isThreeDec = [7];
+
+        let roundedCellValue = original.includes(keyIndex)
+          ? cellValue
+          : isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(
+              isOneDec.includes(keyIndex)
+                ? 1
+                : isTwoDec.includes(keyIndex)
+                ? 2
+                : isThreeDec.includes(keyIndex)
+                ? 3
+                : 0
+            );
+        return roundedCellValue || '';
+      });
+    });
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = extractedRows.findIndex((array: any) =>
+      array.includes('Print Time')
+    );
+
+    // to find the end of data body using "Average" word
+    let bodyEndIndex = extractedRows.findIndex((array: any) =>
+      array.some(
+        (element: any) => typeof element === 'string' && element.includes('Max')
+      )
+    );
+
+    let extractedRowsBody = extractedRows.slice(
+      bodyStartIndex + 1,
+      bodyEndIndex + 1
+    );
+    return {
+      customerName,
+      reportNum,
+      stations,
+      variety,
+      lotNum,
+      extractedRowsBody,
+      createdAt,
+      id,
+    };
+  }
+
+  // India
+  async processPDFDataV6(report: Report, handleShowError: any) {
+    let {
+      dataRows,
+      reportNum,
+      lotNum,
+      customerName,
+      stations,
+      variety,
+      createdAt,
+      id,
+    } = report;
+    if (!dataRows || dataRows[0] === null) {
+      handleShowError('Failed to extract data rows!');
+      return;
+    }
+
+    let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
+
+    // number of elements based on elments in this row
+
+    const keys = Object.keys(parsedRawData[5]).sort((a, b) => {
+      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+      return numA - numB;
+    });
+
+    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+      //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
+      return keys.map((key, keyIndex) => {
+        if (obj.__EMPTY && keyIndex == 1) {
+          return obj.__EMPTY;
+        }
+        let cellValue = obj[key];
+        let original = [16];
+        let isOneDec = [4, 8, 10, 11, 12, 13, 14];
+        let isTwoDec = [3, 5, 6, 9, 15];
+        let isThreeDec = [7];
+
+        let roundedCellValue = original.includes(keyIndex)
+          ? cellValue
+          : isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(
+              isOneDec.includes(keyIndex)
+                ? 1
+                : isTwoDec.includes(keyIndex)
+                ? 2
+                : isThreeDec.includes(keyIndex)
+                ? 3
+                : 0
+            );
+        return roundedCellValue || '';
+      });
+    });
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = extractedRows.findIndex((array: any) =>
+      array.includes('Print Time')
+    );
+
+    // to find the end of data body using "Average" word
+    let bodyEndIndex = extractedRows.findIndex((array: any) =>
+      array.some(
+        (element: any) => typeof element === 'string' && element.includes('Max')
+      )
+    );
+
+    let extractedRowsBody = extractedRows.slice(
+      bodyStartIndex + 1,
+      bodyEndIndex + 1
+    );
+    return {
+      customerName,
+      reportNum,
+      stations,
+      variety,
+      lotNum,
+      extractedRowsBody,
+      createdAt,
+      id,
+    };
+  }
+
+  //Uzbekistan - tashkent
+  async processPDFDataV7(report: Report, handleShowError: any) {
+    let {
+      dataRows,
+      reportNum,
+      lotNum,
+      customerName,
+      stations,
+      variety,
+      createdAt,
+      id,
+    } = report;
+    if (!dataRows || dataRows[0] === null) {
+      handleShowError('Failed to extract data rows!');
+      return;
+    }
+
+    let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
+
+    // number of elements based on elments in this row
+
+    const keys = Object.keys(parsedRawData[5]).sort((a, b) => {
+      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+      return numA - numB;
+    });
+
+    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+      //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
+      return keys.map((key, keyIndex) => {
+        if (obj.__EMPTY && keyIndex == 1) {
+          return obj.__EMPTY;
+        }
+        let cellValue = obj[key];
+        let original = [16];
+        let isOneDec = [4, 8, 10, 11, 12, 13, 14];
+        let isTwoDec = [3, 5, 6, 9, 15];
+        let isThreeDec = [7];
+
+        let roundedCellValue = original.includes(keyIndex)
+          ? cellValue
+          : isNaN(cellValue)
+          ? cellValue
+          : Number(cellValue).toFixed(
+              isOneDec.includes(keyIndex)
+                ? 1
+                : isTwoDec.includes(keyIndex)
+                ? 2
+                : isThreeDec.includes(keyIndex)
+                ? 3
+                : 0
+            );
+        return roundedCellValue || '';
+      });
+    });
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = extractedRows.findIndex((array: any) =>
+      array.includes('Print Time')
+    );
+
+    // to find the end of data body using "Average" word
+    let bodyEndIndex = extractedRows.findIndex((array: any) =>
+      array.some(
+        (element: any) => typeof element === 'string' && element.includes('Max')
+      )
+    );
+
+    let extractedRowsBody = extractedRows.slice(
+      bodyStartIndex + 1,
+      bodyEndIndex + 1
+    );
+    return {
+      customerName,
+      reportNum,
+      stations,
+      variety,
+      lotNum,
+      extractedRowsBody,
+      createdAt,
+      id,
+    };
+  }
 
   async handleProcessingVersion(
     dataItem: any,
@@ -282,6 +621,9 @@ export class PdfparseService {
       case 'v3':
         const process3 = this.processPDFDataV3(dataItem, handleShowError);
         return process3;
+      case 'v4':
+        const process4 = this.processPDFDataV4(dataItem, handleShowError);
+        return process4;
       default:
         handleShowError("version doesn't exist!");
     }
