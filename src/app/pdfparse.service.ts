@@ -26,7 +26,7 @@ export class PdfparseService {
 
     let parsedRawData = JSON.parse(dataRows[0]);
 
-    // number of elements based on elments in this row
+    // number of elements based on elements in this row
     const keys = Object.keys(parsedRawData[7]).sort((a, b) => {
       const numA = parseInt(a.match(/\d+/)![0]);
       const numB = parseInt(b.match(/\d+/)![0]);

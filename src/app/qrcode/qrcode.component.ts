@@ -77,7 +77,6 @@ export class QrcodeComponent implements OnInit {
         this.dbEntryData[0].dataRows,
         this.dbEntryData[0].hviVersion
       );
-      // this.parseData(this.dbEntryData[0].dataRows);
       this.isLoading = false;
     });
     const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
