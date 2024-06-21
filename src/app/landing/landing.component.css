@@ -1,0 +1,80 @@
+.landing-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.centered-header {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.tile-container {
+  display: flex;
+  flex-flow: wrap;
+  width: 100%;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.tile {
+  flex: 0 0 300px;
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: brightness(50%); /* Dim the image */
+}
+
+.tile-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 88, 233, 0.8); /* Additional dimming overlay */
+}
+
+.tile-button {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 38px; /* Larger text */
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Text shadow for better visibility */
+}
+
+.tile-button:hover {
+  background-color: rgba(76, 175, 80, 0.3); /* Semi-transparent hover effect */
+  font-size: 26px; /* Slightly larger on hover */
+}

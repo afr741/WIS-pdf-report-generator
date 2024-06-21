@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Observable, catchError, from, switchMap, throwError } from 'rxjs';
+
 import { Auth } from 'aws-amplify';
+import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { Observable, from, switchMap, catchError, throwError } from 'rxjs';
 
 @Injectable()
 export class AuthService {

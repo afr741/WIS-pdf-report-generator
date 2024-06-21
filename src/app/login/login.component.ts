@@ -76,13 +76,7 @@ export class LoginComponent implements OnInit {
         if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
           return this.router.navigate(['/reset']);
         } else {
-          if (userGroupList.includes('managers')) {
-            return this.router.navigate(['edit']);
-          } else if (userGroupList.includes('admins')) {
-            return this.router.navigate(['pdf']);
-          } else {
-            return this.router.navigate(['upload']);
-          }
+          return this.router.navigate(['landing']);
         }
       } else {
         this.isLoading = false;
