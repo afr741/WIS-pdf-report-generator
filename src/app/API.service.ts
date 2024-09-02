@@ -1,9 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
-import { Injectable } from '@angular/core';
-import API, { graphqlOperation, GraphQLResult } from '@aws-amplify/api-graphql';
-import { Observable } from 'zen-observable-ts';
+import { Injectable } from "@angular/core";
+import API, { graphqlOperation, GraphQLResult } from "@aws-amplify/api-graphql";
+import { Observable } from "zen-observable-ts";
 
 export interface SubscriptionResponse<T> {
   value: GraphQLResult<T>;
@@ -80,16 +80,16 @@ export type ModelIDInput = {
 };
 
 export enum ModelAttributeTypes {
-  binary = 'binary',
-  binarySet = 'binarySet',
-  bool = 'bool',
-  list = 'list',
-  map = 'map',
-  number = 'number',
-  numberSet = 'numberSet',
-  string = 'string',
-  stringSet = 'stringSet',
-  _null = '_null',
+  binary = "binary",
+  binarySet = "binarySet",
+  bool = "bool",
+  list = "list",
+  map = "map",
+  number = "number",
+  numberSet = "numberSet",
+  string = "string",
+  stringSet = "stringSet",
+  _null = "_null"
 }
 
 export type ModelSizeInput = {
@@ -119,7 +119,7 @@ export type ModelStringInput = {
 };
 
 export type ReportTemplate = {
-  __typename: 'ReportTemplate';
+  __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
@@ -198,7 +198,7 @@ export type ModelReportConditionInput = {
 };
 
 export type Report = {
-  __typename: 'Report';
+  __typename: "Report";
   id: string;
   name: string;
   email: string;
@@ -255,7 +255,7 @@ export type ModelUserInfoConditionInput = {
 };
 
 export type UserInfo = {
-  __typename: 'UserInfo';
+  __typename: "UserInfo";
   id: string;
   labLocation: string;
   hviVersion: string;
@@ -296,7 +296,7 @@ export type ModelLabsConditionInput = {
 };
 
 export type Labs = {
-  __typename: 'Labs';
+  __typename: "Labs";
   labCountry: string;
   labCode: string;
   label: string;
@@ -343,7 +343,7 @@ export type ModelReportTemplateFilterInput = {
 };
 
 export type ModelReportTemplateConnection = {
-  __typename: 'ModelReportTemplateConnection';
+  __typename: "ModelReportTemplateConnection";
   items: Array<ReportTemplate | null>;
   nextToken?: string | null;
 };
@@ -371,7 +371,7 @@ export type ModelReportFilterInput = {
 };
 
 export type ModelReportConnection = {
-  __typename: 'ModelReportConnection';
+  __typename: "ModelReportConnection";
   items: Array<Report | null>;
   nextToken?: string | null;
 };
@@ -387,8 +387,8 @@ export type ModelStringKeyConditionInput = {
 };
 
 export enum ModelSortDirection {
-  ASC = 'ASC',
-  DESC = 'DESC',
+  ASC = "ASC",
+  DESC = "DESC"
 }
 
 export type ModelUserInfoFilterInput = {
@@ -404,7 +404,7 @@ export type ModelUserInfoFilterInput = {
 };
 
 export type ModelUserInfoConnection = {
-  __typename: 'ModelUserInfoConnection';
+  __typename: "ModelUserInfoConnection";
   items: Array<UserInfo | null>;
   nextToken?: string | null;
 };
@@ -424,7 +424,7 @@ export type ModelLabsFilterInput = {
 };
 
 export type ModelLabsConnection = {
-  __typename: 'ModelLabsConnection';
+  __typename: "ModelLabsConnection";
   items: Array<Labs | null>;
   nextToken?: string | null;
 };
@@ -527,7 +527,7 @@ export type ModelSubscriptionLabsFilterInput = {
 };
 
 export type CreateReportTemplateMutation = {
-  __typename: 'ReportTemplate';
+  __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
@@ -548,7 +548,7 @@ export type CreateReportTemplateMutation = {
 };
 
 export type UpdateReportTemplateMutation = {
-  __typename: 'ReportTemplate';
+  __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
@@ -569,7 +569,7 @@ export type UpdateReportTemplateMutation = {
 };
 
 export type DeleteReportTemplateMutation = {
-  __typename: 'ReportTemplate';
+  __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
@@ -590,7 +590,7 @@ export type DeleteReportTemplateMutation = {
 };
 
 export type CreateReportMutation = {
-  __typename: 'Report';
+  __typename: "Report";
   id: string;
   name: string;
   email: string;
@@ -610,7 +610,7 @@ export type CreateReportMutation = {
 };
 
 export type UpdateReportMutation = {
-  __typename: 'Report';
+  __typename: "Report";
   id: string;
   name: string;
   email: string;
@@ -630,7 +630,7 @@ export type UpdateReportMutation = {
 };
 
 export type DeleteReportMutation = {
-  __typename: 'Report';
+  __typename: "Report";
   id: string;
   name: string;
   email: string;
@@ -650,7 +650,7 @@ export type DeleteReportMutation = {
 };
 
 export type CreateUserInfoMutation = {
-  __typename: 'UserInfo';
+  __typename: "UserInfo";
   id: string;
   labLocation: string;
   hviVersion: string;
@@ -660,7 +660,7 @@ export type CreateUserInfoMutation = {
 };
 
 export type UpdateUserInfoMutation = {
-  __typename: 'UserInfo';
+  __typename: "UserInfo";
   id: string;
   labLocation: string;
   hviVersion: string;
@@ -670,7 +670,7 @@ export type UpdateUserInfoMutation = {
 };
 
 export type DeleteUserInfoMutation = {
-  __typename: 'UserInfo';
+  __typename: "UserInfo";
   id: string;
   labLocation: string;
   hviVersion: string;
@@ -680,7 +680,7 @@ export type DeleteUserInfoMutation = {
 };
 
 export type CreateLabsMutation = {
-  __typename: 'Labs';
+  __typename: "Labs";
   labCountry: string;
   labCode: string;
   label: string;
@@ -692,7 +692,7 @@ export type CreateLabsMutation = {
 };
 
 export type UpdateLabsMutation = {
-  __typename: 'Labs';
+  __typename: "Labs";
   labCountry: string;
   labCode: string;
   label: string;
@@ -704,7 +704,7 @@ export type UpdateLabsMutation = {
 };
 
 export type DeleteLabsMutation = {
-  __typename: 'Labs';
+  __typename: "Labs";
   labCountry: string;
   labCode: string;
   label: string;
@@ -716,7 +716,7 @@ export type DeleteLabsMutation = {
 };
 
 export type GetReportTemplateQuery = {
-  __typename: 'ReportTemplate';
+  __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
@@ -737,9 +737,9 @@ export type GetReportTemplateQuery = {
 };
 
 export type ListReportTemplatesQuery = {
-  __typename: 'ModelReportTemplateConnection';
+  __typename: "ModelReportTemplateConnection";
   items: Array<{
-    __typename: 'ReportTemplate';
+    __typename: "ReportTemplate";
     templateId: string;
     localCompanyName?: string | null;
     localCompanyNameTranslation?: string | null;
@@ -762,7 +762,7 @@ export type ListReportTemplatesQuery = {
 };
 
 export type GetReportQuery = {
-  __typename: 'Report';
+  __typename: "Report";
   id: string;
   name: string;
   email: string;
@@ -782,9 +782,9 @@ export type GetReportQuery = {
 };
 
 export type ListReportsQuery = {
-  __typename: 'ModelReportConnection';
+  __typename: "ModelReportConnection";
   items: Array<{
-    __typename: 'Report';
+    __typename: "Report";
     id: string;
     name: string;
     email: string;
@@ -806,9 +806,9 @@ export type ListReportsQuery = {
 };
 
 export type ReportsByAttachmentUrlAndNameQuery = {
-  __typename: 'ModelReportConnection';
+  __typename: "ModelReportConnection";
   items: Array<{
-    __typename: 'Report';
+    __typename: "Report";
     id: string;
     name: string;
     email: string;
@@ -830,7 +830,7 @@ export type ReportsByAttachmentUrlAndNameQuery = {
 };
 
 export type GetUserInfoQuery = {
-  __typename: 'UserInfo';
+  __typename: "UserInfo";
   id: string;
   labLocation: string;
   hviVersion: string;
@@ -840,9 +840,9 @@ export type GetUserInfoQuery = {
 };
 
 export type ListUserInfosQuery = {
-  __typename: 'ModelUserInfoConnection';
+  __typename: "ModelUserInfoConnection";
   items: Array<{
-    __typename: 'UserInfo';
+    __typename: "UserInfo";
     id: string;
     labLocation: string;
     hviVersion: string;
@@ -854,7 +854,7 @@ export type ListUserInfosQuery = {
 };
 
 export type GetLabsQuery = {
-  __typename: 'Labs';
+  __typename: "Labs";
   labCountry: string;
   labCode: string;
   label: string;
@@ -866,9 +866,9 @@ export type GetLabsQuery = {
 };
 
 export type ListLabsQuery = {
-  __typename: 'ModelLabsConnection';
+  __typename: "ModelLabsConnection";
   items: Array<{
-    __typename: 'Labs';
+    __typename: "Labs";
     labCountry: string;
     labCode: string;
     label: string;
@@ -882,7 +882,7 @@ export type ListLabsQuery = {
 };
 
 export type OnCreateReportTemplateSubscription = {
-  __typename: 'ReportTemplate';
+  __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
@@ -903,7 +903,7 @@ export type OnCreateReportTemplateSubscription = {
 };
 
 export type OnUpdateReportTemplateSubscription = {
-  __typename: 'ReportTemplate';
+  __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
@@ -924,7 +924,7 @@ export type OnUpdateReportTemplateSubscription = {
 };
 
 export type OnDeleteReportTemplateSubscription = {
-  __typename: 'ReportTemplate';
+  __typename: "ReportTemplate";
   templateId: string;
   localCompanyName?: string | null;
   localCompanyNameTranslation?: string | null;
@@ -945,7 +945,7 @@ export type OnDeleteReportTemplateSubscription = {
 };
 
 export type OnCreateReportSubscription = {
-  __typename: 'Report';
+  __typename: "Report";
   id: string;
   name: string;
   email: string;
@@ -965,7 +965,7 @@ export type OnCreateReportSubscription = {
 };
 
 export type OnUpdateReportSubscription = {
-  __typename: 'Report';
+  __typename: "Report";
   id: string;
   name: string;
   email: string;
@@ -985,7 +985,7 @@ export type OnUpdateReportSubscription = {
 };
 
 export type OnDeleteReportSubscription = {
-  __typename: 'Report';
+  __typename: "Report";
   id: string;
   name: string;
   email: string;
@@ -1005,7 +1005,7 @@ export type OnDeleteReportSubscription = {
 };
 
 export type OnCreateUserInfoSubscription = {
-  __typename: 'UserInfo';
+  __typename: "UserInfo";
   id: string;
   labLocation: string;
   hviVersion: string;
@@ -1015,7 +1015,7 @@ export type OnCreateUserInfoSubscription = {
 };
 
 export type OnUpdateUserInfoSubscription = {
-  __typename: 'UserInfo';
+  __typename: "UserInfo";
   id: string;
   labLocation: string;
   hviVersion: string;
@@ -1025,7 +1025,7 @@ export type OnUpdateUserInfoSubscription = {
 };
 
 export type OnDeleteUserInfoSubscription = {
-  __typename: 'UserInfo';
+  __typename: "UserInfo";
   id: string;
   labLocation: string;
   hviVersion: string;
@@ -1035,7 +1035,7 @@ export type OnDeleteUserInfoSubscription = {
 };
 
 export type OnCreateLabsSubscription = {
-  __typename: 'Labs';
+  __typename: "Labs";
   labCountry: string;
   labCode: string;
   label: string;
@@ -1047,7 +1047,7 @@ export type OnCreateLabsSubscription = {
 };
 
 export type OnUpdateLabsSubscription = {
-  __typename: 'Labs';
+  __typename: "Labs";
   labCountry: string;
   labCode: string;
   label: string;
@@ -1059,7 +1059,7 @@ export type OnUpdateLabsSubscription = {
 };
 
 export type OnDeleteLabsSubscription = {
-  __typename: 'Labs';
+  __typename: "Labs";
   labCountry: string;
   labCode: string;
   label: string;
@@ -1071,7 +1071,7 @@ export type OnDeleteLabsSubscription = {
 };
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root"
 })
 export class APIService {
   async CreateReportTemplate(
@@ -1101,7 +1101,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1138,7 +1138,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1175,7 +1175,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1211,7 +1211,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1247,7 +1247,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1283,7 +1283,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1309,7 +1309,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1335,7 +1335,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1361,7 +1361,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1389,7 +1389,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1417,7 +1417,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1445,7 +1445,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      input,
+      input
     };
     if (condition) {
       gqlAPIServiceArguments.condition = condition;
@@ -1479,7 +1479,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      id,
+      id
     };
     const response = (await API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -1555,7 +1555,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      id,
+      id
     };
     const response = (await API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -1648,7 +1648,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      attachmentUrl,
+      attachmentUrl
     };
     if (name) {
       gqlAPIServiceArguments.name = name;
@@ -1685,7 +1685,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      id,
+      id
     };
     const response = (await API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -1742,7 +1742,7 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      id,
+      id
     };
     const response = (await API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -1791,7 +1791,7 @@ export class APIService {
     owner?: string
   ): Observable<
     SubscriptionResponse<
-      Pick<__SubscriptionContainer, 'onCreateReportTemplate'>
+      Pick<__SubscriptionContainer, "onCreateReportTemplate">
     >
   > {
     const statement = `subscription OnCreateReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput, $owner: String) {
@@ -1827,7 +1827,7 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
       SubscriptionResponse<
-        Pick<__SubscriptionContainer, 'onCreateReportTemplate'>
+        Pick<__SubscriptionContainer, "onCreateReportTemplate">
       >
     >;
   }
@@ -1837,7 +1837,7 @@ export class APIService {
     owner?: string
   ): Observable<
     SubscriptionResponse<
-      Pick<__SubscriptionContainer, 'onUpdateReportTemplate'>
+      Pick<__SubscriptionContainer, "onUpdateReportTemplate">
     >
   > {
     const statement = `subscription OnUpdateReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput, $owner: String) {
@@ -1873,7 +1873,7 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
       SubscriptionResponse<
-        Pick<__SubscriptionContainer, 'onUpdateReportTemplate'>
+        Pick<__SubscriptionContainer, "onUpdateReportTemplate">
       >
     >;
   }
@@ -1883,7 +1883,7 @@ export class APIService {
     owner?: string
   ): Observable<
     SubscriptionResponse<
-      Pick<__SubscriptionContainer, 'onDeleteReportTemplate'>
+      Pick<__SubscriptionContainer, "onDeleteReportTemplate">
     >
   > {
     const statement = `subscription OnDeleteReportTemplate($filter: ModelSubscriptionReportTemplateFilterInput, $owner: String) {
@@ -1919,7 +1919,7 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
       SubscriptionResponse<
-        Pick<__SubscriptionContainer, 'onDeleteReportTemplate'>
+        Pick<__SubscriptionContainer, "onDeleteReportTemplate">
       >
     >;
   }
@@ -1928,7 +1928,7 @@ export class APIService {
     filter?: ModelSubscriptionReportFilterInput,
     owner?: string
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, 'onCreateReport'>>
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateReport">>
   > {
     const statement = `subscription OnCreateReport($filter: ModelSubscriptionReportFilterInput, $owner: String) {
         onCreateReport(filter: $filter, owner: $owner) {
@@ -1961,7 +1961,7 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, 'onCreateReport'>>
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateReport">>
     >;
   }
 
@@ -1969,7 +1969,7 @@ export class APIService {
     filter?: ModelSubscriptionReportFilterInput,
     owner?: string
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, 'onUpdateReport'>>
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateReport">>
   > {
     const statement = `subscription OnUpdateReport($filter: ModelSubscriptionReportFilterInput, $owner: String) {
         onUpdateReport(filter: $filter, owner: $owner) {
@@ -2002,7 +2002,7 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, 'onUpdateReport'>>
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateReport">>
     >;
   }
 
@@ -2010,7 +2010,7 @@ export class APIService {
     filter?: ModelSubscriptionReportFilterInput,
     owner?: string
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, 'onDeleteReport'>>
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteReport">>
   > {
     const statement = `subscription OnDeleteReport($filter: ModelSubscriptionReportFilterInput, $owner: String) {
         onDeleteReport(filter: $filter, owner: $owner) {
@@ -2043,7 +2043,7 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, 'onDeleteReport'>>
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteReport">>
     >;
   }
 
@@ -2051,7 +2051,7 @@ export class APIService {
     filter?: ModelSubscriptionUserInfoFilterInput,
     owner?: string
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, 'onCreateUserInfo'>>
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateUserInfo">>
   > {
     const statement = `subscription OnCreateUserInfo($filter: ModelSubscriptionUserInfoFilterInput, $owner: String) {
         onCreateUserInfo(filter: $filter, owner: $owner) {
@@ -2074,7 +2074,7 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, 'onCreateUserInfo'>>
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateUserInfo">>
     >;
   }
 
@@ -2082,7 +2082,7 @@ export class APIService {
     filter?: ModelSubscriptionUserInfoFilterInput,
     owner?: string
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, 'onUpdateUserInfo'>>
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateUserInfo">>
   > {
     const statement = `subscription OnUpdateUserInfo($filter: ModelSubscriptionUserInfoFilterInput, $owner: String) {
         onUpdateUserInfo(filter: $filter, owner: $owner) {
@@ -2105,7 +2105,7 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, 'onUpdateUserInfo'>>
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateUserInfo">>
     >;
   }
 
@@ -2113,7 +2113,7 @@ export class APIService {
     filter?: ModelSubscriptionUserInfoFilterInput,
     owner?: string
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, 'onDeleteUserInfo'>>
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteUserInfo">>
   > {
     const statement = `subscription OnDeleteUserInfo($filter: ModelSubscriptionUserInfoFilterInput, $owner: String) {
         onDeleteUserInfo(filter: $filter, owner: $owner) {
@@ -2136,7 +2136,7 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, 'onDeleteUserInfo'>>
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteUserInfo">>
     >;
   }
 
@@ -2144,7 +2144,7 @@ export class APIService {
     filter?: ModelSubscriptionLabsFilterInput,
     owner?: string
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, 'onCreateLabs'>>
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateLabs">>
   > {
     const statement = `subscription OnCreateLabs($filter: ModelSubscriptionLabsFilterInput, $owner: String) {
         onCreateLabs(filter: $filter, owner: $owner) {
@@ -2169,7 +2169,7 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, 'onCreateLabs'>>
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateLabs">>
     >;
   }
 
@@ -2177,7 +2177,7 @@ export class APIService {
     filter?: ModelSubscriptionLabsFilterInput,
     owner?: string
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, 'onUpdateLabs'>>
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateLabs">>
   > {
     const statement = `subscription OnUpdateLabs($filter: ModelSubscriptionLabsFilterInput, $owner: String) {
         onUpdateLabs(filter: $filter, owner: $owner) {
@@ -2202,7 +2202,7 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, 'onUpdateLabs'>>
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateLabs">>
     >;
   }
 
@@ -2210,7 +2210,7 @@ export class APIService {
     filter?: ModelSubscriptionLabsFilterInput,
     owner?: string
   ): Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, 'onDeleteLabs'>>
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteLabs">>
   > {
     const statement = `subscription OnDeleteLabs($filter: ModelSubscriptionLabsFilterInput, $owner: String) {
         onDeleteLabs(filter: $filter, owner: $owner) {
@@ -2235,7 +2235,7 @@ export class APIService {
     return API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
-      SubscriptionResponse<Pick<__SubscriptionContainer, 'onDeleteLabs'>>
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteLabs">>
     >;
   }
 }

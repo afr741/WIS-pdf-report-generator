@@ -90,8 +90,12 @@ export class LoginComponent implements OnInit {
       if (error.code == 'UserNotFoundException') {
         this.error = error.message;
       }
+
       this.error = error;
       console.log(error);
+      if (error === 'The user is not authenticated') {
+        return this.router.navigate(['/reset']);
+      }
     }
     return null;
   }

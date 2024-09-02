@@ -1,19 +1,14 @@
 .landing-container {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 200px;
 }
 
 .centered-header {
   text-align: center;
-  font-size: 2.5rem;
-  color: #333;
+  font-size: 4.5rem;
   margin-bottom: 2rem;
 }
 
@@ -27,8 +22,8 @@
 }
 
 .tile {
-  flex: 0 0 300px;
-  height: 300px;
+  flex: 0 0 400px;
+  height: 400px;
   position: relative;
   overflow: hidden;
   border-radius: 8px;
@@ -75,6 +70,10 @@
 }
 
 .tile-button:hover {
+  background-color: rgba(76, 175, 80, 0.3); /* Semi-transparent hover effect */
+  font-size: 46px; /* Slightly larger on hover */
+}
+.tile-button:active {
   background-color: rgba(76, 175, 80, 0.3); /* Semi-transparent hover effect */
   font-size: 26px; /* Slightly larger on hover */
 }

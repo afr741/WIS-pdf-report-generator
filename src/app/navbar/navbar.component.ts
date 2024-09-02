@@ -1,13 +1,12 @@
-import { APIService, Report } from '../API.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { SVGIcon, bellIcon, menuIcon } from '@progress/kendo-svg-icons';
 
+import { APIService } from '../API.service';
 import { AuthService } from '../AuthService';
-import { Storage } from 'aws-amplify';
 import { ZenObservable } from 'zen-observable-ts';
+import { routeData } from '../configs/locationCofigs';
 
-// const logo = require('../../assets/images/wis-logo.jpeg').default as string;
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -33,7 +32,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public isManagerUp: boolean = false;
 
   // public wisLogo: any = logo;
-  public kendokaAvatar =
+  public kendokaAvatar: any =
     'https://www.telerik.com/kendo-angular-ui-develop/components/navigation/appbar/assets/kendoka-angular.png';
   public sectionName: string = '';
   public wislogo: any;
@@ -46,12 +45,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ) {}
 
   public async ngOnInit() {
-    this.wislogo = await Storage.get('wis.jpg');
     this.setSectionName(this.router.url);
 
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
         this.setSectionName(event.url);
+        let navUrl = event.url.split('/')[1];
+        this.wislogo = routeData.filter(
+          (item) => item.routeId === navUrl
+        )[0].icon;
+        console.log('route', this.router, 'kendokaAvatar', this.kendokaAvatar);
       }
     });
 
@@ -65,7 +68,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     this.authService.getUserEmailAndLab().then((res) => {
       console.log('user lab', res);
-      this.isManagerUp = res.userGroup.includes('managers');
+      this.isManagerUp = res?.userGroup?.includes('managers') ?? false;
     });
     this.modifyUserPreferenceSubscription = this.api
       .OnUpdateUserInfoListener()
@@ -76,7 +79,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
 
     await this.api.ListUserInfos().then((user: any) => {
-      // console.log('user list', user);
+      console.log('user list', user);
 
       if (user.items.length > 0) {
         this.isPreferenceSet = true;
@@ -89,7 +92,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       }
     });
     await this.api.ListLabs().then((labs: any) => {
-      // console.log('labs', labs);
+      console.log('labs', labs);
       this.labNameList = labs.items.map((item: any) => {
         return item.label;
       });
