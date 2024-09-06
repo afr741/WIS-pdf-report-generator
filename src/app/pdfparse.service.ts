@@ -6,6 +6,7 @@ import { Report } from './API.service';
 })
 export class PdfparseService {
   constructor() {}
+
   //Dushanbe
   processPDFDataV1(report: Report, handleShowError: any) {
     let {
@@ -286,16 +287,26 @@ export class PdfparseService {
     console.log('parsedRawData', parsedRawData);
 
     // number of elements based on elements in this row
+    let startRowKeyWord = ['Sample Count', 'No.'];
 
-    const keys = Object.keys(parsedRawData[1]).sort((a, b) => {
-      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
-      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
-      return numA - numB;
+    // to find the start of data body using "Time" word
+    let bodyStartIndex = parsedRawData.findIndex((object: any) => {
+      let values = Object.values(object);
+      return (
+        values.includes(startRowKeyWord[0]) ||
+        values.includes(startRowKeyWord[1])
+      );
     });
+
+    const keys = Object.keys(parsedRawData[bodyStartIndex]);
+    console.log('keys', keys);
 
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
       //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
       return keys.map((key, keyIndex) => {
+        if (obj.__EMPTY && keyIndex == bodyStartIndex) {
+          return obj.__EMPTY;
+        }
         let cellValue = obj[key];
         let original = [16, 2];
         let isInteger = [0, 1, 3, 9, 10];
@@ -318,21 +329,36 @@ export class PdfparseService {
                 ? 3
                 : 9
             );
-        return roundedCellValue;
+        return roundedCellValue ?? '';
       });
     });
 
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes('Sample Count')
-    );
+    // let startRowKeyWord = ['Sample Count', 'No.'];
+
+    // // to find the start of data body using "Time" word
+    // let bodyStartIndex = extractedRows.findIndex(
+    //   (array: any) => {
+    //     if (Array.isArray(startRowKeyWord)) {
+    //       // Check if any of the keywords in the array are included in the current row
+    //       return startRowKeyWord.some((keyword) => array.includes(keyword));
+    //     } else {
+    //       // Check if the single keyword is included in the current row
+    //       return array.includes(startRowKeyWord);
+    //     }
+    //   }
+    //   // array.includes('Sample Count')
+    // );
 
     // to find the end of data body using "Average" word
-    let bodyEndIndex = extractedRows.length;
+    let bodyEndIndex = extractedRows.length - 1;
 
     let extractedRowsBody = extractedRows.slice(bodyStartIndex, bodyEndIndex);
 
     console.log(
+      'bodyStartIndex',
+      bodyStartIndex,
+      'bodyEndIndex',
+      bodyEndIndex,
       'extractedRows:',
       extractedRows,
       'keys:',

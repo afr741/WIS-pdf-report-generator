@@ -74,8 +74,8 @@ export class PdfComponent implements OnInit {
       });
     this.authService.getUserEmailAndLab().then((res) => {
       console.log('user lab', res);
-      this.isManagerUp = res.userGroup.includes('managers');
-      this.isSuperUser = res.userGroup.includes('admins');
+      this.isManagerUp = res?.userGroup?.includes('managers') ?? false;
+      this.isSuperUser = res?.userGroup?.includes('admins') ?? false;
       this.currentUserEmail = res.email;
     });
 
