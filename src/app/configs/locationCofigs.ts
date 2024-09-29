@@ -1,5 +1,3 @@
-const countryCode = ['TJK-DUSHANBE', 'TJK-BOKHTAR', 'TJK-KHUJAND'];
-
 const uploadIcon = '../../assets/images/upload-icon.svg';
 const editIcon = '../../assets/images/edit-icon.svg';
 const reportsIcon = '../../assets/images/reports-icon.svg';
@@ -37,4 +35,4 @@ const routeData: Array<any> = [
   },
 ];
 
-export { countryCode, routeData };
+export { routeData };

@@ -14,7 +14,7 @@ import {
   LoaderSize,
 } from '@progress/kendo-angular-indicators';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Storage } from 'aws-amplify';
 import { NotificationService } from '@progress/kendo-angular-notification';
@@ -46,6 +46,8 @@ export class EditComponent implements OnInit, OnDestroy {
     size: <LoaderSize>'large',
   };
   public activeTemplateInfo: ReportTemplate | undefined = undefined;
+  public remarksList: FormArray = this.fb.array([]);
+
   constructor(
     private fb: FormBuilder,
     private api: APIService,
@@ -65,6 +67,7 @@ export class EditComponent implements OnInit, OnDestroy {
       email: ['', Validators.required],
       origin: ['', Validators.required],
       testLocation: ['', Validators.required],
+      remarksList: this.fb.array([this.fb.control('')]),
     });
   }
 
@@ -107,7 +110,7 @@ export class EditComponent implements OnInit, OnDestroy {
     this.api
       .ListReportTemplates()
       .then(async (event) => {
-        // console.log('this.templateInfos fetchTemplateData event', event);
+        console.log('this.templateInfos fetchTemplateData event', event);
         this.templateInfos = event.items as ReportTemplate[];
         if (this.templateInfos.length > 0) {
           const foundEntry = this.templateInfos.find(
@@ -122,11 +125,29 @@ export class EditComponent implements OnInit, OnDestroy {
               updatedAt,
               __typename,
               templateId,
+              remarksList,
               ...fieldsToPrefill
             } = this.activeTemplateInfo;
-            // console.log('activeTemplateInfo', this.activeTemplateInfo);
-            // console.log('fieldsToPrefill:', fieldsToPrefill);
-            this.createForm.patchValue(fieldsToPrefill);
+            console.log('activeTemplateInfo', this.activeTemplateInfo);
+            console.log('fieldsToPrefill:', fieldsToPrefill);
+            console.log('remarksList:', remarksList);
+            console.log('createForm:', this.createForm);
+            console.log(
+              ' this.createForm.get("remarksList")',
+              this.createForm.get('remarksList')
+            );
+
+            // remarksList: this.fb.array(remarksList),
+            this.createForm.patchValue({
+              ...fieldsToPrefill,
+            });
+            if (remarksList) {
+              remarksList.forEach((item) => {
+                this.remarksList.push(this.fb.control(item));
+              });
+              this.createForm.setControl('remarksList', this.remarksList);
+            }
+
             if (fieldsToPrefill.stampImageName) {
               Storage.get(`${fieldsToPrefill.stampImageName}`).then((res) => {
                 if (res) {
@@ -237,6 +258,10 @@ export class EditComponent implements OnInit, OnDestroy {
       };
       reader.readAsDataURL(fileList[0].rawFile);
     }
+  }
+  addAdditionalText(): void {
+    this.remarksList.push(this.fb.control(''));
+    this.createForm.setControl('remarksList', this.remarksList);
   }
 
   private updateReportWithAttachment(

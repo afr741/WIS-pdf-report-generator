@@ -136,6 +136,26 @@
           </div>
         </div>
 
+        <div class="asset-wrapper">
+          <div class="select-wrapper">
+            <p>Remarks</p>
+
+            <div formArrayName="remarksList">
+              <div *ngFor="let control of remarksList.controls; let i = index">
+                <kendo-textbox
+                  [formControlName]="i"
+                  #remarkItem
+                  placeholder="Additional text {{ i + 1 }}"
+                ></kendo-textbox>
+              </div>
+            </div>
+
+            <button type="button" (click)="addAdditionalText()">
+              Add More Text
+            </button>
+          </div>
+        </div>
+
         <div class="k-form-buttons">
           <button
             kendoButton

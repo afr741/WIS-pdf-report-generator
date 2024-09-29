@@ -15,6 +15,7 @@ query GetReportTemplate($id: ID!) {
     testLocation
     origin
     labLocation
+    remarksList
     id
     createdAt
     updatedAt
@@ -43,6 +44,7 @@ query ListReportTemplates(
       testLocation
       origin
       labLocation
+      remarksList
       id
       createdAt
       updatedAt

@@ -23,6 +23,7 @@ type ReportTemplate
   testLocation: String
   origin: String
   labLocation: String
+  remarksList: [String]
 }
 
 type Report

@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion2c453a77": {
+    "LambdaLayerVersion1d86bbdb": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": [
@@ -30,9 +30,9 @@
           "S3Bucket": {
             "Ref": "deploymentBucketName"
           },
-          "S3Key": "amplify-builds/hvigenphasetwolayer-LambdaLayerVersion2c453a77-build.zip"
+          "S3Key": "amplify-builds/hvigenphasetwolayer-LambdaLayerVersion1d86bbdb-build.zip"
         },
-        "Description": "Updated layer version 2024-06-21T01:23:55.819Z",
+        "Description": "Updated layer version 2024-09-06T03:06:17.862Z",
         "LayerName": {
           "Fn::Sub": [
             "hvigenphasetwolayer-${env}",
@@ -47,11 +47,11 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionPrivate2c453a77": {
+    "LambdaLayerPermissionPrivate1d86bbdb": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-east-1:169759725246:layer:hvigenphasetwolayer-phasethree:8",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:169759725246:layer:hvigenphasetwolayer-phasethree:10",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -61,7 +61,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion2c453a77"
+        "Ref": "LambdaLayerVersion1d86bbdb"
       }
     }
   }

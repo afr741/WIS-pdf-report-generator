@@ -284,10 +284,12 @@ export class PdfparseService {
     }
 
     let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('dataRows', dataRows);
+
     console.log('parsedRawData', parsedRawData);
 
     // number of elements based on elements in this row
-    let startRowKeyWord = ['Sample Count', 'No.'];
+    let startRowKeyWord = ['No.', 'Sample Count'];
 
     // to find the start of data body using "Time" word
     let bodyStartIndex = parsedRawData.findIndex((object: any) => {
@@ -297,8 +299,20 @@ export class PdfparseService {
         values.includes(startRowKeyWord[1])
       );
     });
+    //sort keys based number embeded in key string, excep "VIT" "__EMPTY" and  go first
+    const customSort = (arr: string[]): string[] => {
+      return arr.sort((a, b) => {
+        if (a === '__EMPTY' || a.includes('VIT')) return -1;
+        if (b === '__EMPTY' || b.includes('VIT')) return 1;
 
-    const keys = Object.keys(parsedRawData[bodyStartIndex]);
+        const numA = parseInt(a.replace(/[^0-9]/g, ''));
+        const numB = parseInt(b.replace(/[^0-9]/g, ''));
+
+        return numA - numB;
+      });
+    };
+
+    const keys = customSort(Object.keys(parsedRawData[bodyStartIndex]));
     console.log('keys', keys);
 
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
@@ -333,24 +347,17 @@ export class PdfparseService {
       });
     });
 
-    // let startRowKeyWord = ['Sample Count', 'No.'];
-
-    // // to find the start of data body using "Time" word
-    // let bodyStartIndex = extractedRows.findIndex(
-    //   (array: any) => {
-    //     if (Array.isArray(startRowKeyWord)) {
-    //       // Check if any of the keywords in the array are included in the current row
-    //       return startRowKeyWord.some((keyword) => array.includes(keyword));
-    //     } else {
-    //       // Check if the single keyword is included in the current row
-    //       return array.includes(startRowKeyWord);
-    //     }
-    //   }
-    //   // array.includes('Sample Count')
-    // );
-
     // to find the end of data body using "Average" word
-    let bodyEndIndex = extractedRows.length - 1;
+    let bodyEndIndex =
+      extractedRows.findIndex((array: any) =>
+        array.some(
+          (element: any) =>
+            typeof element === 'string' &&
+            ['AVERAGE', 'Average', 'average'].some((avg) =>
+              element.toUpperCase().includes(avg)
+            )
+        )
+      ) + 1 || extractedRows.length;
 
     let extractedRowsBody = extractedRows.slice(bodyStartIndex, bodyEndIndex);
 

@@ -16,8 +16,6 @@ import {
   LoaderSize,
 } from '@progress/kendo-angular-indicators';
 
-import { REMARKS } from './staticTemplateData';
-
 @Component({
   selector: 'app-pdf',
   templateUrl: './pdf.component.html',
@@ -298,7 +296,8 @@ export class PdfComponent implements OnInit {
     let email: any = '';
     let localCompanyName: any = '';
     let localCompanyNameTranslation: any = '';
-
+    let singlePageRowLimit = 34;
+    let remarks: any = [];
     if (this.activeTemplateInfo) {
       phone = this.activeTemplateInfo.phone;
       address = this.activeTemplateInfo.address;
@@ -308,23 +307,27 @@ export class PdfComponent implements OnInit {
       localCompanyName = this.activeTemplateInfo.localCompanyName;
       localCompanyNameTranslation =
         this.activeTemplateInfo.localCompanyNameTranslation;
+      remarks = this.activeTemplateInfo.remarksList;
     }
 
     let docDefinition = {
       pageSize: 'A4',
-      background: [
-        this.stampImage && {
-          image: await this.stampImage,
-          fit: [150, 150],
-          absolutePosition: { x: 410, y: 680 },
-        },
-        {
-          link: qrURL,
-          image: await qrImageProcessed,
-          fit: [90, 90],
-          absolutePosition: { x: 280, y: 700 },
-        },
-      ],
+      background:
+        this.stampImage && extractedRowsBody.length < singlePageRowLimit
+          ? [
+              {
+                image: await this.stampImage,
+                fit: [150, 150],
+                absolutePosition: { x: 410, y: 680 },
+              },
+              {
+                link: qrURL,
+                image: await qrImageProcessed,
+                fit: [90, 90],
+                absolutePosition: { x: 280, y: 700 },
+              },
+            ]
+          : null,
       content: [
         this.letterHeadImage && {
           width: 500,
@@ -370,18 +373,12 @@ export class PdfComponent implements OnInit {
         },
 
         { text: '\n\nRemarks', style: 'remarks' },
+        {},
         {
           style: 'remarksBullets',
-          ol: REMARKS.part1,
+          ol: remarks,
         },
-        {
-          style: 'remarksBullets',
-          text: REMARKS.part2,
-        },
-        {
-          style: 'remarksBullets',
-          ol: REMARKS.part3,
-        },
+
         {
           text: `${localCompanyName}\n ${localCompanyNameTranslation}`,
           style: 'contactsHeader',
@@ -410,6 +407,22 @@ export class PdfComponent implements OnInit {
           },
           layout: 'noBorders',
         },
+
+        extractedRowsBody.length > singlePageRowLimit
+          ? this.stampImage && {
+              image: await this.stampImage,
+              fit: [150, 150],
+              absolutePosition: { x: 410, y: 680 },
+            }
+          : null,
+        extractedRowsBody.length > singlePageRowLimit
+          ? {
+              link: qrURL,
+              image: await qrImageProcessed,
+              fit: [90, 90],
+              absolutePosition: { x: 280, y: 680 },
+            }
+          : null,
       ],
       styles: {
         header: {
