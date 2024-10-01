@@ -241,6 +241,7 @@ export class PdfComponent implements OnInit {
       variety,
       lotNum,
       extractedRowsBody,
+      numberOfSamples,
       createdAt,
       id,
     } = res;
@@ -265,24 +266,6 @@ export class PdfComponent implements OnInit {
       }${createdDate.getDate()}.`;
 
       return date;
-    };
-
-    const numberOfSamples = () => {
-      switch (this.selectedHviVersion) {
-        case 'v1':
-          return extractedRowsBody.length - 3;
-        case 'v2':
-          return extractedRowsBody.length - 9;
-
-        case 'v3':
-          return extractedRowsBody.length - 9;
-
-        case 'v4':
-          return extractedRowsBody.length - 1;
-
-        default:
-          return extractedRowsBody.length - 1;
-      }
     };
 
     if (extractedRowsBody.length == 0) {
@@ -348,7 +331,7 @@ export class PdfComponent implements OnInit {
                 'Lot number',
                 lotNum,
                 { text: 'Samples drawn by customer', bold: true },
-                `${numberOfSamples()} samples`,
+                `${numberOfSamples} samples`,
               ],
             ],
           },

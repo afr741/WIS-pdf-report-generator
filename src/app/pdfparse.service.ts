@@ -85,6 +85,9 @@ export class PdfparseService {
     );
 
     let emptyRow = extractedRowsBody.splice(extractedRowsBody.length - 2, 1);
+
+    const numberOfSamples = extractedRowsBody.length - 3;
+
     return {
       customerName,
       reportNum,
@@ -94,6 +97,7 @@ export class PdfparseService {
       extractedRowsBody,
       createdAt,
       id,
+      numberOfSamples,
     };
   }
   //Bohktar
@@ -171,6 +175,7 @@ export class PdfparseService {
       bodyStartIndex,
       bodyEndIndex + 1
     );
+    const numberOfSamples = extractedRowsBody.length - 9;
 
     return {
       customerName,
@@ -181,6 +186,7 @@ export class PdfparseService {
       extractedRowsBody,
       createdAt,
       id,
+      numberOfSamples,
     };
   }
   // Hujand
@@ -255,6 +261,8 @@ export class PdfparseService {
       bodyStartIndex + 1,
       bodyEndIndex + 1
     );
+    const numberOfSamples = extractedRowsBody.length - 9;
+
     return {
       customerName,
       reportNum,
@@ -264,6 +272,7 @@ export class PdfparseService {
       extractedRowsBody,
       createdAt,
       id,
+      numberOfSamples,
     };
   }
   // Vietnam
@@ -285,7 +294,6 @@ export class PdfparseService {
 
     let parsedRawData = JSON.parse(dataRows[0]);
     console.log('dataRows', dataRows);
-
     console.log('parsedRawData', parsedRawData);
 
     // number of elements based on elements in this row
@@ -348,18 +356,26 @@ export class PdfparseService {
     });
 
     // to find the end of data body using "Average" word
+
+    const averageIndex = extractedRows.findIndex((array: any) =>
+      array.some(
+        (element: any) =>
+          typeof element === 'string' &&
+          ['AVERAGE', 'Average', 'average'].some((avg) =>
+            element.toUpperCase().includes(avg)
+          )
+      )
+    );
+
     let bodyEndIndex =
-      extractedRows.findIndex((array: any) =>
-        array.some(
-          (element: any) =>
-            typeof element === 'string' &&
-            ['AVERAGE', 'Average', 'average'].some((avg) =>
-              element.toUpperCase().includes(avg)
-            )
-        )
-      ) + 1 || extractedRows.length;
+      averageIndex !== -1 ? averageIndex + 1 : extractedRows.length;
 
     let extractedRowsBody = extractedRows.slice(bodyStartIndex, bodyEndIndex);
+
+    const numberOfSamples =
+      averageIndex !== -1
+        ? extractedRowsBody.length - 2
+        : extractedRowsBody.length - 1;
 
     console.log(
       'bodyStartIndex',
@@ -371,7 +387,9 @@ export class PdfparseService {
       'keys:',
       keys,
       'extractedRowsBody:',
-      extractedRowsBody
+      extractedRowsBody,
+      'averageIndex',
+      averageIndex
     );
 
     return {
@@ -383,6 +401,7 @@ export class PdfparseService {
       extractedRowsBody,
       createdAt,
       id,
+      numberOfSamples,
     };
   }
   //China - Shanghai
