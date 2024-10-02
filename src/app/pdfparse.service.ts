@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Report } from './API.service';
+import { concat } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -298,15 +299,14 @@ export class PdfparseService {
 
     // number of elements based on elements in this row
     let startRowKeyWord = ['No.', 'Sample Count'];
-
+    const firstRowIndex = parsedRawData.findIndex((object: any) =>
+      Object.values(object).some((value) =>
+        startRowKeyWord.includes(value as string)
+      )
+    );
     // to find the start of data body using "Time" word
-    let bodyStartIndex = parsedRawData.findIndex((object: any) => {
-      let values = Object.values(object);
-      return (
-        values.includes(startRowKeyWord[0]) ||
-        values.includes(startRowKeyWord[1])
-      );
-    });
+    let bodyStartIndex = firstRowIndex == -1 ? 0 : firstRowIndex;
+    console.log('bodyStartIndex', bodyStartIndex);
     //sort keys based number embeded in key string, excep "VIT" "__EMPTY" and  go first
     const customSort = (arr: string[]): string[] => {
       return arr.sort((a, b) => {
@@ -323,12 +323,13 @@ export class PdfparseService {
     const keys = customSort(Object.keys(parsedRawData[bodyStartIndex]));
     console.log('keys', keys);
 
-    const extractedRows = parsedRawData.map((obj: any, index: any) => {
+    let extractedRows = parsedRawData.map((obj: any, index: any) => {
       //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
       return keys.map((key, keyIndex) => {
         if (obj.__EMPTY && keyIndex == bodyStartIndex) {
           return obj.__EMPTY;
         }
+
         let cellValue = obj[key];
         let original = [16, 2];
         let isInteger = [0, 1, 3, 9, 10];
@@ -354,6 +355,15 @@ export class PdfparseService {
         return roundedCellValue ?? '';
       });
     });
+
+    if (firstRowIndex == -1) {
+      extractedRows = [
+        extractedRows[0].map((item: any, index: any) => {
+          console.log('item', item);
+          return keys[index];
+        }),
+      ].concat(extractedRows);
+    }
 
     // to find the end of data body using "Average" word
 
