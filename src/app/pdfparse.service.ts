@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Report } from './API.service';
-import { concat } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -287,6 +286,7 @@ export class PdfparseService {
       variety,
       createdAt,
       id,
+      samplesSenderName,
     } = report;
     if (!dataRows || dataRows[0] === null) {
       handleShowError('Failed to extract data rows!');
@@ -335,7 +335,7 @@ export class PdfparseService {
         let isInteger = [0, 1, 3, 9, 10];
         let isOneDec = [6, 12, 13, 14];
         let isTwoDec = [4, 5, 8, 11, 15];
-        let isThreeDec = [7];
+        let isThreeDec: any = [];
 
         let roundedCellValue = original.includes(keyIndex)
           ? cellValue
@@ -412,6 +412,7 @@ export class PdfparseService {
       createdAt,
       id,
       numberOfSamples,
+      samplesSenderName,
     };
   }
   //China - Shanghai

@@ -66,6 +66,16 @@
         ></kendo-textbox>
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
       </kendo-formfield>
+      <kendo-formfield>
+        <kendo-label labelCssClass="k-form-label" text="Samples sent By" />
+        <kendo-textbox
+          formControlName="samplesSenderName"
+          #samplesSenderName
+          required
+          placeholder="Samples sent By"
+        ></kendo-textbox>
+        <kendo-formerror> samplesSenderName is required</kendo-formerror>
+      </kendo-formfield>
 
       <div class="row">
         <div class="col-xs-12 col-sm-6 example-col">

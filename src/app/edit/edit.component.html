@@ -142,16 +142,60 @@
 
             <div formArrayName="remarksList">
               <div *ngFor="let control of remarksList.controls; let i = index">
-                <kendo-textbox
-                  [formControlName]="i"
-                  #remarkItem
-                  placeholder="Additional text {{ i + 1 }}"
-                ></kendo-textbox>
+                <div class="inputSection">
+                  <kendo-textbox
+                    [formControlName]="i"
+                    #remarkItem
+                    placeholder="Additional text {{ i + 1 }}"
+                    style="width: 100%"
+                  ></kendo-textbox>
+                  <button
+                    type="button"
+                    class="close"
+                    aria-label="Close"
+                    (click)="deleteRemark(i)"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
               </div>
             </div>
 
             <button type="button" (click)="addAdditionalText()">
-              Add More Text
+              Add more remarks
+            </button>
+          </div>
+          <div class="select-wrapper">
+            <p>Test and Lab Conditions</p>
+            <div formArrayName="testConditionsList">
+              <div
+                *ngFor="
+                  let control of testConditionsList.controls;
+                  let i = index
+                "
+              >
+                <div class="inputSection">
+                  <kendo-textbox
+                    [formControlName]="i"
+                    #conditionItem
+                    placeholder="Additional text {{ i + 1 }}"
+                  ></kendo-textbox>
+                  <div class="col-2">
+                    <button
+                      type="button"
+                      class="close"
+                      aria-label="Close"
+                      (click)="deleteRemark2(i)"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" (click)="addAdditionalText2()">
+              Add more conditions
             </button>
           </div>
         </div>

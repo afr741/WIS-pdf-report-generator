@@ -56,6 +56,7 @@ export class UploadComponent implements OnInit, OnDestroy {
       variety: ['', Validators.required],
       attachmentUrl: [null, Validators.required],
       dataRows: ['', Validators.required],
+      samplesSenderName: ['', Validators.required],
     });
   }
 

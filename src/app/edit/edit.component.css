@@ -6,6 +6,9 @@
   height: 100%;
 }
 
+.example-wrap {
+  width: 500px;
+}
 .loader-wrapper {
   display: flex;
   align-items: center;
@@ -34,6 +37,14 @@
 }
 .asset-wrapper {
   padding: 20px 0;
+}
+
+.select-wrapper {
+  margin: 0 20px;
+}
+.inputSection {
+  display: flex;
+  flex-direction: row;
 }
 
 .k-block,

@@ -24,6 +24,7 @@ type ReportTemplate
   origin: String
   labLocation: String
   remarksList: [String]
+  testConditionsList: [String]
 }
 
 type Report
@@ -40,6 +41,7 @@ type Report
   ) {
   id: ID!
   name: String!
+  samplesSenderName: String
   email: String!
   labLocation: String!
   hviVersion: String!

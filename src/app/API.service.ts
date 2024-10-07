@@ -39,6 +39,7 @@ export type CreateReportTemplateInput = {
   origin?: string | null;
   labLocation?: string | null;
   remarksList?: Array<string | null> | null;
+  testConditionsList?: Array<string | null> | null;
   id?: string | null;
 };
 
@@ -57,6 +58,7 @@ export type ModelReportTemplateConditionInput = {
   origin?: ModelStringInput | null;
   labLocation?: ModelStringInput | null;
   remarksList?: ModelStringInput | null;
+  testConditionsList?: ModelStringInput | null;
   and?: Array<ModelReportTemplateConditionInput | null> | null;
   or?: Array<ModelReportTemplateConditionInput | null> | null;
   not?: ModelReportTemplateConditionInput | null;
@@ -136,6 +138,7 @@ export type ReportTemplate = {
   origin?: string | null;
   labLocation?: string | null;
   remarksList?: Array<string | null> | null;
+  testConditionsList?: Array<string | null> | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -157,6 +160,7 @@ export type UpdateReportTemplateInput = {
   origin?: string | null;
   labLocation?: string | null;
   remarksList?: Array<string | null> | null;
+  testConditionsList?: Array<string | null> | null;
   id: string;
 };
 
@@ -167,6 +171,7 @@ export type DeleteReportTemplateInput = {
 export type CreateReportInput = {
   id?: string | null;
   name: string;
+  samplesSenderName?: string | null;
   email: string;
   labLocation: string;
   hviVersion: string;
@@ -182,6 +187,7 @@ export type CreateReportInput = {
 
 export type ModelReportConditionInput = {
   name?: ModelStringInput | null;
+  samplesSenderName?: ModelStringInput | null;
   email?: ModelStringInput | null;
   labLocation?: ModelStringInput | null;
   hviVersion?: ModelStringInput | null;
@@ -205,6 +211,7 @@ export type Report = {
   __typename: "Report";
   id: string;
   name: string;
+  samplesSenderName?: string | null;
   email: string;
   labLocation: string;
   hviVersion: string;
@@ -224,6 +231,7 @@ export type Report = {
 export type UpdateReportInput = {
   id: string;
   name?: string | null;
+  samplesSenderName?: string | null;
   email?: string | null;
   labLocation?: string | null;
   hviVersion?: string | null;
@@ -338,6 +346,7 @@ export type ModelReportTemplateFilterInput = {
   origin?: ModelStringInput | null;
   labLocation?: ModelStringInput | null;
   remarksList?: ModelStringInput | null;
+  testConditionsList?: ModelStringInput | null;
   id?: ModelIDInput | null;
   createdAt?: ModelStringInput | null;
   updatedAt?: ModelStringInput | null;
@@ -356,6 +365,7 @@ export type ModelReportTemplateConnection = {
 export type ModelReportFilterInput = {
   id?: ModelIDInput | null;
   name?: ModelStringInput | null;
+  samplesSenderName?: ModelStringInput | null;
   email?: ModelStringInput | null;
   labLocation?: ModelStringInput | null;
   hviVersion?: ModelStringInput | null;
@@ -449,6 +459,7 @@ export type ModelSubscriptionReportTemplateFilterInput = {
   origin?: ModelSubscriptionStringInput | null;
   labLocation?: ModelSubscriptionStringInput | null;
   remarksList?: ModelSubscriptionStringInput | null;
+  testConditionsList?: ModelSubscriptionStringInput | null;
   id?: ModelSubscriptionIDInput | null;
   createdAt?: ModelSubscriptionStringInput | null;
   updatedAt?: ModelSubscriptionStringInput | null;
@@ -490,6 +501,7 @@ export type ModelSubscriptionStringInput = {
 export type ModelSubscriptionReportFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   name?: ModelSubscriptionStringInput | null;
+  samplesSenderName?: ModelSubscriptionStringInput | null;
   email?: ModelSubscriptionStringInput | null;
   labLocation?: ModelSubscriptionStringInput | null;
   hviVersion?: ModelSubscriptionStringInput | null;
@@ -548,6 +560,7 @@ export type CreateReportTemplateMutation = {
   origin?: string | null;
   labLocation?: string | null;
   remarksList?: Array<string | null> | null;
+  testConditionsList?: Array<string | null> | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -570,6 +583,7 @@ export type UpdateReportTemplateMutation = {
   origin?: string | null;
   labLocation?: string | null;
   remarksList?: Array<string | null> | null;
+  testConditionsList?: Array<string | null> | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -592,6 +606,7 @@ export type DeleteReportTemplateMutation = {
   origin?: string | null;
   labLocation?: string | null;
   remarksList?: Array<string | null> | null;
+  testConditionsList?: Array<string | null> | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -602,6 +617,7 @@ export type CreateReportMutation = {
   __typename: "Report";
   id: string;
   name: string;
+  samplesSenderName?: string | null;
   email: string;
   labLocation: string;
   hviVersion: string;
@@ -622,6 +638,7 @@ export type UpdateReportMutation = {
   __typename: "Report";
   id: string;
   name: string;
+  samplesSenderName?: string | null;
   email: string;
   labLocation: string;
   hviVersion: string;
@@ -642,6 +659,7 @@ export type DeleteReportMutation = {
   __typename: "Report";
   id: string;
   name: string;
+  samplesSenderName?: string | null;
   email: string;
   labLocation: string;
   hviVersion: string;
@@ -740,6 +758,7 @@ export type GetReportTemplateQuery = {
   origin?: string | null;
   labLocation?: string | null;
   remarksList?: Array<string | null> | null;
+  testConditionsList?: Array<string | null> | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -764,6 +783,7 @@ export type ListReportTemplatesQuery = {
     origin?: string | null;
     labLocation?: string | null;
     remarksList?: Array<string | null> | null;
+    testConditionsList?: Array<string | null> | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -776,6 +796,7 @@ export type GetReportQuery = {
   __typename: "Report";
   id: string;
   name: string;
+  samplesSenderName?: string | null;
   email: string;
   labLocation: string;
   hviVersion: string;
@@ -798,6 +819,7 @@ export type ListReportsQuery = {
     __typename: "Report";
     id: string;
     name: string;
+    samplesSenderName?: string | null;
     email: string;
     labLocation: string;
     hviVersion: string;
@@ -822,6 +844,7 @@ export type ReportsByAttachmentUrlAndNameQuery = {
     __typename: "Report";
     id: string;
     name: string;
+    samplesSenderName?: string | null;
     email: string;
     labLocation: string;
     hviVersion: string;
@@ -908,6 +931,7 @@ export type OnCreateReportTemplateSubscription = {
   origin?: string | null;
   labLocation?: string | null;
   remarksList?: Array<string | null> | null;
+  testConditionsList?: Array<string | null> | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -930,6 +954,7 @@ export type OnUpdateReportTemplateSubscription = {
   origin?: string | null;
   labLocation?: string | null;
   remarksList?: Array<string | null> | null;
+  testConditionsList?: Array<string | null> | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -952,6 +977,7 @@ export type OnDeleteReportTemplateSubscription = {
   origin?: string | null;
   labLocation?: string | null;
   remarksList?: Array<string | null> | null;
+  testConditionsList?: Array<string | null> | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -962,6 +988,7 @@ export type OnCreateReportSubscription = {
   __typename: "Report";
   id: string;
   name: string;
+  samplesSenderName?: string | null;
   email: string;
   labLocation: string;
   hviVersion: string;
@@ -982,6 +1009,7 @@ export type OnUpdateReportSubscription = {
   __typename: "Report";
   id: string;
   name: string;
+  samplesSenderName?: string | null;
   email: string;
   labLocation: string;
   hviVersion: string;
@@ -1002,6 +1030,7 @@ export type OnDeleteReportSubscription = {
   __typename: "Report";
   id: string;
   name: string;
+  samplesSenderName?: string | null;
   email: string;
   labLocation: string;
   hviVersion: string;
@@ -1109,6 +1138,7 @@ export class APIService {
           origin
           labLocation
           remarksList
+          testConditionsList
           id
           createdAt
           updatedAt
@@ -1147,6 +1177,7 @@ export class APIService {
           origin
           labLocation
           remarksList
+          testConditionsList
           id
           createdAt
           updatedAt
@@ -1185,6 +1216,7 @@ export class APIService {
           origin
           labLocation
           remarksList
+          testConditionsList
           id
           createdAt
           updatedAt
@@ -1211,6 +1243,7 @@ export class APIService {
           __typename
           id
           name
+          samplesSenderName
           email
           labLocation
           hviVersion
@@ -1247,6 +1280,7 @@ export class APIService {
           __typename
           id
           name
+          samplesSenderName
           email
           labLocation
           hviVersion
@@ -1283,6 +1317,7 @@ export class APIService {
           __typename
           id
           name
+          samplesSenderName
           email
           labLocation
           hviVersion
@@ -1490,6 +1525,7 @@ export class APIService {
           origin
           labLocation
           remarksList
+          testConditionsList
           id
           createdAt
           updatedAt
@@ -1528,6 +1564,7 @@ export class APIService {
             origin
             labLocation
             remarksList
+            testConditionsList
             id
             createdAt
             updatedAt
@@ -1557,6 +1594,7 @@ export class APIService {
           __typename
           id
           name
+          samplesSenderName
           email
           labLocation
           hviVersion
@@ -1593,6 +1631,7 @@ export class APIService {
             __typename
             id
             name
+            samplesSenderName
             email
             labLocation
             hviVersion
@@ -1648,6 +1687,7 @@ export class APIService {
             __typename
             id
             name
+            samplesSenderName
             email
             labLocation
             hviVersion
@@ -1830,6 +1870,7 @@ export class APIService {
           origin
           labLocation
           remarksList
+          testConditionsList
           id
           createdAt
           updatedAt
@@ -1877,6 +1918,7 @@ export class APIService {
           origin
           labLocation
           remarksList
+          testConditionsList
           id
           createdAt
           updatedAt
@@ -1924,6 +1966,7 @@ export class APIService {
           origin
           labLocation
           remarksList
+          testConditionsList
           id
           createdAt
           updatedAt
@@ -1957,6 +2000,7 @@ export class APIService {
           __typename
           id
           name
+          samplesSenderName
           email
           labLocation
           hviVersion
@@ -1998,6 +2042,7 @@ export class APIService {
           __typename
           id
           name
+          samplesSenderName
           email
           labLocation
           hviVersion
@@ -2039,6 +2084,7 @@ export class APIService {
           __typename
           id
           name
+          samplesSenderName
           email
           labLocation
           hviVersion

@@ -16,6 +16,7 @@ query GetReportTemplate($id: ID!) {
     origin
     labLocation
     remarksList
+    testConditionsList
     id
     createdAt
     updatedAt
@@ -45,6 +46,7 @@ query ListReportTemplates(
       origin
       labLocation
       remarksList
+      testConditionsList
       id
       createdAt
       updatedAt
@@ -60,6 +62,7 @@ query GetReport($id: ID!) {
   getReport(id: $id) {
     id
     name
+    samplesSenderName
     email
     labLocation
     hviVersion
@@ -87,6 +90,7 @@ query ListReports(
     items {
       id
       name
+      samplesSenderName
       email
       labLocation
       hviVersion
@@ -127,6 +131,7 @@ query ReportsByAttachmentUrlAndName(
     items {
       id
       name
+      samplesSenderName
       email
       labLocation
       hviVersion

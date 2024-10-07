@@ -47,6 +47,7 @@ export class EditComponent implements OnInit, OnDestroy {
   };
   public activeTemplateInfo: ReportTemplate | undefined = undefined;
   public remarksList: FormArray = this.fb.array([]);
+  public testConditionsList: FormArray = this.fb.array([]);
 
   constructor(
     private fb: FormBuilder,
@@ -68,6 +69,7 @@ export class EditComponent implements OnInit, OnDestroy {
       origin: ['', Validators.required],
       testLocation: ['', Validators.required],
       remarksList: this.fb.array([this.fb.control('')]),
+      testConditionsList: this.fb.array([this.fb.control('')]),
     });
   }
 
@@ -126,15 +128,25 @@ export class EditComponent implements OnInit, OnDestroy {
               __typename,
               templateId,
               remarksList,
+              testConditionsList,
               ...fieldsToPrefill
             } = this.activeTemplateInfo;
             console.log('activeTemplateInfo', this.activeTemplateInfo);
             console.log('fieldsToPrefill:', fieldsToPrefill);
-            console.log('remarksList:', remarksList);
+            console.log(
+              'remarksList:',
+              remarksList,
+              'testConditionsList',
+              testConditionsList
+            );
             console.log('createForm:', this.createForm);
             console.log(
               ' this.createForm.get("remarksList")',
               this.createForm.get('remarksList')
+            );
+            console.log(
+              ' this.createForm.get("testConditionsList")',
+              this.createForm.get('testConditionsList')
             );
 
             // remarksList: this.fb.array(remarksList),
@@ -146,6 +158,15 @@ export class EditComponent implements OnInit, OnDestroy {
                 this.remarksList.push(this.fb.control(item));
               });
               this.createForm.setControl('remarksList', this.remarksList);
+            }
+            if (testConditionsList) {
+              testConditionsList.forEach((item) => {
+                this.testConditionsList.push(this.fb.control(item));
+              });
+              this.createForm.setControl(
+                'testConditionsList',
+                this.testConditionsList
+              );
             }
 
             if (fieldsToPrefill.stampImageName) {
@@ -262,6 +283,18 @@ export class EditComponent implements OnInit, OnDestroy {
   addAdditionalText(): void {
     this.remarksList.push(this.fb.control(''));
     this.createForm.setControl('remarksList', this.remarksList);
+  }
+  addAdditionalText2(): void {
+    this.testConditionsList.push(this.fb.control(''));
+    this.createForm.setControl('testConditionsList', this.testConditionsList);
+  }
+
+  deleteRemark(index: number): void {
+    (this.createForm.get('remarksList') as FormArray).removeAt(index);
+  }
+
+  deleteRemark2(index: number): void {
+    (this.createForm.get('testConditionsList') as FormArray).removeAt(index);
   }
 
   private updateReportWithAttachment(

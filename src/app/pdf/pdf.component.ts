@@ -240,16 +240,22 @@ export class PdfComponent implements OnInit {
       stations,
       variety,
       lotNum,
+      samplesSenderName,
       extractedRowsBody,
       numberOfSamples,
       createdAt,
       id,
     } = res;
-    console.log('extractedRowsBody', extractedRowsBody);
+    console.log(
+      'extractedRowsBody',
+      extractedRowsBody,
+      'samplesSenderName',
+      samplesSenderName
+    );
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL(id);
 
     let qrImageProcessed = await this.getBase64ImageFromURL(qrImage);
-    let testLocation = '';
+    let testLocation = 'N/A';
     let origin = '';
     if (this.activeTemplateInfo?.testLocation) {
       testLocation = this.activeTemplateInfo?.testLocation;
@@ -272,15 +278,16 @@ export class PdfComponent implements OnInit {
       this.displayStatus(false);
     }
     // if (!this.activeTemplateInfo) return;
-    let phone: any = '';
-    let address: any = '';
-    let addressTranslation: any = '';
-    let fax: any = '';
-    let email: any = '';
-    let localCompanyName: any = '';
-    let localCompanyNameTranslation: any = '';
+    let phone: any = 'N/A';
+    let address: any = 'N/A';
+    let addressTranslation: any = 'N/A';
+    let fax: any = 'N/A';
+    let email: any = 'N/A';
+    let localCompanyName: any = 'N/A';
+    let localCompanyNameTranslation: any = 'N/A';
     let singlePageRowLimit = 34;
     let remarks: any = [];
+    let testConditionsList: any = [];
     if (this.activeTemplateInfo) {
       phone = this.activeTemplateInfo.phone;
       address = this.activeTemplateInfo.address;
@@ -291,6 +298,7 @@ export class PdfComponent implements OnInit {
       localCompanyNameTranslation =
         this.activeTemplateInfo.localCompanyNameTranslation;
       remarks = this.activeTemplateInfo.remarksList;
+      testConditionsList = this.activeTemplateInfo.testConditionsList;
     }
 
     let docDefinition = {
@@ -298,16 +306,23 @@ export class PdfComponent implements OnInit {
       background:
         this.stampImage && extractedRowsBody.length < singlePageRowLimit
           ? [
-              {
-                image: await this.stampImage,
-                fit: [150, 150],
-                absolutePosition: { x: 410, y: 680 },
-              },
+              this.selectedHviVersion == 'v4'
+                ? {
+                    image: await this.stampImage,
+                    // fit: [150, 150],
+                    fit: [500, 2800],
+                    absolutePosition: { x: 50, y: 680 },
+                  }
+                : {
+                    image: await this.stampImage,
+                    fit: [150, 150],
+                    absolutePosition: { x: 410, y: 680 },
+                  },
               {
                 link: qrURL,
                 image: await qrImageProcessed,
                 fit: [90, 90],
-                absolutePosition: { x: 280, y: 700 },
+                absolutePosition: { x: 450, y: 590 },
               },
             ]
           : null,
@@ -321,21 +336,56 @@ export class PdfComponent implements OnInit {
           style: 'header',
           layout: 'noBorders',
           table: {
-            widths: [140, 140, 140, 140, 140],
+            widths: [100, 163, 100, 200],
             body: [
-              ['Test Location', testLocation, 'Recepient', customerName],
-              ['CI Number', reportNum, 'ORIGIN', origin],
-              ['CI Report Number', reportNum, 'Station(As advised)', stations],
-              ['Date', formatedDate(), 'Variety(As advised)', variety],
+              [
+                'Test Location',
+                testLocation,
+                'Recipient',
+                'asdasdsawadasdassadfsdfsdfds',
+              ],
+              [
+                'CI Number',
+                reportNum == '' ? 'N/A' : reportNum,
+                'ORIGIN',
+                origin == '' ? 'N/A' : origin,
+              ],
+              [
+                'CI Report Number',
+                reportNum == '' ? 'N/A' : reportNum,
+                'Station(As advised)',
+                stations == '' ? 'N/A' : stations,
+              ],
+              [
+                'Date',
+                formatedDate(),
+                'Variety(As advised)',
+                variety == '' ? 'N/A' : variety,
+              ],
               [
                 'Lot number',
-                lotNum,
+                lotNum == '' ? 'N/A' : lotNum,
                 { text: 'Samples drawn by customer', bold: true },
                 `${numberOfSamples} samples`,
               ],
             ],
           },
         },
+        this.selectedHviVersion == 'v4' && samplesSenderName
+          ? {
+              style: 'samplesSenderName',
+              columns: [
+                {
+                  text: 'Samples sent by:  ',
+                  noWrap: true,
+                },
+                {
+                  text: samplesSenderName,
+                  noWrap: true,
+                },
+              ],
+            }
+          : null,
         {
           style: 'dataTable',
           layout: {
@@ -350,18 +400,30 @@ export class PdfComponent implements OnInit {
           table: {
             headerRows: 1,
             // widths: columnWidthArray,
+            // widths: ['*', 'auto', 100, '*'],
+
             // heights: 1,
             body: extractedRowsBody,
           },
         },
 
-        { text: '\n\nRemarks', style: 'remarks' },
-        {},
+        { text: '\n\nRemarks', style: 'remarksHeader' },
         {
           style: 'remarksBullets',
-          ol: remarks,
+          layout: 'noBorders',
+          table: {
+            body: remarks.map((item: any) => [item]),
+          },
         },
+        { text: '\n\nTest and Lab Conditions', style: 'remarksHeader' },
 
+        {
+          style: 'remarksBullets',
+          layout: 'noBorders',
+          table: {
+            body: testConditionsList.map((item: any) => [item]),
+          },
+        },
         {
           text: `${localCompanyName}\n ${localCompanyNameTranslation}`,
           style: 'contactsHeader',
@@ -392,18 +454,28 @@ export class PdfComponent implements OnInit {
         },
 
         extractedRowsBody.length > singlePageRowLimit
-          ? this.stampImage && {
-              image: await this.stampImage,
-              fit: [150, 150],
-              absolutePosition: { x: 410, y: 680 },
-            }
+          ? this.stampImage &&
+            (this.selectedHviVersion == 'v4'
+              ? {
+                  image: await this.stampImage,
+                  fit: [500, 2800],
+                  absolutePosition: { x: 50, y: 680 },
+                }
+              : {
+                  image: await this.stampImage,
+                  fit: [150, 150],
+                  absolutePosition: { x: 410, y: 680 },
+                })
           : null,
         extractedRowsBody.length > singlePageRowLimit
           ? {
               link: qrURL,
               image: await qrImageProcessed,
               fit: [90, 90],
-              absolutePosition: { x: 280, y: 680 },
+              absolutePosition:
+                this.selectedHviVersion == 'v4'
+                  ? { x: 450, y: 590 }
+                  : { x: 280, y: 680 },
             }
           : null,
       ],
@@ -411,12 +483,24 @@ export class PdfComponent implements OnInit {
         header: {
           fontSize: 8,
         },
+        samplesSenderName: {
+          margin: [200, 5],
+          // widths: [100, 200],
+          fontSize: 8,
+          bold: true,
+          color: 'blue',
+        },
         dataTable: {
           margin: [0, 15],
           fontSize: 6,
         },
         qrCodeText: {
           fontSize: 8,
+        },
+        remarksHeader: {
+          bold: true,
+          underline: true,
+          fontSize: 7,
         },
         remarks: {
           fontSize: 6,

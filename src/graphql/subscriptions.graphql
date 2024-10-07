@@ -19,6 +19,7 @@ subscription OnCreateReportTemplate(
     origin
     labLocation
     remarksList
+    testConditionsList
     id
     createdAt
     updatedAt
@@ -46,6 +47,7 @@ subscription OnUpdateReportTemplate(
     origin
     labLocation
     remarksList
+    testConditionsList
     id
     createdAt
     updatedAt
@@ -73,6 +75,7 @@ subscription OnDeleteReportTemplate(
     origin
     labLocation
     remarksList
+    testConditionsList
     id
     createdAt
     updatedAt
@@ -88,6 +91,7 @@ subscription OnCreateReport(
   onCreateReport(filter: $filter, owner: $owner) {
     id
     name
+    samplesSenderName
     email
     labLocation
     hviVersion
@@ -113,6 +117,7 @@ subscription OnUpdateReport(
   onUpdateReport(filter: $filter, owner: $owner) {
     id
     name
+    samplesSenderName
     email
     labLocation
     hviVersion
@@ -138,6 +143,7 @@ subscription OnDeleteReport(
   onDeleteReport(filter: $filter, owner: $owner) {
     id
     name
+    samplesSenderName
     email
     labLocation
     hviVersion
