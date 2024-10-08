@@ -300,6 +300,40 @@ export class PdfComponent implements OnInit {
       remarks = this.activeTemplateInfo.remarksList;
       testConditionsList = this.activeTemplateInfo.testConditionsList;
     }
+    let columnLength = extractedRowsBody[0].length;
+    let columnWidthArray = columnLength
+      ? Array(columnLength).fill(columnLength > 15 ? 21 : '*')
+      : [];
+    const modifiedBody = extractedRowsBody.map((item: any) => {
+      // console.log('item', item);
+      return item.map((itemInner: any) => {
+        if (Array.isArray(itemInner)) {
+          return itemInner.map((itemInnerInner: any) => {
+            if (itemInnerInner[0].text) {
+              return {
+                text: itemInnerInner.text || itemInnerInner,
+                width: 100,
+                _minWidth: 100,
+              };
+            } else {
+              return { text: itemInnerInner, width: 100, _maxWidth: 100 };
+            }
+          });
+        } else if (typeof itemInner === 'object') {
+          return {
+            text: itemInner.text || itemInner,
+            width: 100,
+            _maxWidth: 100,
+          };
+        } else {
+          return { text: itemInner, width: 100, _maxWidth: 100 };
+        }
+      });
+    });
+
+    // console.log('columnWidthArray', columnWidthArray);
+
+    // console.log('modifiedBody', modifiedBody);
 
     let docDefinition = {
       pageSize: 'A4',
@@ -396,14 +430,16 @@ export class PdfComponent implements OnInit {
               return i === node.table.headerRows ? 2 : 1;
             },
             vLineWidth: () => 0,
+
+            fillColor: function (rowIndex: any, node: any, columnIndex: any) {
+              return rowIndex % 2 === 0 ? '#c2ddf2' : null;
+            },
           },
           table: {
             headerRows: 1,
-            // widths: columnWidthArray,
-            // widths: ['*', 'auto', 100, '*'],
+            widths: columnWidthArray,
 
-            // heights: 1,
-            body: extractedRowsBody,
+            body: modifiedBody,
           },
         },
 
@@ -491,8 +527,8 @@ export class PdfComponent implements OnInit {
           color: 'blue',
         },
         dataTable: {
-          margin: [0, 15],
-          fontSize: 6,
+          margin: [0, 1],
+          fontSize: columnLength > 15 ? 5 : 6,
         },
         qrCodeText: {
           fontSize: 8,

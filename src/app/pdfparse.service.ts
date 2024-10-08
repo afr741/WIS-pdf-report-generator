@@ -323,24 +323,30 @@ export class PdfparseService {
     const keys = customSort(Object.keys(parsedRawData[bodyStartIndex]));
     console.log('keys', keys);
 
+    const averageIndex2 = parsedRawData.findIndex((item: any) =>
+      typeof item === 'object' ? item.text === 'Average' : item === 'Average'
+    );
+
     let extractedRows = parsedRawData.map((obj: any, index: any) => {
       //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
       return keys.map((key, keyIndex) => {
-        if (obj.__EMPTY && keyIndex == bodyStartIndex) {
+        if (obj.__EMPTY && keyIndex === bodyStartIndex) {
           return obj.__EMPTY;
         }
 
         let cellValue = obj[key];
-        let original = [16, 2];
-        let isInteger = [0, 1, 3, 9, 10];
-        let isOneDec = [6, 12, 13, 14];
-        let isTwoDec = [4, 5, 8, 11, 15];
+        let original: any = [];
+        let isInteger: any = [];
+        let isOneDec: any = [];
+        let isTwoDec: any = [];
         let isThreeDec: any = [];
 
         let roundedCellValue = original.includes(keyIndex)
           ? cellValue
-          : isNaN(cellValue)
+          : isNaN(Number(cellValue))
           ? cellValue
+          : averageIndex2 === index && !Number.isNaN(Number(cellValue))
+          ? Number(cellValue).toFixed(2)
           : Number(cellValue).toFixed(
               isInteger.includes(keyIndex)
                 ? 0
@@ -350,7 +356,7 @@ export class PdfparseService {
                 ? 2
                 : isThreeDec.includes(keyIndex)
                 ? 3
-                : 9
+                : 0
             );
         return roundedCellValue ?? '';
       });
