@@ -23,7 +23,7 @@
         },
         "hvigenv2processor": {
           "deploymentBucketName": "amplify-hvigen-phasethree-a1162-deployment",
-          "s3Key": "amplify-builds/hvigenv2processor-6a36596354752b633550-build.zip"
+          "s3Key": "amplify-builds/hvigenv2processor-524964696d5937366e55-build.zip"
         }
       },
       "storage": {

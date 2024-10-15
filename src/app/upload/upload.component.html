@@ -18,16 +18,6 @@
       </kendo-formfield>
 
       <kendo-formfield>
-        <kendo-label labelCssClass="k-form-label" text="Report Number" />
-        <kendo-textbox
-          formControlName="reportNum"
-          #reportNum
-          placeholder="Enter Report Number"
-        ></kendo-textbox>
-        <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
-      </kendo-formfield>
-
-      <kendo-formfield>
         <kendo-label labelCssClass="k-form-label" text="Lot Number" />
         <kendo-textbox
           formControlName="lotNum"
@@ -46,26 +36,36 @@
         ></kendo-textbox>
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
       </kendo-formfield>
+      <ng-container *ngIf="selectedHviVersion !== 'v4'">
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Stations" />
+          <kendo-textbox
+            formControlName="stations"
+            #stations
+            placeholder="Stations"
+          ></kendo-textbox>
+          <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+        </kendo-formfield>
 
-      <kendo-formfield>
-        <kendo-label labelCssClass="k-form-label" text="Stations" />
-        <kendo-textbox
-          formControlName="stations"
-          #stations
-          placeholder="Stations"
-        ></kendo-textbox>
-        <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
-      </kendo-formfield>
-
-      <kendo-formfield>
-        <kendo-label labelCssClass="k-form-label" text="Variety" />
-        <kendo-textbox
-          formControlName="variety"
-          #variety
-          placeholder="Variety"
-        ></kendo-textbox>
-        <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
-      </kendo-formfield>
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Variety" />
+          <kendo-textbox
+            formControlName="variety"
+            #variety
+            placeholder="Variety"
+          ></kendo-textbox>
+          <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+        </kendo-formfield>
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Report Number" />
+          <kendo-textbox
+            formControlName="reportNum"
+            #reportNum
+            placeholder="Enter Report Number"
+          ></kendo-textbox>
+          <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+        </kendo-formfield>
+      </ng-container>
       <kendo-formfield>
         <kendo-label labelCssClass="k-form-label" text="Samples sent By" />
         <kendo-textbox
@@ -76,6 +76,41 @@
         ></kendo-textbox>
         <kendo-formerror> samplesSenderName is required</kendo-formerror>
       </kendo-formfield>
+
+      <ng-container *ngIf="selectedHviVersion === 'v4'">
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Seller Name" />
+          <kendo-textbox
+            formControlName="sellerName"
+            #sellerName
+            required
+            placeholder="Seller Name"
+          ></kendo-textbox>
+          <kendo-formerror> seller name is required</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Buyer name" />
+          <kendo-textbox
+            formControlName="buyerName"
+            #buyerName
+            required
+            placeholder="Buyer name"
+          ></kendo-textbox>
+          <kendo-formerror> Buyer name is required</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Invoice Number" />
+          <kendo-textbox
+            formControlName="invoiceNumber"
+            #invoiceNumber
+            required
+            placeholder="Invoice Number"
+          ></kendo-textbox>
+          <kendo-formerror> Invoice Number</kendo-formerror>
+        </kendo-formfield>
+      </ng-container>
 
       <div class="row">
         <div class="col-xs-12 col-sm-6 example-col">

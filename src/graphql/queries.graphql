@@ -72,6 +72,9 @@ query GetReport($id: ID!) {
     origin
     stations
     variety
+    invoiceNumber
+    sellerName
+    buyerName
     attachmentUrl
     dataRows
     createdAt
@@ -100,6 +103,9 @@ query ListReports(
       origin
       stations
       variety
+      invoiceNumber
+      sellerName
+      buyerName
       attachmentUrl
       dataRows
       createdAt
@@ -141,6 +147,9 @@ query ReportsByAttachmentUrlAndName(
       origin
       stations
       variety
+      invoiceNumber
+      sellerName
+      buyerName
       attachmentUrl
       dataRows
       createdAt

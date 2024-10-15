@@ -181,6 +181,9 @@ export type CreateReportInput = {
   origin: string;
   stations: string;
   variety: string;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
 };
@@ -197,6 +200,9 @@ export type ModelReportConditionInput = {
   origin?: ModelStringInput | null;
   stations?: ModelStringInput | null;
   variety?: ModelStringInput | null;
+  invoiceNumber?: ModelStringInput | null;
+  sellerName?: ModelStringInput | null;
+  buyerName?: ModelStringInput | null;
   attachmentUrl?: ModelStringInput | null;
   dataRows?: ModelStringInput | null;
   and?: Array<ModelReportConditionInput | null> | null;
@@ -221,6 +227,9 @@ export type Report = {
   origin: string;
   stations: string;
   variety: string;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -241,6 +250,9 @@ export type UpdateReportInput = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
   attachmentUrl?: string | null;
   dataRows?: Array<string | null> | null;
 };
@@ -375,6 +387,9 @@ export type ModelReportFilterInput = {
   origin?: ModelStringInput | null;
   stations?: ModelStringInput | null;
   variety?: ModelStringInput | null;
+  invoiceNumber?: ModelStringInput | null;
+  sellerName?: ModelStringInput | null;
+  buyerName?: ModelStringInput | null;
   attachmentUrl?: ModelStringInput | null;
   dataRows?: ModelStringInput | null;
   createdAt?: ModelStringInput | null;
@@ -511,6 +526,9 @@ export type ModelSubscriptionReportFilterInput = {
   origin?: ModelSubscriptionStringInput | null;
   stations?: ModelSubscriptionStringInput | null;
   variety?: ModelSubscriptionStringInput | null;
+  invoiceNumber?: ModelSubscriptionStringInput | null;
+  sellerName?: ModelSubscriptionStringInput | null;
+  buyerName?: ModelSubscriptionStringInput | null;
   attachmentUrl?: ModelSubscriptionStringInput | null;
   dataRows?: ModelSubscriptionStringInput | null;
   createdAt?: ModelSubscriptionStringInput | null;
@@ -627,6 +645,9 @@ export type CreateReportMutation = {
   origin: string;
   stations: string;
   variety: string;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -648,6 +669,9 @@ export type UpdateReportMutation = {
   origin: string;
   stations: string;
   variety: string;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -669,6 +693,9 @@ export type DeleteReportMutation = {
   origin: string;
   stations: string;
   variety: string;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -806,6 +833,9 @@ export type GetReportQuery = {
   origin: string;
   stations: string;
   variety: string;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -829,6 +859,9 @@ export type ListReportsQuery = {
     origin: string;
     stations: string;
     variety: string;
+    invoiceNumber?: string | null;
+    sellerName?: string | null;
+    buyerName?: string | null;
     attachmentUrl: string;
     dataRows?: Array<string | null> | null;
     createdAt: string;
@@ -854,6 +887,9 @@ export type ReportsByAttachmentUrlAndNameQuery = {
     origin: string;
     stations: string;
     variety: string;
+    invoiceNumber?: string | null;
+    sellerName?: string | null;
+    buyerName?: string | null;
     attachmentUrl: string;
     dataRows?: Array<string | null> | null;
     createdAt: string;
@@ -998,6 +1034,9 @@ export type OnCreateReportSubscription = {
   origin: string;
   stations: string;
   variety: string;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -1019,6 +1058,9 @@ export type OnUpdateReportSubscription = {
   origin: string;
   stations: string;
   variety: string;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -1040,6 +1082,9 @@ export type OnDeleteReportSubscription = {
   origin: string;
   stations: string;
   variety: string;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -1253,6 +1298,9 @@ export class APIService {
           origin
           stations
           variety
+          invoiceNumber
+          sellerName
+          buyerName
           attachmentUrl
           dataRows
           createdAt
@@ -1290,6 +1338,9 @@ export class APIService {
           origin
           stations
           variety
+          invoiceNumber
+          sellerName
+          buyerName
           attachmentUrl
           dataRows
           createdAt
@@ -1327,6 +1378,9 @@ export class APIService {
           origin
           stations
           variety
+          invoiceNumber
+          sellerName
+          buyerName
           attachmentUrl
           dataRows
           createdAt
@@ -1604,6 +1658,9 @@ export class APIService {
           origin
           stations
           variety
+          invoiceNumber
+          sellerName
+          buyerName
           attachmentUrl
           dataRows
           createdAt
@@ -1641,6 +1698,9 @@ export class APIService {
             origin
             stations
             variety
+            invoiceNumber
+            sellerName
+            buyerName
             attachmentUrl
             dataRows
             createdAt
@@ -1697,6 +1757,9 @@ export class APIService {
             origin
             stations
             variety
+            invoiceNumber
+            sellerName
+            buyerName
             attachmentUrl
             dataRows
             createdAt
@@ -2010,6 +2073,9 @@ export class APIService {
           origin
           stations
           variety
+          invoiceNumber
+          sellerName
+          buyerName
           attachmentUrl
           dataRows
           createdAt
@@ -2052,6 +2118,9 @@ export class APIService {
           origin
           stations
           variety
+          invoiceNumber
+          sellerName
+          buyerName
           attachmentUrl
           dataRows
           createdAt
@@ -2094,6 +2163,9 @@ export class APIService {
           origin
           stations
           variety
+          invoiceNumber
+          sellerName
+          buyerName
           attachmentUrl
           dataRows
           createdAt

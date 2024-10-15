@@ -101,6 +101,9 @@ subscription OnCreateReport(
     origin
     stations
     variety
+    invoiceNumber
+    sellerName
+    buyerName
     attachmentUrl
     dataRows
     createdAt
@@ -127,6 +130,9 @@ subscription OnUpdateReport(
     origin
     stations
     variety
+    invoiceNumber
+    sellerName
+    buyerName
     attachmentUrl
     dataRows
     createdAt
@@ -153,6 +159,9 @@ subscription OnDeleteReport(
     origin
     stations
     variety
+    invoiceNumber
+    sellerName
+    buyerName
     attachmentUrl
     dataRows
     createdAt

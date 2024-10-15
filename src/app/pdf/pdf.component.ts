@@ -239,6 +239,9 @@ export class PdfComponent implements OnInit {
       reportNum,
       stations,
       variety,
+      invoiceNumber,
+      sellerName,
+      buyerName,
       lotNum,
       samplesSenderName,
       extractedRowsBody,
@@ -370,36 +373,57 @@ export class PdfComponent implements OnInit {
           style: 'header',
           layout: 'noBorders',
           table: {
-            widths: [100, 163, 100, 200],
+            widths: [70, 163, 80, 200],
             body: [
-              [
-                'Test Location',
-                testLocation,
-                'Recipient',
-                'asdasdsawadasdassadfsdfsdfds',
-              ],
+              ['Test Location', testLocation, 'Recipient', customerName],
               [
                 'CI Number',
                 reportNum == '' ? 'N/A' : reportNum,
-                'ORIGIN',
+                'Origin',
                 origin == '' ? 'N/A' : origin,
               ],
               [
-                'CI Report Number',
-                reportNum == '' ? 'N/A' : reportNum,
-                'Station(As advised)',
-                stations == '' ? 'N/A' : stations,
+                this.selectedHviVersion == 'v4'
+                  ? 'Seller name'
+                  : 'CI Report Number',
+                this.selectedHviVersion == 'v4'
+                  ? sellerName == '' || !sellerName
+                    ? 'N/A'
+                    : sellerName
+                  : reportNum == ''
+                  ? 'N/A'
+                  : reportNum,
+                this.selectedHviVersion == 'v4'
+                  ? 'Buyer name'
+                  : 'Station(As advised)',
+                this.selectedHviVersion == 'v4'
+                  ? buyerName == '' || !buyerName
+                    ? 'N/A'
+                    : buyerName
+                  : stations == ''
+                  ? 'N/A'
+                  : stations,
               ],
               [
                 'Date',
                 formatedDate(),
-                'Variety(As advised)',
-                variety == '' ? 'N/A' : variety,
+                this.selectedHviVersion == 'v4'
+                  ? 'Invoice Number'
+                  : 'Station(As advised)',
+                this.selectedHviVersion == 'v4'
+                  ? invoiceNumber == '' || !invoiceNumber
+                    ? 'N/A'
+                    : invoiceNumber
+                  : variety == ''
+                  ? 'N/A'
+                  : variety,
               ],
               [
                 'Lot number',
                 lotNum == '' ? 'N/A' : lotNum,
-                { text: 'Samples drawn by customer', bold: true },
+                this.selectedHviVersion == 'v4'
+                  ? 'Number of samples'
+                  : 'Samples drawn by customer',
                 `${numberOfSamples} samples`,
               ],
             ],
@@ -407,17 +431,8 @@ export class PdfComponent implements OnInit {
         },
         this.selectedHviVersion == 'v4' && samplesSenderName
           ? {
+              text: `Samples sent by: ${samplesSenderName}`,
               style: 'samplesSenderName',
-              columns: [
-                {
-                  text: 'Samples sent by:  ',
-                  noWrap: true,
-                },
-                {
-                  text: samplesSenderName,
-                  noWrap: true,
-                },
-              ],
             }
           : null,
         {
@@ -520,7 +535,7 @@ export class PdfComponent implements OnInit {
           fontSize: 8,
         },
         samplesSenderName: {
-          margin: [200, 5],
+          margin: [170, 5],
           // widths: [100, 200],
           fontSize: 8,
           bold: true,

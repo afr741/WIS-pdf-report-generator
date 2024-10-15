@@ -51,6 +51,9 @@ type Report
   origin: String!
   stations: String!
   variety: String!
+  invoiceNumber: String
+  sellerName: String
+  buyerName: String
   attachmentUrl: String!
     @index(name: "attachmentUrlIndex", sortKeyFields: ["name"])
   dataRows: [AWSJSON]

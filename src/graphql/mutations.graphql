@@ -101,6 +101,9 @@ mutation CreateReport(
     origin
     stations
     variety
+    invoiceNumber
+    sellerName
+    buyerName
     attachmentUrl
     dataRows
     createdAt
@@ -127,6 +130,9 @@ mutation UpdateReport(
     origin
     stations
     variety
+    invoiceNumber
+    sellerName
+    buyerName
     attachmentUrl
     dataRows
     createdAt
@@ -153,6 +159,9 @@ mutation DeleteReport(
     origin
     stations
     variety
+    invoiceNumber
+    sellerName
+    buyerName
     attachmentUrl
     dataRows
     createdAt

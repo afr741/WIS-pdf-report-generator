@@ -287,6 +287,9 @@ export class PdfparseService {
       createdAt,
       id,
       samplesSenderName,
+      sellerName,
+      buyerName,
+      invoiceNumber,
     } = report;
     if (!dataRows || dataRows[0] === null) {
       handleShowError('Failed to extract data rows!');
@@ -320,7 +323,26 @@ export class PdfparseService {
       });
     };
 
-    const keys = customSort(Object.keys(parsedRawData[bodyStartIndex]));
+    const keys = Object.keys(parsedRawData[bodyStartIndex]).includes('     +b')
+      ? [
+          'No',
+          'Lot',
+          'SCI',
+          'Mic',
+          'Rd',
+          '     +b',
+          'C-G',
+          'Area',
+          'Cnt',
+          'T.L',
+          'Len',
+
+          'Unf',
+          'Str',
+          'SFI',
+          'ELG',
+        ]
+      : customSort(Object.keys(parsedRawData[bodyStartIndex]));
     console.log('keys', keys);
 
     const averageIndex2 = parsedRawData.findIndex((item: any) =>
@@ -336,10 +358,6 @@ export class PdfparseService {
 
         let cellValue = obj[key];
         let original: any = [];
-        let isInteger: any = [];
-        let isOneDec: any = [];
-        let isTwoDec: any = [];
-        let isThreeDec: any = [];
 
         let roundedCellValue = original.includes(keyIndex)
           ? cellValue
@@ -347,17 +365,14 @@ export class PdfparseService {
           ? cellValue
           : averageIndex2 === index && !Number.isNaN(Number(cellValue))
           ? Number(cellValue).toFixed(2)
-          : Number(cellValue).toFixed(
-              isInteger.includes(keyIndex)
-                ? 0
-                : isOneDec.includes(keyIndex)
-                ? 1
-                : isTwoDec.includes(keyIndex)
-                ? 2
-                : isThreeDec.includes(keyIndex)
-                ? 3
-                : 0
-            );
+          : cellValue;
+
+        if (
+          !isNaN(Number(roundedCellValue)) &&
+          roundedCellValue.toString().split('.')[1]?.length > 2
+        ) {
+          roundedCellValue = Number(roundedCellValue).toFixed(2);
+        }
         return roundedCellValue ?? '';
       });
     });
@@ -413,6 +428,9 @@ export class PdfparseService {
       reportNum,
       stations,
       variety,
+      sellerName,
+      buyerName,
+      invoiceNumber,
       lotNum,
       extractedRowsBody,
       createdAt,
