@@ -543,7 +543,7 @@ export class PdfComponent implements OnInit {
         },
         dataTable: {
           margin: [0, 1],
-          fontSize: columnLength > 15 ? 5 : 6,
+          fontSize: columnLength > 15 ? 7 : 8,
         },
         qrCodeText: {
           fontSize: 8,

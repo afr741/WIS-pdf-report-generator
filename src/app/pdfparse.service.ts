@@ -323,7 +323,26 @@ export class PdfparseService {
       });
     };
 
-    const keys = Object.keys(parsedRawData[bodyStartIndex]).includes('     +b')
+    const keys = Object.keys(parsedRawData[bodyStartIndex]).includes('Mark')
+      ? [
+          'No',
+          'Mark',
+          'Bale No',
+          'SCI',
+          'Mic',
+          'Rd',
+          '     +b',
+          'C-G',
+          'Area',
+          'Cnt',
+          'T.L',
+          'Len',
+          'Unf',
+          'Str',
+          'SFI',
+          'ELG',
+        ]
+      : Object.keys(parsedRawData[bodyStartIndex]).includes('     +b')
       ? [
           'No',
           'Lot',
@@ -351,16 +370,25 @@ export class PdfparseService {
 
     let extractedRows = parsedRawData.map((obj: any, index: any) => {
       //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
-      return keys.map((key, keyIndex) => {
-        if (obj.__EMPTY && keyIndex === bodyStartIndex) {
-          return obj.__EMPTY;
-        }
-
+      return keys.map((key: any, keyIndex: any) => {
+        // if (obj.__EMPTY && keyIndex === bodyStartIndex) {
+        //   return obj.__EMPTY;
+        // }
         let cellValue = obj[key];
         let original: any = [];
+        let singleDecimal: any = [12];
+        let integers: any = [10];
+
+        if (singleDecimal.includes(keyIndex)) {
+          return Number(cellValue).toFixed(1);
+        }
 
         let roundedCellValue = original.includes(keyIndex)
           ? cellValue
+          : singleDecimal.includes(keyIndex)
+          ? Number(cellValue).toFixed(1)
+          : integers.includes(keyIndex)
+          ? Number(cellValue).toFixed(0)
           : isNaN(Number(cellValue))
           ? cellValue
           : averageIndex2 === index && !Number.isNaN(Number(cellValue))
@@ -380,10 +408,15 @@ export class PdfparseService {
     if (firstRowIndex == -1) {
       extractedRows = [
         extractedRows[0].map((item: any, index: any) => {
-          console.log('item', item);
           return keys[index];
         }),
       ].concat(extractedRows);
+    }
+    if (
+      extractedRows[0].length > 0 &&
+      new Set(extractedRows[0]).size !== extractedRows[0].length
+    ) {
+      extractedRows = extractedRows.map((row: any) => row.slice(1));
     }
 
     // to find the end of data body using "Average" word
