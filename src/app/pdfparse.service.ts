@@ -311,57 +311,85 @@ export class PdfparseService {
     let bodyStartIndex = firstRowIndex == -1 ? 0 : firstRowIndex;
     console.log('bodyStartIndex', bodyStartIndex);
     //sort keys based number embeded in key string, excep "VIT" "__EMPTY" and  go first
-    const customSort = (arr: string[]): string[] => {
-      return arr.sort((a, b) => {
-        if (a === '__EMPTY' || a.includes('VIT')) return -1;
-        if (b === '__EMPTY' || b.includes('VIT')) return 1;
+    const customSortKeyToColumn = (stringsList: string[]): string[] => {
+      const customOrder1 = [
+        'No.',
+        'Bale No.',
+        'Mark',
+        'SCI',
+        'Mic',
+        'Rd',
+        '+b',
+        'C-G',
+        'Area',
+        'Cnt',
+        'T.L',
+        'Len',
+        'Unf',
+        'Str',
+        'SFI',
+        'ELG',
+      ];
+      const customOrder2 = [
+        'No',
+        'Lot',
+        'Bale No.',
+        'SCI',
+        'Mic',
+        'Rd',
+        ' +b',
+        'C-G',
+        'Area',
+        'Cnt',
+        'T.L',
+        'Len',
+        'Unf',
+        'Str',
+        'SFI',
+        'ELG',
+      ];
 
-        const numA = parseInt(a.replace(/[^0-9]/g, ''));
-        const numB = parseInt(b.replace(/[^0-9]/g, ''));
+      const customOrder = stringsList.includes('Mark')
+        ? customOrder1
+        : customOrder2;
+      // Create a map for custom order to store each item’s index
+      const customOrderMap = new Map(
+        customOrder.map((item, index) => [item, index])
+      );
 
-        return numA - numB;
+      // Define the sorting function
+      return stringsList.sort((a, b) => {
+        const indexA = customOrderMap.has(a)
+          ? customOrderMap.get(a) ?? Infinity
+          : Infinity;
+        const indexB = customOrderMap.has(b)
+          ? customOrderMap.get(b) ?? Infinity
+          : Infinity;
+
+        // If both are in the custom order, sort by custom order index
+        if (indexA !== indexB) {
+          return indexA - indexB;
+        }
+        // If both are not in the custom order, sort alphabetically
+        return a.localeCompare(b);
       });
     };
 
-    const keys = Object.keys(parsedRawData[bodyStartIndex]).includes('Mark')
-      ? [
-          'No',
-          'Mark',
-          'Bale No',
-          'SCI',
-          'Mic',
-          'Rd',
-          '     +b',
-          'C-G',
-          'Area',
-          'Cnt',
-          'T.L',
-          'Len',
-          'Unf',
-          'Str',
-          'SFI',
-          'ELG',
-        ]
-      : Object.keys(parsedRawData[bodyStartIndex]).includes('     +b')
-      ? [
-          'No',
-          'Lot',
-          'SCI',
-          'Mic',
-          'Rd',
-          '     +b',
-          'C-G',
-          'Area',
-          'Cnt',
-          'T.L',
-          'Len',
+    const customSortColumnValueKeys = (arr: any) => {
+      return arr.sort((a: any, b: any) => {
+        if (a === '__EMPTY' || a.includes('VIT')) return -1;
+        if (b === '__EMPTY' || b.includes('VIT')) return 1;
+        const numA = parseInt(a.replace(/[^0-9]/g, ''));
+        const numB = parseInt(b.replace(/[^0-9]/g, ''));
+        return numA - numB;
+      });
+    };
+    //if column headers are used as keys
+    const keys =
+      firstRowIndex == -1
+        ? customSortKeyToColumn(Object.keys(parsedRawData[bodyStartIndex]))
+        : customSortColumnValueKeys(Object.keys(parsedRawData[bodyStartIndex]));
 
-          'Unf',
-          'Str',
-          'SFI',
-          'ELG',
-        ]
-      : customSort(Object.keys(parsedRawData[bodyStartIndex]));
     console.log('keys', keys);
 
     const averageIndex2 = parsedRawData.findIndex((item: any) =>
@@ -371,29 +399,19 @@ export class PdfparseService {
     let extractedRows = parsedRawData.map((obj: any, index: any) => {
       //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
       return keys.map((key: any, keyIndex: any) => {
-        // if (obj.__EMPTY && keyIndex === bodyStartIndex) {
-        //   return obj.__EMPTY;
-        // }
         let cellValue = obj[key];
-        let original: any = [];
-        let singleDecimal: any = [12];
-        let integers: any = [10];
+        let integersWords: any = ['Cnt', 'T.L'];
+        let shouldInteger =
+          integersWords.includes(key) ||
+          integersWords.includes(parsedRawData[firstRowIndex][key]);
 
-        if (singleDecimal.includes(keyIndex)) {
-          return Number(cellValue).toFixed(1);
-        }
-
-        let roundedCellValue = original.includes(keyIndex)
+        let roundedCellValue = isNaN(Number(cellValue))
           ? cellValue
-          : singleDecimal.includes(keyIndex)
-          ? Number(cellValue).toFixed(1)
-          : integers.includes(keyIndex)
+          : shouldInteger
           ? Number(cellValue).toFixed(0)
-          : isNaN(Number(cellValue))
-          ? cellValue
-          : averageIndex2 === index && !Number.isNaN(Number(cellValue))
-          ? Number(cellValue).toFixed(2)
-          : cellValue;
+          : // : averageIndex2 === index && !isNaN(Number(cellValue))
+            // ? Number(cellValue).toFixed(2)
+            Number(cellValue).toFixed(1);
 
         if (
           !isNaN(Number(roundedCellValue)) &&
@@ -412,12 +430,12 @@ export class PdfparseService {
         }),
       ].concat(extractedRows);
     }
-    if (
-      extractedRows[0].length > 0 &&
-      new Set(extractedRows[0]).size !== extractedRows[0].length
-    ) {
-      extractedRows = extractedRows.map((row: any) => row.slice(1));
-    }
+    // if (
+    //   extractedRows[0].length > 0 &&
+    //   new Set(extractedRows[0]).size !== extractedRows[0].length
+    // ) {
+    //   extractedRows = extractedRows.map((row: any) => row.slice(1));
+    // }
 
     // to find the end of data body using "Average" word
 

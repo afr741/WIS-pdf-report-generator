@@ -288,7 +288,7 @@ export class PdfComponent implements OnInit {
     let email: any = 'N/A';
     let localCompanyName: any = 'N/A';
     let localCompanyNameTranslation: any = 'N/A';
-    let singlePageRowLimit = 34;
+    let singlePageRowLimit = 10;
     let remarks: any = [];
     let testConditionsList: any = [];
     if (this.activeTemplateInfo) {
@@ -305,7 +305,7 @@ export class PdfComponent implements OnInit {
     }
     let columnLength = extractedRowsBody[0].length;
     let columnWidthArray = columnLength
-      ? Array(columnLength).fill(columnLength > 15 ? 21 : '*')
+      ? Array(columnLength).fill(columnLength > 15 ? 22 : '*')
       : [];
     const modifiedBody = extractedRowsBody.map((item: any) => {
       // console.log('item', item);
@@ -340,29 +340,7 @@ export class PdfComponent implements OnInit {
 
     let docDefinition = {
       pageSize: 'A4',
-      background:
-        this.stampImage && extractedRowsBody.length < singlePageRowLimit
-          ? [
-              this.selectedHviVersion == 'v4'
-                ? {
-                    image: await this.stampImage,
-                    // fit: [150, 150],
-                    fit: [500, 2800],
-                    absolutePosition: { x: 50, y: 680 },
-                  }
-                : {
-                    image: await this.stampImage,
-                    fit: [150, 150],
-                    absolutePosition: { x: 410, y: 680 },
-                  },
-              {
-                link: qrURL,
-                image: await qrImageProcessed,
-                fit: [90, 90],
-                absolutePosition: { x: 450, y: 590 },
-              },
-            ]
-          : null,
+
       content: [
         this.letterHeadImage && {
           width: 500,
@@ -503,36 +481,22 @@ export class PdfComponent implements OnInit {
           },
           layout: 'noBorders',
         },
+        {
+          link: qrURL,
+          image: await qrImageProcessed,
+          fit: [90, 90],
+          x: 430,
+        },
 
-        extractedRowsBody.length > singlePageRowLimit
-          ? this.stampImage &&
-            (this.selectedHviVersion == 'v4'
-              ? {
-                  image: await this.stampImage,
-                  fit: [500, 2800],
-                  absolutePosition: { x: 50, y: 680 },
-                }
-              : {
-                  image: await this.stampImage,
-                  fit: [150, 150],
-                  absolutePosition: { x: 410, y: 680 },
-                })
-          : null,
-        extractedRowsBody.length > singlePageRowLimit
-          ? {
-              link: qrURL,
-              image: await qrImageProcessed,
-              fit: [90, 90],
-              absolutePosition:
-                this.selectedHviVersion == 'v4'
-                  ? { x: 450, y: 590 }
-                  : { x: 280, y: 680 },
-            }
-          : null,
+        {
+          image: await this.stampImage,
+          fit: this.selectedHviVersion == 'v4' ? [500, 2800] : [150, 150],
+        },
       ],
       styles: {
         header: {
           fontSize: 8,
+          paddingBottom: '10px',
         },
         samplesSenderName: {
           margin: [170, 5],
@@ -543,7 +507,7 @@ export class PdfComponent implements OnInit {
         },
         dataTable: {
           margin: [0, 1],
-          fontSize: columnLength > 15 ? 7 : 8,
+          fontSize: 6,
         },
         qrCodeText: {
           fontSize: 8,
