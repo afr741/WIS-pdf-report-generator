@@ -411,13 +411,13 @@ export class PdfparseService {
           ? Number(cellValue).toFixed(0)
           : // : averageIndex2 === index && !isNaN(Number(cellValue))
             // ? Number(cellValue).toFixed(2)
-            Number(cellValue).toFixed(1);
+            cellValue;
 
         if (
           !isNaN(Number(roundedCellValue)) &&
-          roundedCellValue.toString().split('.')[1]?.length > 2
+          roundedCellValue.toString().split('.')[1]?.length > 1
         ) {
-          roundedCellValue = Number(roundedCellValue).toFixed(2);
+          roundedCellValue = Number(roundedCellValue).toFixed(1);
         }
         return roundedCellValue ?? '';
       });
