@@ -392,9 +392,9 @@ export class PdfparseService {
 
     console.log('keys', keys);
 
-    const averageIndex2 = parsedRawData.findIndex((item: any) =>
-      typeof item === 'object' ? item.text === 'Average' : item === 'Average'
-    );
+    // const averageIndex2 = parsedRawData.findIndex((item: any) =>
+    //   typeof item === 'object' ? item.text === 'Average' : item === 'Average'
+    // );
 
     let extractedRows = parsedRawData.map((obj: any, index: any) => {
       //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
@@ -403,7 +403,7 @@ export class PdfparseService {
         let integersWords: any = ['Cnt', 'T.L'];
         let shouldInteger =
           integersWords.includes(key) ||
-          integersWords.includes(parsedRawData[firstRowIndex][key]);
+          integersWords.includes(parsedRawData[bodyStartIndex][key]);
 
         let roundedCellValue = isNaN(Number(cellValue))
           ? cellValue
