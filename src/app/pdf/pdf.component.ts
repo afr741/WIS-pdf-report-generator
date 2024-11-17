@@ -347,72 +347,64 @@ export class PdfComponent implements OnInit {
           margin: [0, 10],
           image: await this.letterHeadImage,
         },
+        { text: 'S.I.T.C. Report', style: 'header' },
         {
-          style: 'header',
+          style: 'headerData',
           layout: 'noBorders',
+
           table: {
-            widths: [70, 163, 80, 200],
+            widths: [90, 163, 85, 200],
             body: [
-              ['Test Location', testLocation, 'Recipient', customerName],
               [
-                'CI Number',
+                'CI / Report Number',
                 reportNum == '' ? 'N/A' : reportNum,
+                'Report Date',
+                formatedDate(),
+              ],
+              [
+                'Lab / Ref No',
+                'N/A',
+                'Test Location',
+                testLocation == '' ? 'N/A' : testLocation,
+              ],
+              [
+                'Recipient / Customer name',
+                customerName,
+                'Testing Instrument type',
+                'N/A',
+              ],
+              [
+                'Client NumberClient Inv/Ref No. (As advised)',
+                invoiceNumber,
                 'Origin',
                 origin == '' ? 'N/A' : origin,
               ],
+
               [
-                this.selectedHviVersion == 'v4'
-                  ? 'Seller name'
-                  : 'CI Report Number',
-                this.selectedHviVersion == 'v4'
-                  ? sellerName == '' || !sellerName
-                    ? 'N/A'
-                    : sellerName
-                  : reportNum == ''
-                  ? 'N/A'
-                  : reportNum,
-                this.selectedHviVersion == 'v4'
-                  ? 'Buyer name'
-                  : 'Station(As advised)',
-                this.selectedHviVersion == 'v4'
-                  ? buyerName == '' || !buyerName
-                    ? 'N/A'
-                    : buyerName
-                  : stations == ''
-                  ? 'N/A'
-                  : stations,
+                'Buyer name',
+                buyerName,
+                'Station(As advised)',
+                stations == '' ? 'N/A' : stations,
               ],
               [
-                'Date',
-                formatedDate(),
-                this.selectedHviVersion == 'v4'
-                  ? 'Invoice Number'
-                  : 'Station(As advised)',
-                this.selectedHviVersion == 'v4'
-                  ? invoiceNumber == '' || !invoiceNumber
-                    ? 'N/A'
-                    : invoiceNumber
-                  : variety == ''
-                  ? 'N/A'
-                  : variety,
+                'Vessel / Conveyance',
+                'N/A',
+                'Variety',
+                variety == '' ? 'N/A' : variety,
               ],
+              ['B/L or Conveyance  Ref  No.', 'N/A', 'Crop year', 'N/A'],
+              ['Sampling location', 'N/A', 'Date of sampling', 'N/A'],
+              ['Sampling %', 'N/A', 'Date of testing', 'N/A'],
               [
-                'Lot number',
-                lotNum == '' ? 'N/A' : lotNum,
-                this.selectedHviVersion == 'v4'
-                  ? 'Number of samples'
-                  : 'Samples drawn by customer',
+                'Sampling party',
+                'N/A',
+                'Total sampling',
                 `${numberOfSamples} samples`,
               ],
             ],
           },
         },
-        this.selectedHviVersion == 'v4' && samplesSenderName
-          ? {
-              text: `Samples sent by: ${samplesSenderName}`,
-              style: 'samplesSenderName',
-            }
-          : null,
+
         {
           style: 'dataTable',
           layout: {
@@ -495,8 +487,13 @@ export class PdfComponent implements OnInit {
       ],
       styles: {
         header: {
+          fontSize: 14,
+          paddingBottom: '20px',
+          alignment: 'center',
+        },
+        headerData: {
           fontSize: 8,
-          paddingBottom: '10px',
+          paddingBottom: '20px',
         },
         samplesSenderName: {
           margin: [170, 5],
