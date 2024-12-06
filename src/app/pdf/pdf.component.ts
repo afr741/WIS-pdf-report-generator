@@ -279,6 +279,7 @@ export class PdfComponent implements OnInit {
 
     if (extractedRowsBody.length == 0) {
       this.displayStatus(false);
+      // console.log('No data found', extractedRowsBody);
     }
     // if (!this.activeTemplateInfo) return;
     let phone: any = 'N/A';
@@ -304,8 +305,11 @@ export class PdfComponent implements OnInit {
       testConditionsList = this.activeTemplateInfo.testConditionsList;
     }
     let columnLength = extractedRowsBody[0].length;
+
     let columnWidthArray = columnLength
-      ? Array(columnLength).fill(columnLength > 15 ? 22 : '*')
+      ? Array(columnLength).fill(
+          columnLength > 15 ? (this.selectedHviVersion === 'v4' ? 22 : 17) : '*'
+        )
       : [];
     const modifiedBody = extractedRowsBody.map((item: any) => {
       // console.log('item', item);
@@ -387,6 +391,12 @@ export class PdfComponent implements OnInit {
                 stations == '' ? 'N/A' : stations,
               ],
               [
+                'Seller name',
+                sellerName,
+                'Lot number',
+                lotNum == '' ? 'N/A' : lotNum,
+              ],
+              [
                 'Vessel / Conveyance',
                 'N/A',
                 'Variety',
@@ -429,7 +439,7 @@ export class PdfComponent implements OnInit {
         },
 
         { text: '\n\nRemarks', style: 'remarksHeader' },
-        {
+        remarks.length && {
           style: 'remarksBullets',
           layout: 'noBorders',
           table: {
@@ -438,7 +448,7 @@ export class PdfComponent implements OnInit {
         },
         { text: '\n\nTest and Lab Conditions', style: 'remarksHeader' },
 
-        {
+        testConditionsList.length && {
           style: 'remarksBullets',
           layout: 'noBorders',
           table: {
@@ -479,21 +489,26 @@ export class PdfComponent implements OnInit {
           fit: [90, 90],
           x: 430,
         },
-
-        {
+        (await this.stampImage) && {
           image: await this.stampImage,
-          fit: this.selectedHviVersion == 'v4' ? [500, 2800] : [150, 150],
+          fit:
+            this.selectedHviVersion == 'v4' || this.selectedHviVersion == 'v6'
+              ? [500, 2800]
+              : [150, 150],
+        },
+        {
+          text: "This is a PDF report including a QR Code for verification purposes, however as PDF is not 100% secure from being amended after issuance of the original. If you have not received this report directly from the WIS company who's name appears in the letterhead and you wish to verify the contents, please contact info@wiscontrol.com",
+          style: 'qrCodeDisclaimer',
         },
       ],
       styles: {
         header: {
           fontSize: 14,
-          paddingBottom: '20px',
           alignment: 'center',
         },
         headerData: {
           fontSize: 8,
-          paddingBottom: '20px',
+          margin: [0, 10, 0, 10],
         },
         samplesSenderName: {
           margin: [170, 5],
@@ -507,6 +522,9 @@ export class PdfComponent implements OnInit {
           fontSize: 6,
         },
         qrCodeText: {
+          fontSize: 8,
+        },
+        qrCodeDisclaimer: {
           fontSize: 8,
         },
         remarksHeader: {
