@@ -498,7 +498,12 @@ export class PdfparseService {
       variety,
       createdAt,
       id,
+      samplesSenderName,
+      sellerName,
+      buyerName,
+      invoiceNumber,
     } = report;
+
     if (!dataRows || dataRows[0] === null) {
       handleShowError('Failed to extract data rows!');
       return;
@@ -509,11 +514,7 @@ export class PdfparseService {
 
     // number of elements based on elments in this row
 
-    const keys = Object.keys(parsedRawData[5]).sort((a, b) => {
-      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
-      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
-      return numA - numB;
-    });
+    const keys = Object.keys(parsedRawData[0]);
 
     const extractedRows = parsedRawData.map((obj: any, index: any) => {
       //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
@@ -549,25 +550,33 @@ export class PdfparseService {
     );
 
     // to find the end of data body using "Average" word
-    let bodyEndIndex = extractedRows.findIndex((array: any) =>
-      array.some(
-        (element: any) => typeof element === 'string' && element.includes('Max')
-      )
-    );
+    // let bodyEndIndex = extractedRows.findIndex((array: any) =>
+    //   array.some(
+    //     (element: any) => typeof element === 'string' && element.includes('Max')
+    //   )
+    // );
+    let bodyEndIndex = extractedRows.length - 2;
 
     let extractedRowsBody = extractedRows.slice(
       bodyStartIndex + 1,
       bodyEndIndex + 1
     );
+    const numberOfSamples = extractedRowsBody.length - 3;
+
     return {
       customerName,
       reportNum,
       stations,
       variety,
+      sellerName,
+      buyerName,
+      invoiceNumber,
       lotNum,
       extractedRowsBody,
       createdAt,
       id,
+      numberOfSamples,
+      samplesSenderName,
     };
   }
 
@@ -596,56 +605,167 @@ export class PdfparseService {
     let parsedRawData = JSON.parse(dataRows[0]);
     console.log('parsedRawData', parsedRawData);
 
-    let startRowKeyWord = ['Station'];
+    const combinedObject = {
+      'No.': ['No', 'No.', 'Sample Count', 'S.No'],
+      'S.B. No.': ['S.B. No', 'S.B.No'],
+      'P.R No.': ['P.R No', 'P.R No.', 'P.R.No.'],
+      'HVI ID No': ['ID No'],
+      'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
+      'Bale/Sample No.': ['Bale No.', 'Sample No.', 'Bale ID'],
+      SCI: ['SCI'],
+      Mic: ['Mic'],
+      Rd: ['Rd'],
+      '+b': ['+b'],
+      'C-G': ['C-G'],
+      Area: ['Area'],
+      Cnt: ['Cnt'],
+      'T.L': ['T.L'],
+      Len: ['Len'],
+      Unf: ['Unf'],
+      Str: ['Str'],
+      SFI: ['SFI'],
+      ELG: ['ELG'],
+      Remarks: ['Remarks'],
+    };
+
+    // number of elements based on elements in this row
+    let startRowKeyWord = ['ID No', 'SCI'];
     const firstRowIndex = parsedRawData.findIndex((object: any) =>
       Object.values(object).some((value) =>
         startRowKeyWord.includes(value as string)
       )
     );
-    // number of elements based on elments in this row
-    // console.log('firstRowIndex', firstRowIndex);
-    const keys = Object.keys(parsedRawData[firstRowIndex]);
-    console.log('keys', keys);
-    // .sort((a, b) => {
-    //   const numA = parseInt(a.match(/\d+/)?.[0] || '0');
-    //   const numB = parseInt(b.match(/\d+/)?.[0] || '0');
-    //   return numA - numB;
-    // });
-
-    const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
-      return keys.map((key, keyIndex) => {
-        // if (obj.__EMPTY && keyIndex == 1) {
-        //   return obj.__EMPTY;
-        // }
-        let cellValue = obj[key];
-        let original = [16];
-        let isOneDec = [4, 8, 10, 11, 12, 13, 14];
-        let isTwoDec = [3, 5, 6, 9, 15];
-        let isThreeDec = [7];
-
-        let roundedCellValue = isNaN(cellValue)
-          ? cellValue
-          : Number(cellValue).toFixed(2);
-        return roundedCellValue || '';
-      });
-    });
     // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex(
-      (array: any) => array.includes('Station') || array.includes('Station')
+    let bodyStartIndex = firstRowIndex == -1 ? 0 : firstRowIndex;
+    let firstBodyRow = parsedRawData[bodyStartIndex];
+    // to find the end of data body using "Average" word
+    function sortedColumnNames(columnNames: any, combinedObject: any) {
+      const orderMap = new Map(
+        Object.keys(combinedObject).map((key, index) => [key, index])
+      );
+
+      const sortedColumnNames = columnNames.sort((a: any, b: any) => {
+        let aIndex: any = -1;
+        let bIndex: any = -1;
+
+        for (const [key, variations] of Object.entries(combinedObject)) {
+          if ((variations as string[]).includes(a.trim())) {
+            // Trimmed comparison
+            aIndex = orderMap.get(key);
+            break;
+          }
+        }
+
+        for (const [key, variations] of Object.entries(combinedObject)) {
+          if ((variations as string[]).includes(b.trim())) {
+            // Trimmed comparison
+            bIndex = orderMap.get(key);
+            break;
+          }
+        }
+
+        if (aIndex === -1 && bIndex === -1) return 0; // Both unmatched
+        if (aIndex === -1) return 1; // Only 'a' unmatched
+        if (bIndex === -1) return -1; // Only 'b' unmatched
+        return aIndex - bIndex; // Compare indices
+      });
+
+      return sortedColumnNames;
+    }
+
+    const areColumnNamesKeys = !isNaN(Number(Object.values(firstBodyRow)[0]));
+    const masterKeys = Object.keys(combinedObject);
+
+    //if columns names are as values
+    let sortedColumns = sortedColumnNames(
+      areColumnNamesKeys
+        ? Object.keys(firstBodyRow)
+        : Object.values(firstBodyRow),
+      combinedObject
     );
 
-    // to find the end of data body using "Average" word
-    let bodyEndIndex = extractedRows.findIndex((array: any) =>
+    let updatedKeys = areColumnNamesKeys
+      ? sortedColumns
+      : sortedColumns.map((value: string) =>
+          Object.keys(firstBodyRow).find((key) =>
+            firstBodyRow[key].includes(value)
+          )
+        );
+
+    console.log(
+      'areColumnNamesKeys',
+      areColumnNamesKeys,
+      'mastersKeys',
+      masterKeys,
+      'sortedColumns',
+      sortedColumns,
+      'updatedKeys',
+      updatedKeys
+    );
+
+    let extractedRows = parsedRawData.map((obj: any, index: any) => {
+      return updatedKeys.map((key: any, keyIndex: any) => {
+        let cellValue = obj[key];
+        let integersWords: any = ['Cnt', 'T.L'];
+        let shouldInteger = false;
+
+        let roundedCellValue = isNaN(Number(cellValue))
+          ? cellValue
+          : shouldInteger
+          ? Number(cellValue).toFixed(0)
+          : // : averageIndex2 === index && !isNaN(Number(cellValue))
+            // ? Number(cellValue).toFixed(2)
+            cellValue;
+
+        if (
+          !isNaN(Number(roundedCellValue)) &&
+          roundedCellValue.toString().split('.')[1]?.length > 1
+        ) {
+          roundedCellValue = Number(roundedCellValue).toFixed(1);
+        }
+        return roundedCellValue ?? '-';
+      });
+    });
+
+    if (firstRowIndex == -1) {
+      extractedRows = [
+        extractedRows[0].map((item: any, index: any) => {
+          return updatedKeys[index];
+        }),
+      ].concat(extractedRows);
+    }
+
+    const averageIndex = extractedRows.findIndex((array: any) =>
       array.some(
         (element: any) =>
-          typeof element === 'string' && element.includes('(INDIA)')
+          typeof element === 'string' &&
+          ['Test and lab conditions'].some((avg) => element.includes(avg))
       )
     );
 
+    let bodyEndIndex =
+      averageIndex !== -1 ? averageIndex - 2 : extractedRows.length;
+
     let extractedRowsBody = extractedRows.slice(bodyStartIndex, bodyEndIndex);
 
-    const numberOfSamples = extractedRowsBody - 2;
+    const numberOfSamples =
+      averageIndex !== -1
+        ? extractedRowsBody.length - 2
+        : extractedRowsBody.length - 1;
+
+    console.log(
+      'bodyStartIndex',
+      bodyStartIndex,
+      'bodyEndIndex',
+      bodyEndIndex,
+      'extractedRows:',
+      extractedRows,
+      'extractedRowsBody:',
+      extractedRowsBody,
+      'averageIndex',
+      averageIndex
+    );
+
     return {
       customerName,
       reportNum,
