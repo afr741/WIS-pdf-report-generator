@@ -275,7 +275,8 @@ export class PdfparseService {
       numberOfSamples,
     };
   }
-  // Vietnam
+
+  // Vietnam new
   async processPDFDataV4(report: Report, handleShowError: any) {
     let {
       dataRows,
@@ -300,7 +301,7 @@ export class PdfparseService {
     console.log('dataRows', dataRows);
     console.log('parsedRawData', parsedRawData);
 
-    const combinedObject = {
+    const masterObject = {
       'No.': ['No', 'No.', 'Sample Count'],
       'S.B. No.': [],
       'P.R No.': [],
@@ -331,145 +332,125 @@ export class PdfparseService {
       Remarks: [],
     };
 
-    // number of elements based on elements in this row
-    let startRowKeyWord = ['No.', 'Sample Count'];
-    const firstRowIndex = parsedRawData.findIndex((object: any) =>
-      Object.values(object).some((value) =>
-        startRowKeyWord.includes(value as string)
-      )
-    );
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = firstRowIndex == -1 ? 0 : firstRowIndex;
-    let firstBodyRow = parsedRawData[bodyStartIndex];
-    // to find the end of data body using "Average" word
-    function sortedColumnNames(columnNames: any, combinedObject: any) {
-      const orderMap = new Map(
-        Object.keys(combinedObject).map((key, index) => [key, index])
+    type MasterObject = Record<string, string[]>;
+
+    function processPDFContent(parsedPDF: any[], masterObject: MasterObject) {
+      // Extract rows from the parsed PDF content starting with column names
+
+      const isFirstStructure = Object.keys(parsedPDF[0]).some(
+        (key) => key.includes('__EMPTY') || key.includes('VIT')
       );
 
-      const sortedColumnNames = columnNames.sort((a: any, b: any) => {
-        let aIndex: any = -1;
-        let bIndex: any = -1;
+      let startRowIndex = parsedPDF.findIndex((row) =>
+        isFirstStructure
+          ? Object.values(row).some((value: any) =>
+              Object.values(masterObject).flat().includes(value)
+            )
+          : Object.keys(row).some((value: any) =>
+              Object.values(masterObject).flat().includes(value)
+            )
+      );
+      startRowIndex = startRowIndex == -1 ? 0 : startRowIndex;
+      let endRowIndex = parsedPDF.findIndex((row) =>
+        Object.values(row).some((value: any) =>
+          value.toString().trim().includes('Average')
+        )
+      );
+      console.log(
+        'isFirstStructure:',
+        isFirstStructure,
+        'startRowIndex:',
+        startRowIndex,
+        'endRowIndex:',
+        endRowIndex
+      );
+      endRowIndex = endRowIndex == -1 ? parsedPDF.length : endRowIndex + 1;
 
-        for (const [key, variations] of Object.entries(combinedObject)) {
-          if ((variations as string[]).includes(a)) {
-            aIndex = orderMap.get(key);
-            break;
-          }
-        }
-
-        for (const [key, variations] of Object.entries(combinedObject)) {
-          if ((variations as string[]).includes(b)) {
-            bIndex = orderMap.get(key);
-            break;
-          }
-        }
-
-        if (aIndex === -1 && bIndex === -1) return 0;
-        if (aIndex === -1) return 1;
-        if (bIndex === -1) return -1;
-        return aIndex - bIndex;
-      });
-      return sortedColumnNames;
-    }
-
-    const areColumnNamesKeys = !isNaN(Number(Object.values(firstBodyRow)[0]));
-    const masterKeys = Object.keys(combinedObject);
-
-    //if columns names are as values
-    let sortedColumns = sortedColumnNames(
-      areColumnNamesKeys
-        ? Object.keys(firstBodyRow)
-        : Object.values(firstBodyRow),
-      combinedObject
-    );
-
-    let updatedKeys = areColumnNamesKeys
-      ? sortedColumns
-      : sortedColumns.map((value: string) =>
-          Object.keys(firstBodyRow).find((key) =>
-            firstBodyRow[key].includes(value)
+      const relevantRows = parsedPDF.slice(startRowIndex, endRowIndex);
+      console.log('relevantRows', relevantRows);
+      // Map column names to keys in masterObject or omit if not found.
+      const columnMapping: Record<string, string> = {};
+      const headerRow: any = relevantRows[0];
+      for (const [key, value] of Object.entries(headerRow)) {
+        const matchingKey = Object.keys(masterObject).find((masterKey) =>
+          masterObject[masterKey].includes(
+            String(isFirstStructure ? value : key).trim()
           )
         );
-
-    console.log(
-      'mastersKeys',
-      masterKeys,
-      'sortedColumns',
-      sortedColumns,
-      'updatedKeys',
-      updatedKeys
-    );
-
-    // const averageIndex2 = parsedRawData.findIndex((item: any) =>
-    //   typeof item === 'object' ? item.text === 'Average' : item === 'Average'
-    // );
-
-    let extractedRows = parsedRawData.map((obj: any, index: any) => {
-      //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
-      return updatedKeys.map((key: any, keyIndex: any) => {
-        let cellValue = obj[key];
-        let integersWords: any = ['Cnt', 'T.L'];
-        let shouldInteger = false;
-
-        let roundedCellValue = isNaN(Number(cellValue))
-          ? cellValue
-          : shouldInteger
-          ? Number(cellValue).toFixed(0)
-          : // : averageIndex2 === index && !isNaN(Number(cellValue))
-            // ? Number(cellValue).toFixed(2)
-            cellValue;
-
-        if (
-          !isNaN(Number(roundedCellValue)) &&
-          roundedCellValue.toString().split('.')[1]?.length > 1
-        ) {
-          roundedCellValue = Number(roundedCellValue).toFixed(1);
+        if (matchingKey) {
+          columnMapping[key] = matchingKey;
         }
-        return roundedCellValue ?? '';
-      });
-    });
+      }
 
-    if (firstRowIndex == -1) {
-      extractedRows = [
-        extractedRows[0].map((item: any, index: any) => {
-          return updatedKeys[index];
-        }),
-      ].concat(extractedRows);
+      // Filter and rename the column names in the header row.
+      const sortedColumns = Object.keys(masterObject).filter((key) =>
+        Object.values(columnMapping).includes(key)
+      );
+
+      // Process the data rows to match the sorted and filtered column names.
+      const dataRows = relevantRows.slice(1).map((row) => {
+        const filteredRow: Record<string, any> = {};
+        for (const [originalKey, newKey] of Object.entries(columnMapping)) {
+          if (sortedColumns.includes(newKey)) {
+            filteredRow[newKey] = row[originalKey];
+          }
+        }
+        return filteredRow;
+      });
+
+      return {
+        headers: sortedColumns,
+        rows: dataRows,
+      };
     }
 
-    const averageIndex = extractedRows.findIndex((array: any) =>
-      array.some(
-        (element: any) =>
-          typeof element === 'string' &&
-          ['AVERAGE', 'Average', 'average'].some((avg) =>
-            element.toUpperCase().includes(avg)
-          )
-      )
+    const result = processPDFContent(parsedRawData, masterObject);
+    console.log('result', result);
+
+    function formatAndRoundResult(
+      result: { headers: string[]; rows: Record<string, any>[] },
+      roundToInteger: string[], // Columns to round to integer
+      roundTo1Decimal: string[] // Columns to round to 2 decimal points
+    ) {
+      const { headers, rows } = result;
+
+      // Initialize the final array with the headers as the first row.
+      const formattedResult: string[][] = [headers];
+
+      // Iterate over each row and map it to an array of strings.
+      rows.forEach((row) => {
+        const formattedRow = headers.map((header) => {
+          let value = row[header];
+
+          if (value !== undefined && typeof value === 'number') {
+            if (roundToInteger.includes(header)) {
+              value = Math.round(value); // Round to integer
+            } else if (roundTo1Decimal.includes(header)) {
+              value = value.toFixed(1); // Round to 2 decimal points
+            } else {
+              value = value.toFixed(2);
+            }
+          }
+
+          // Replace undefined or missing values with "-"
+          return value !== undefined ? String(value) : '-';
+        });
+        formattedResult.push(formattedRow);
+      });
+
+      return formattedResult;
+    }
+
+    const roundToInteger = ['SFI', 'No.', 'T.L', 'Cnt']; // Columns to round to integer
+    const roundTo1Decimal = ['+b']; // Columns to round to 1 decimal points
+
+    const extractedRowsBody = formatAndRoundResult(
+      result,
+      roundToInteger,
+      roundTo1Decimal
     );
-
-    let bodyEndIndex =
-      averageIndex !== -1 ? averageIndex + 1 : extractedRows.length;
-
-    let extractedRowsBody = extractedRows.slice(bodyStartIndex, bodyEndIndex);
-
-    const numberOfSamples =
-      averageIndex !== -1
-        ? extractedRowsBody.length - 2
-        : extractedRowsBody.length - 1;
-
-    console.log(
-      'bodyStartIndex',
-      bodyStartIndex,
-      'bodyEndIndex',
-      bodyEndIndex,
-      'extractedRows:',
-      extractedRows,
-      'extractedRowsBody:',
-      extractedRowsBody,
-      'averageIndex',
-      averageIndex
-    );
+    console.log('formattedOutput', extractedRowsBody);
+    const numberOfSamples = extractedRowsBody.length - 2;
 
     return {
       customerName,
@@ -487,6 +468,7 @@ export class PdfparseService {
       samplesSenderName,
     };
   }
+
   //China - Shanghai
   async processPDFDataV5(report: Report, handleShowError: any) {
     let {
@@ -549,12 +531,6 @@ export class PdfparseService {
       array.includes('Print Time')
     );
 
-    // to find the end of data body using "Average" word
-    // let bodyEndIndex = extractedRows.findIndex((array: any) =>
-    //   array.some(
-    //     (element: any) => typeof element === 'string' && element.includes('Max')
-    //   )
-    // );
     let bodyEndIndex = extractedRows.length - 2;
 
     let extractedRowsBody = extractedRows.slice(
@@ -605,7 +581,69 @@ export class PdfparseService {
     let parsedRawData = JSON.parse(dataRows[0]);
     console.log('parsedRawData', parsedRawData);
 
-    const combinedObject = {
+    type MasterObject = Record<string, string[]>;
+
+    function processPDFContent(parsedPDF: any[], masterObject: MasterObject) {
+      // Extract rows from the parsed PDF content starting with column names
+      // and ending before "WAKEFIELD INSPECTION SERVICES".
+      const startRowIndex = parsedPDF.findIndex((row) =>
+        Object.values(row).some((value: any) =>
+          Object.values(masterObject).flat().includes(value)
+        )
+      );
+      const endRowIndex = parsedPDF.findIndex((row) =>
+        Object.values(row).some((value: any) =>
+          value
+            .toString()
+            .trim()
+            .toUpperCase()
+            .includes('WAKEFIELD INSPECTION SERVICES')
+        )
+      );
+
+      if (startRowIndex === -1 || endRowIndex === -1) {
+        throw new Error('Could not find valid start or end rows.');
+      }
+
+      const relevantRows = parsedPDF.slice(startRowIndex, endRowIndex);
+
+      // Map column names to keys in masterObject or omit if not found.
+      const columnMapping: Record<string, string> = {};
+      const headerRow: any = relevantRows[0];
+      for (const [key, value] of Object.entries(headerRow)) {
+        const matchingKey = Object.keys(masterObject).find((masterKey) =>
+          masterObject[masterKey].includes(String(value).trim())
+        );
+        if (matchingKey) {
+          columnMapping[key] = matchingKey;
+        }
+      }
+
+      // Filter and rename the column names in the header row.
+      const sortedColumns = Object.keys(masterObject).filter((key) =>
+        Object.values(columnMapping).includes(key)
+      );
+
+      // Process the data rows to match the sorted and filtered column names.
+      const dataRows = relevantRows.slice(1).map((row) => {
+        const filteredRow: Record<string, any> = {};
+        for (const [originalKey, newKey] of Object.entries(columnMapping)) {
+          if (sortedColumns.includes(newKey)) {
+            filteredRow[newKey] = row[originalKey];
+          }
+        }
+        return filteredRow;
+      });
+
+      return {
+        headers: sortedColumns,
+        rows: dataRows,
+      };
+    }
+
+    // Example usage
+
+    const masterObject = {
       'No.': ['No', 'No.', 'Sample Count', 'S.No'],
       'S.B. No.': ['S.B. No', 'S.B.No'],
       'P.R No.': ['P.R No', 'P.R No.', 'P.R.No.'],
@@ -628,143 +666,51 @@ export class PdfparseService {
       Remarks: ['Remarks'],
     };
 
-    // number of elements based on elements in this row
-    let startRowKeyWord = ['ID No', 'SCI'];
-    const firstRowIndex = parsedRawData.findIndex((object: any) =>
-      Object.values(object).some((value) =>
-        startRowKeyWord.includes(value as string)
-      )
-    );
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = firstRowIndex == -1 ? 0 : firstRowIndex;
-    let firstBodyRow = parsedRawData[bodyStartIndex];
-    // to find the end of data body using "Average" word
-    function sortedColumnNames(columnNames: any, combinedObject: any) {
-      const orderMap = new Map(
-        Object.keys(combinedObject).map((key, index) => [key, index])
-      );
+    const result = processPDFContent(parsedRawData, masterObject);
+    console.log(result);
 
-      const sortedColumnNames = columnNames.sort((a: any, b: any) => {
-        let aIndex: any = -1;
-        let bIndex: any = -1;
+    function formatAndRoundResult(
+      result: { headers: string[]; rows: Record<string, any>[] },
+      roundToInteger: string[], // Columns to round to integer
+      roundToDecimal: string[] // Columns to round to 2 decimal points
+    ) {
+      const { headers, rows } = result;
 
-        for (const [key, variations] of Object.entries(combinedObject)) {
-          if ((variations as string[]).includes(a.trim())) {
-            // Trimmed comparison
-            aIndex = orderMap.get(key);
-            break;
+      // Initialize the final array with the headers as the first row.
+      const formattedResult: string[][] = [headers];
+
+      // Iterate over each row and map it to an array of strings.
+      rows.forEach((row) => {
+        const formattedRow = headers.map((header) => {
+          let value = row[header];
+
+          if (value !== undefined && typeof value === 'number') {
+            if (roundToInteger.includes(header)) {
+              value = Math.round(value); // Round to integer
+            } else if (roundToDecimal.includes(header)) {
+              value = value.toFixed(2); // Round to 2 decimal points
+            }
           }
-        }
 
-        for (const [key, variations] of Object.entries(combinedObject)) {
-          if ((variations as string[]).includes(b.trim())) {
-            // Trimmed comparison
-            bIndex = orderMap.get(key);
-            break;
-          }
-        }
-
-        if (aIndex === -1 && bIndex === -1) return 0; // Both unmatched
-        if (aIndex === -1) return 1; // Only 'a' unmatched
-        if (bIndex === -1) return -1; // Only 'b' unmatched
-        return aIndex - bIndex; // Compare indices
+          // Replace undefined or missing values with "-"
+          return value !== undefined ? String(value) : '-';
+        });
+        formattedResult.push(formattedRow);
       });
 
-      return sortedColumnNames;
+      return formattedResult;
     }
 
-    const areColumnNamesKeys = !isNaN(Number(Object.values(firstBodyRow)[0]));
-    const masterKeys = Object.keys(combinedObject);
+    const roundToInteger = ['SCI', 'SFI']; // Columns to round to integer
+    const roundToDecimal = ['Area', 'Len']; // Columns to round to 2 decimal points
 
-    //if columns names are as values
-    let sortedColumns = sortedColumnNames(
-      areColumnNamesKeys
-        ? Object.keys(firstBodyRow)
-        : Object.values(firstBodyRow),
-      combinedObject
+    const extractedRowsBody = formatAndRoundResult(
+      result,
+      roundToInteger,
+      roundToDecimal
     );
-
-    let updatedKeys = areColumnNamesKeys
-      ? sortedColumns
-      : sortedColumns.map((value: string) =>
-          Object.keys(firstBodyRow).find((key) =>
-            firstBodyRow[key].includes(value)
-          )
-        );
-
-    console.log(
-      'areColumnNamesKeys',
-      areColumnNamesKeys,
-      'mastersKeys',
-      masterKeys,
-      'sortedColumns',
-      sortedColumns,
-      'updatedKeys',
-      updatedKeys
-    );
-
-    let extractedRows = parsedRawData.map((obj: any, index: any) => {
-      return updatedKeys.map((key: any, keyIndex: any) => {
-        let cellValue = obj[key];
-        let integersWords: any = ['Cnt', 'T.L'];
-        let shouldInteger = false;
-
-        let roundedCellValue = isNaN(Number(cellValue))
-          ? cellValue
-          : shouldInteger
-          ? Number(cellValue).toFixed(0)
-          : // : averageIndex2 === index && !isNaN(Number(cellValue))
-            // ? Number(cellValue).toFixed(2)
-            cellValue;
-
-        if (
-          !isNaN(Number(roundedCellValue)) &&
-          roundedCellValue.toString().split('.')[1]?.length > 1
-        ) {
-          roundedCellValue = Number(roundedCellValue).toFixed(1);
-        }
-        return roundedCellValue ?? '-';
-      });
-    });
-
-    if (firstRowIndex == -1) {
-      extractedRows = [
-        extractedRows[0].map((item: any, index: any) => {
-          return updatedKeys[index];
-        }),
-      ].concat(extractedRows);
-    }
-
-    const averageIndex = extractedRows.findIndex((array: any) =>
-      array.some(
-        (element: any) =>
-          typeof element === 'string' &&
-          ['Test and lab conditions'].some((avg) => element.includes(avg))
-      )
-    );
-
-    let bodyEndIndex =
-      averageIndex !== -1 ? averageIndex - 2 : extractedRows.length;
-
-    let extractedRowsBody = extractedRows.slice(bodyStartIndex, bodyEndIndex);
-
-    const numberOfSamples =
-      averageIndex !== -1
-        ? extractedRowsBody.length - 2
-        : extractedRowsBody.length - 1;
-
-    console.log(
-      'bodyStartIndex',
-      bodyStartIndex,
-      'bodyEndIndex',
-      bodyEndIndex,
-      'extractedRows:',
-      extractedRows,
-      'extractedRowsBody:',
-      extractedRowsBody,
-      'averageIndex',
-      averageIndex
-    );
+    console.log('formattedOutput', extractedRowsBody);
+    const numberOfSamples = extractedRowsBody.length - 2;
 
     return {
       customerName,

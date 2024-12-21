@@ -306,11 +306,7 @@ export class PdfComponent implements OnInit {
     }
     let columnLength = extractedRowsBody[0].length;
 
-    let columnWidthArray = columnLength
-      ? Array(columnLength).fill(
-          columnLength > 15 ? (this.selectedHviVersion === 'v4' ? 22 : 17) : '*'
-        )
-      : [];
+    let columnWidthArray = columnLength ? Array(columnLength).fill(22) : [];
     const modifiedBody = extractedRowsBody.map((item: any) => {
       // console.log('item', item);
       return item.map((itemInner: any) => {
@@ -337,10 +333,6 @@ export class PdfComponent implements OnInit {
         }
       });
     });
-
-    // console.log('columnWidthArray', columnWidthArray);
-
-    // console.log('modifiedBody', modifiedBody);
 
     let docDefinition = {
       pageSize: 'A4',
@@ -497,7 +489,7 @@ export class PdfComponent implements OnInit {
               : [150, 150],
         },
         {
-          text: "This is a PDF report including a QR Code for verification purposes, however as PDF is not 100% secure from being amended after issuance of the original. If you have not received this report directly from the WIS company who's name appears in the letterhead and you wish to verify the contents, please contact info@wiscontrol.com",
+          text: "- This is a PDF report including a QR Code for verification purposes, however as PDF is not 100% secure from being amended after issuance of the original. If you have not received this report directly from the WIS company who's name appears in the letterhead and you wish to verify the contents, please contact info@wiscontrol.com",
           style: 'qrCodeDisclaimer',
         },
       ],
