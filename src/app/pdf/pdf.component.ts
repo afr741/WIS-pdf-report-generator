@@ -305,8 +305,10 @@ export class PdfComponent implements OnInit {
       testConditionsList = this.activeTemplateInfo.testConditionsList;
     }
     let columnLength = extractedRowsBody[0].length;
-
-    let columnWidthArray = columnLength ? Array(columnLength).fill(22) : [];
+    let selectedColumnWidth = this.selectedHviVersion === 'v5' ? 25 : 22;
+    let columnWidthArray = columnLength
+      ? Array(columnLength).fill(selectedColumnWidth)
+      : [];
     const modifiedBody = extractedRowsBody.map((item: any) => {
       // console.log('item', item);
       return item.map((itemInner: any) => {

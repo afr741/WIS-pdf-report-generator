@@ -8,6 +8,7 @@ export class PdfparseService {
   constructor() {}
 
   //Dushanbe
+
   processPDFDataV1(report: Report, handleShowError: any) {
     let {
       dataRows,
@@ -490,54 +491,235 @@ export class PdfparseService {
       handleShowError('Failed to extract data rows!');
       return;
     }
-
     let parsedRawData = JSON.parse(dataRows[0]);
-    console.log('parsedRawData', parsedRawData);
+    console.log('parsedRoawData', parsedRawData);
 
-    // number of elements based on elments in this row
+    //Jinan
+    let columnTranslationsJinan: any = {
+      棉包编号: 'Sample number',
+      纺稳参数: 'SCI',
+      等级: 'Grade',
+      水分: 'Moist',
+      马克隆: 'Mic',
+      成熟度: 'Mat',
+      上半均长: 'Len',
+      整齐度: 'Unf',
+      短纤维: 'SFI',
+      强度: 'Str',
+      伸长率: 'Elg',
+      反射率: 'Rd',
+      黄度: '+b',
+      颜色等级: 'C Grade',
+      杂质数: 'Tr Cnt',
+      杂质面积: 'Tr Area',
+      杂质编码: 'Tr Grade',
+      光通量: 'luminous flux',
+    };
 
-    const keys = Object.keys(parsedRawData[0]);
+    const columnTranslationsQingdao: any = {
+      棉包编号: 'Package No',
+      纺稳参数: 'SCI',
+      等级: 'Grade',
+      水分: 'Moist',
+      马克隆: 'Mic',
+      成熟度: 'Mat',
+      上半均长: 'Len',
+      整齐度: 'Unf',
+      短纤维: 'SFI',
+      强度: 'Str',
+      伸长率: 'Elg',
+      反射率: 'Rd',
+      黄度: '+b',
+      颜色等级: 'C-G',
+      杂质数: 'Tr Cnt',
+      杂质面积: 'Tr Area',
+      杂质等级: 'Tr Grade',
+      杂质编码: 'Tr Code',
+      光通量: 'Luminous Flux',
+    };
 
-    const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
-      return keys.map((key, keyIndex) => {
-        if (obj.__EMPTY && keyIndex == 1) {
-          return obj.__EMPTY;
+    const columnTranslationsJinao: any = {
+      '\'上半部均长"': 'Len',
+      '\'黄度"': '+b',
+      "'SFI": 'SFI',
+      'Sub ID': 'Sub ID',
+      '\'色泽等级"': 'C Grade',
+      MR: 'MR',
+      '\'反射率"': 'Rd',
+      '\'伸长率"': 'Elg',
+      '\'马值"': 'Mic',
+      '\'杂质面积比"': 'Tr Area',
+      '\'整齐度"': 'Unf',
+      '\'杂质粒数"': 'Tr Cnt',
+      '\'强力"': 'Str',
+      '\'叶屑等级"': 'Tr Grade',
+    };
+    const bottomTranslation: any = {
+      最大: 'Max',
+      最小: 'Min',
+      平均值: 'Average',
+      次: 'Freq',
+      平均: 'Average',
+      标准差: 'SD',
+      最小值: 'Min',
+      最大值: 'Max',
+    };
+
+    // Automatically determine which columnTranslations to use
+    let columnTranslations: any;
+    const checkColumn = (parsedRawData: any) => {
+      // Look for a known unique column value to decide which translation to use
+      const firstRow = parsedRawData[0]; // Assume the first row has column names
+      if (firstRow['颜色等级'] === 'C Grade') {
+        columnTranslations = columnTranslationsJinan; // Jinan translation
+      } else if (firstRow['系统测试报告'] === '测试序号') {
+        columnTranslations = columnTranslationsJinao; // Jinao translation
+      } else {
+        columnTranslations = columnTranslationsQingdao; // Qingdao translation
+      }
+    };
+
+    // Call the function to check the first row and set columnTranslations
+    checkColumn(parsedRawData);
+
+    const masterObject = {
+      'No.': ['No.', 'Package No', 'Sub ID'],
+      'S.B. No.': ['S.B. No.'],
+      'P.R No.': ['P.R No.'],
+      'HVI ID No': ['HVI ID No'],
+      'Cont./Mark/Lot No': ['Lot No'],
+      'Bale/Sample No.': ['Sample number'],
+      SCI: ['SCI'],
+      Mic: ['Mic'],
+      Rd: ['Rd'],
+      '+b': ['+b'],
+      'C-G': ['C Grade', 'C-G'],
+      Area: ['Tr Area'],
+      Cnt: ['Tr Cnt'],
+      'T.L': ['Tr Grade'],
+      Len: ['Len'],
+      Unf: ['Unf'],
+      Str: ['Str'],
+      SFI: ['SFI'],
+      ELG: ['Elg'],
+      Remarks: ['luminous flux', 'Luminous Flux'],
+    };
+
+    type MasterObject = Record<string, string[]>;
+
+    function processPDFContent(parsedPDF: any[], masterObject: MasterObject) {
+      // Extract rows from the parsed PDF content starting with column names
+      let startRowIndex = parsedPDF.findIndex((row) =>
+        Object.values(row).some((value: any) =>
+          Object.keys(columnTranslations).includes(value)
+        )
+      );
+      let endRowIndex = parsedPDF.findIndex((row) =>
+        Object.values(row).some((value: any) =>
+          value.toString().trim().toUpperCase().includes('Average')
+        )
+      );
+
+      startRowIndex = startRowIndex == -1 ? 0 : startRowIndex;
+      endRowIndex = endRowIndex == -1 ? parsedPDF.length - 1 : endRowIndex;
+
+      const relevantRows = parsedPDF.slice(startRowIndex, endRowIndex);
+
+      // Map column names to keys in masterObject or omit if not found.
+      const columnMapping: Record<string, string> = {};
+      const headerRow: any = relevantRows[0];
+      for (const [key, value] of Object.entries(headerRow)) {
+        const translatedValue = columnTranslations[value as string];
+        const matchingKey = Object.keys(masterObject).find((masterKey) =>
+          masterObject[masterKey].includes(
+            String(translatedValue || value).trim()
+          )
+        );
+        if (matchingKey) {
+          columnMapping[key] = matchingKey;
         }
-        let cellValue = obj[key];
-        let original = [16];
-        let isOneDec = [4, 8, 10, 11, 12, 13, 14];
-        let isTwoDec = [3, 5, 6, 9, 15];
-        let isThreeDec = [7];
+      }
 
-        let roundedCellValue = original.includes(keyIndex)
-          ? cellValue
-          : isNaN(cellValue)
-          ? cellValue
-          : Number(cellValue).toFixed(
-              isOneDec.includes(keyIndex)
-                ? 1
-                : isTwoDec.includes(keyIndex)
-                ? 2
-                : isThreeDec.includes(keyIndex)
-                ? 3
-                : 0
-            );
-        return roundedCellValue || '';
+      // Filter and rename the column names in the header row.
+      const sortedColumns = Object.keys(masterObject).filter((key) =>
+        Object.values(columnMapping).includes(key)
+      );
+      console.log(
+        'sortedColumns',
+        sortedColumns,
+        'startRowIndex',
+        startRowIndex,
+        'endRowIndex',
+        endRowIndex
+      );
+      // Process the data rows to match the sorted and filtered column names.
+      const dataRows = relevantRows.slice(1).map((row) => {
+        const filteredRow: Record<string, any> = {};
+        for (const [originalKey, newKey] of Object.entries(columnMapping)) {
+          if (sortedColumns.includes(newKey)) {
+            filteredRow[newKey] = row[originalKey];
+          }
+        }
+        return filteredRow;
       });
-    });
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes('Print Time')
-    );
 
-    let bodyEndIndex = extractedRows.length - 2;
+      return {
+        headers: sortedColumns,
+        rows: dataRows,
+      };
+    }
 
-    let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex + 1,
-      bodyEndIndex + 1
+    // Example usage
+
+    const result = processPDFContent(parsedRawData, masterObject);
+    console.log(result);
+
+    function formatAndRoundResult(
+      result: { headers: string[]; rows: Record<string, any>[] },
+      roundToInteger: string[], // Columns to round to integer
+      roundToDecimal: string[] // Columns to round to 2 decimal points
+    ) {
+      const { headers, rows } = result;
+
+      // Initialize the final array with the headers as the first row.
+      const formattedResult: string[][] = [headers];
+
+      // Iterate over each row and map it to an array of strings.
+      rows.forEach((row) => {
+        const formattedRow = headers.map((header) => {
+          let value = row[header];
+          if (bottomTranslation[value]) {
+            value = bottomTranslation[value];
+          }
+          if (value !== undefined && typeof value === 'number') {
+            if (roundToInteger.includes(header)) {
+              value = Math.round(value); // Round to integer
+            } else if (roundTo1Decimal.includes(header)) {
+              value = value.toFixed(1); // Round to 2 decimal points
+            } else {
+              value = value.toFixed(2);
+            }
+          }
+
+          // Replace undefined or missing values with "-"
+          return value !== undefined ? String(value) : '-';
+        });
+        formattedResult.push(formattedRow);
+      });
+
+      return formattedResult;
+    }
+
+    const roundToInteger = ['SFI', 'No.', 'T.L', 'Cnt', 'Remarks']; // Columns to round to integer
+    const roundTo1Decimal = ['+b']; // Columns to round to 1 decimal points
+
+    const extractedRowsBody = formatAndRoundResult(
+      result,
+      roundToInteger,
+      roundTo1Decimal
     );
-    const numberOfSamples = extractedRowsBody.length - 3;
+    console.log('formattedOutput', extractedRowsBody);
+    const numberOfSamples = extractedRowsBody.length - 2;
 
     return {
       customerName,
