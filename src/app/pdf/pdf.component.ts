@@ -289,9 +289,21 @@ export class PdfComponent implements OnInit {
     let email: any = 'N/A';
     let localCompanyName: any = 'N/A';
     let localCompanyNameTranslation: any = 'N/A';
-    let singlePageRowLimit = 10;
-    let remarks: any = [];
-    let testConditionsList: any = [];
+
+    let remarks: any = [
+      "a) The samples tested  will be stored for 3 months only, after which they will be disposed of at the Company's discretion, unless otherwise instructed.",
+      'b) Any comments and queries of results shown in this report should be made in writing within thirty days of the Report Date as shown above.',
+      'c) The report shall not be used for Litigation or publicity.',
+      'd) This report reflects the result of tests carried out on samples submitted to us by party listed above and tested on tye dates and location listed above.',
+    ];
+    let testConditionsList: any = [
+      'The tests were made under the conditions laid down in the Guideline for Instrument Testing of Cotton, published by; ICAC Task Force on  commercial Standardization of Instrument Testing of Cotton (CSITC) and ITMF International Committee on Cotton Testing Methods (ICCTM)',
+      '1) Universal HVI Standards for Upland Cotton',
+      '2) A laboratory temperature of 21° +/- 1° C',
+      '3) A relative humidity of 65 +/- 2%',
+      '4) A sample moisture level between 6.75% and 8.25%',
+      '5) Standard instrument tolerance applicable',
+    ];
     if (this.activeTemplateInfo) {
       phone = this.activeTemplateInfo.phone;
       address = this.activeTemplateInfo.address;
@@ -301,8 +313,8 @@ export class PdfComponent implements OnInit {
       localCompanyName = this.activeTemplateInfo.localCompanyName;
       localCompanyNameTranslation =
         this.activeTemplateInfo.localCompanyNameTranslation;
-      remarks = this.activeTemplateInfo.remarksList;
-      testConditionsList = this.activeTemplateInfo.testConditionsList;
+      // remarks = this.activeTemplateInfo.remarksList;
+      // testConditionsList = this.activeTemplateInfo.testConditionsList;
     }
     let columnLength = extractedRowsBody[0].length;
     let selectedColumnWidth = this.selectedHviVersion === 'v5' ? 25 : 22;
