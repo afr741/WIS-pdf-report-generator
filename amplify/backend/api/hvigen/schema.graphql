@@ -42,15 +42,24 @@ type Report
   id: ID!
   name: String!
   samplesSenderName: String
-  email: String!
-  labLocation: String!
-  hviVersion: String!
-  reportNum: String!
-  lotNum: String!
-  customerName: String!
-  origin: String!
-  stations: String!
-  variety: String!
+  email: String
+  labLocation: String
+  hviVersion: String
+  reportNum: String
+  lotNum: String
+  customerName: String
+  origin: String
+  stations: String
+  variety: String
+  testingInstrumentType: String
+  dateOfTesting: String
+  dateOfSampling: String
+  samplingParty: String
+  samplingLocation: String
+  samplingPercentage: String
+  vesselOrConveyance: String
+  cropYear: String
+  conveyanceRefNo: String
   invoiceNumber: String
   sellerName: String
   buyerName: String

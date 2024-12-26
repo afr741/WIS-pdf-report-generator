@@ -37,6 +37,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public sectionName: string = '';
   public wislogo: any;
   public labNameList = [];
+  public labListData: any = {};
   public hviVersionsList = [];
   constructor(
     private authService: AuthService,
@@ -93,6 +94,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     });
     await this.api.ListLabs().then((labs: any) => {
       console.log('labs', labs);
+      this.labListData = labs.items;
       this.labNameList = labs.items.map((item: any) => {
         return item.label;
       });
@@ -107,6 +109,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.userEmail = emailAndLab.email;
     this.userCategory = emailAndLab.userGroup;
     // console.log('email and lab', emailAndLab);
+    console.log('labNameList', this.labNameList);
   }
 
   ngOnDestroy() {
@@ -199,6 +202,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public labValueChange(value: any): void {
     console.log('lab valueChange', value);
     this.selectedLab = value;
+    this.selectedHviVersion = this.labListData.find(
+      (item: any) => item.label === value
+    )?.defaultHVIProcessingVersion;
   }
 
   public hviValueChange(value: any): void {

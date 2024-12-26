@@ -72,6 +72,15 @@ query GetReport($id: ID!) {
     origin
     stations
     variety
+    testingInstrumentType
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
     invoiceNumber
     sellerName
     buyerName
@@ -103,6 +112,15 @@ query ListReports(
       origin
       stations
       variety
+      testingInstrumentType
+      dateOfTesting
+      dateOfSampling
+      samplingParty
+      samplingLocation
+      samplingPercentage
+      vesselOrConveyance
+      cropYear
+      conveyanceRefNo
       invoiceNumber
       sellerName
       buyerName
@@ -147,6 +165,15 @@ query ReportsByAttachmentUrlAndName(
       origin
       stations
       variety
+      testingInstrumentType
+      dateOfTesting
+      dateOfSampling
+      samplingParty
+      samplingLocation
+      samplingPercentage
+      vesselOrConveyance
+      cropYear
+      conveyanceRefNo
       invoiceNumber
       sellerName
       buyerName

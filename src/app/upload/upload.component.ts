@@ -60,6 +60,15 @@ export class UploadComponent implements OnInit, OnDestroy {
       sellerName: ['', Validators.required],
       buyerName: ['', Validators.required],
       invoiceNumber: ['', Validators.required],
+      testingInstrumentType: ['', Validators.required],
+      dateOfTesting: ['', Validators.required],
+      dateOfSampling: ['', Validators.required],
+      samplingParty: ['', Validators.required],
+      samplingLocation: ['', Validators.required],
+      samplingPercentage: ['', Validators.required],
+      vesselOrConveyance: ['', Validators.required],
+      cropYear: ['', Validators.required],
+      conveyanceRefNo: ['', Validators.required],
     });
   }
 

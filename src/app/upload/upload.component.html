@@ -36,7 +36,7 @@
         ></kendo-textbox>
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
       </kendo-formfield>
-      <ng-container *ngIf="selectedHviVersion !== 'v4'">
+      <ng-container>
         <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="Stations" />
           <kendo-textbox
@@ -77,7 +77,7 @@
         <kendo-formerror> samplesSenderName is required</kendo-formerror>
       </kendo-formfield>
 
-      <ng-container *ngIf="selectedHviVersion === 'v4'">
+      <ng-container>
         <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="Seller Name" />
           <kendo-textbox
@@ -109,6 +109,114 @@
             placeholder="Invoice Number"
           ></kendo-textbox>
           <kendo-formerror> Invoice Number</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label
+            labelCssClass="k-form-label"
+            text="Testing Instrument Type"
+          />
+          <kendo-textbox
+            formControlName="testingInstrumentType"
+            #testingInstrumentType
+            required
+            placeholder="Testing Instrument Type"
+          ></kendo-textbox>
+          <kendo-formerror>Testing Instrument Type</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Date of Testing" />
+          <kendo-textbox
+            formControlName="dateOfTesting"
+            #dateOfTesting
+            required
+            placeholder="Date of Testing"
+          ></kendo-textbox>
+          <kendo-formerror>Date of Testing</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Date of Sampling" />
+          <kendo-textbox
+            formControlName="dateOfSampling"
+            #dateOfSampling
+            required
+            placeholder="Date of Sampling"
+          ></kendo-textbox>
+          <kendo-formerror>Date of Sampling</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Sampling Party" />
+          <kendo-textbox
+            formControlName="samplingParty"
+            #samplingParty
+            required
+            placeholder="Sampling Party"
+          ></kendo-textbox>
+          <kendo-formerror>Sampling Party</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Sampling Location" />
+          <kendo-textbox
+            formControlName="samplingLocation"
+            #samplingLocation
+            required
+            placeholder="Sampling Location"
+          ></kendo-textbox>
+          <kendo-formerror>Sampling Location</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label
+            labelCssClass="k-form-label"
+            text="Sampling Percentage"
+          />
+          <kendo-textbox
+            formControlName="samplingPercentage"
+            #samplingPercentage
+            required
+            placeholder="Sampling Percentage"
+          ></kendo-textbox>
+          <kendo-formerror>Sampling Percentage</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label
+            labelCssClass="k-form-label"
+            text="Vessel Or Conveyance"
+          />
+          <kendo-textbox
+            formControlName="vesselOrConveyance"
+            #vesselOrConveyance
+            required
+            placeholder="Vessel Or Conveyance"
+          ></kendo-textbox>
+          <kendo-formerror>Vessel or Conveyance</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Crop Year" />
+          <kendo-textbox
+            formControlName="cropYear"
+            #cropYear
+            required
+            placeholder="Crop Year"
+          ></kendo-textbox>
+          <kendo-formerror>Crop Year</kendo-formerror>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Conveyance Ref No" />
+          <kendo-textbox
+            formControlName="conveyanceRefNo"
+            #conveyanceRefNo
+            required
+            placeholder="Conveyance Ref No"
+          ></kendo-textbox>
+          <kendo-formerror>Conveyance Ref No</kendo-formerror>
         </kendo-formfield>
       </ng-container>
 

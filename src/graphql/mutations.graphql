@@ -101,6 +101,15 @@ mutation CreateReport(
     origin
     stations
     variety
+    testingInstrumentType
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
     invoiceNumber
     sellerName
     buyerName
@@ -130,6 +139,15 @@ mutation UpdateReport(
     origin
     stations
     variety
+    testingInstrumentType
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
     invoiceNumber
     sellerName
     buyerName
@@ -159,6 +177,15 @@ mutation DeleteReport(
     origin
     stations
     variety
+    testingInstrumentType
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
     invoiceNumber
     sellerName
     buyerName

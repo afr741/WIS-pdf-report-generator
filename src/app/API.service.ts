@@ -172,15 +172,24 @@ export type CreateReportInput = {
   id?: string | null;
   name: string;
   samplesSenderName?: string | null;
-  email: string;
-  labLocation: string;
-  hviVersion: string;
-  reportNum: string;
-  lotNum: string;
-  customerName: string;
-  origin: string;
-  stations: string;
-  variety: string;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  testingInstrumentType?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
@@ -200,6 +209,15 @@ export type ModelReportConditionInput = {
   origin?: ModelStringInput | null;
   stations?: ModelStringInput | null;
   variety?: ModelStringInput | null;
+  testingInstrumentType?: ModelStringInput | null;
+  dateOfTesting?: ModelStringInput | null;
+  dateOfSampling?: ModelStringInput | null;
+  samplingParty?: ModelStringInput | null;
+  samplingLocation?: ModelStringInput | null;
+  samplingPercentage?: ModelStringInput | null;
+  vesselOrConveyance?: ModelStringInput | null;
+  cropYear?: ModelStringInput | null;
+  conveyanceRefNo?: ModelStringInput | null;
   invoiceNumber?: ModelStringInput | null;
   sellerName?: ModelStringInput | null;
   buyerName?: ModelStringInput | null;
@@ -218,15 +236,24 @@ export type Report = {
   id: string;
   name: string;
   samplesSenderName?: string | null;
-  email: string;
-  labLocation: string;
-  hviVersion: string;
-  reportNum: string;
-  lotNum: string;
-  customerName: string;
-  origin: string;
-  stations: string;
-  variety: string;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  testingInstrumentType?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
@@ -250,6 +277,15 @@ export type UpdateReportInput = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
+  testingInstrumentType?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
@@ -387,6 +423,15 @@ export type ModelReportFilterInput = {
   origin?: ModelStringInput | null;
   stations?: ModelStringInput | null;
   variety?: ModelStringInput | null;
+  testingInstrumentType?: ModelStringInput | null;
+  dateOfTesting?: ModelStringInput | null;
+  dateOfSampling?: ModelStringInput | null;
+  samplingParty?: ModelStringInput | null;
+  samplingLocation?: ModelStringInput | null;
+  samplingPercentage?: ModelStringInput | null;
+  vesselOrConveyance?: ModelStringInput | null;
+  cropYear?: ModelStringInput | null;
+  conveyanceRefNo?: ModelStringInput | null;
   invoiceNumber?: ModelStringInput | null;
   sellerName?: ModelStringInput | null;
   buyerName?: ModelStringInput | null;
@@ -526,6 +571,15 @@ export type ModelSubscriptionReportFilterInput = {
   origin?: ModelSubscriptionStringInput | null;
   stations?: ModelSubscriptionStringInput | null;
   variety?: ModelSubscriptionStringInput | null;
+  testingInstrumentType?: ModelSubscriptionStringInput | null;
+  dateOfTesting?: ModelSubscriptionStringInput | null;
+  dateOfSampling?: ModelSubscriptionStringInput | null;
+  samplingParty?: ModelSubscriptionStringInput | null;
+  samplingLocation?: ModelSubscriptionStringInput | null;
+  samplingPercentage?: ModelSubscriptionStringInput | null;
+  vesselOrConveyance?: ModelSubscriptionStringInput | null;
+  cropYear?: ModelSubscriptionStringInput | null;
+  conveyanceRefNo?: ModelSubscriptionStringInput | null;
   invoiceNumber?: ModelSubscriptionStringInput | null;
   sellerName?: ModelSubscriptionStringInput | null;
   buyerName?: ModelSubscriptionStringInput | null;
@@ -636,15 +690,24 @@ export type CreateReportMutation = {
   id: string;
   name: string;
   samplesSenderName?: string | null;
-  email: string;
-  labLocation: string;
-  hviVersion: string;
-  reportNum: string;
-  lotNum: string;
-  customerName: string;
-  origin: string;
-  stations: string;
-  variety: string;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  testingInstrumentType?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
@@ -660,15 +723,24 @@ export type UpdateReportMutation = {
   id: string;
   name: string;
   samplesSenderName?: string | null;
-  email: string;
-  labLocation: string;
-  hviVersion: string;
-  reportNum: string;
-  lotNum: string;
-  customerName: string;
-  origin: string;
-  stations: string;
-  variety: string;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  testingInstrumentType?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
@@ -684,15 +756,24 @@ export type DeleteReportMutation = {
   id: string;
   name: string;
   samplesSenderName?: string | null;
-  email: string;
-  labLocation: string;
-  hviVersion: string;
-  reportNum: string;
-  lotNum: string;
-  customerName: string;
-  origin: string;
-  stations: string;
-  variety: string;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  testingInstrumentType?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
@@ -824,15 +905,24 @@ export type GetReportQuery = {
   id: string;
   name: string;
   samplesSenderName?: string | null;
-  email: string;
-  labLocation: string;
-  hviVersion: string;
-  reportNum: string;
-  lotNum: string;
-  customerName: string;
-  origin: string;
-  stations: string;
-  variety: string;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  testingInstrumentType?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
@@ -850,15 +940,24 @@ export type ListReportsQuery = {
     id: string;
     name: string;
     samplesSenderName?: string | null;
-    email: string;
-    labLocation: string;
-    hviVersion: string;
-    reportNum: string;
-    lotNum: string;
-    customerName: string;
-    origin: string;
-    stations: string;
-    variety: string;
+    email?: string | null;
+    labLocation?: string | null;
+    hviVersion?: string | null;
+    reportNum?: string | null;
+    lotNum?: string | null;
+    customerName?: string | null;
+    origin?: string | null;
+    stations?: string | null;
+    variety?: string | null;
+    testingInstrumentType?: string | null;
+    dateOfTesting?: string | null;
+    dateOfSampling?: string | null;
+    samplingParty?: string | null;
+    samplingLocation?: string | null;
+    samplingPercentage?: string | null;
+    vesselOrConveyance?: string | null;
+    cropYear?: string | null;
+    conveyanceRefNo?: string | null;
     invoiceNumber?: string | null;
     sellerName?: string | null;
     buyerName?: string | null;
@@ -878,15 +977,24 @@ export type ReportsByAttachmentUrlAndNameQuery = {
     id: string;
     name: string;
     samplesSenderName?: string | null;
-    email: string;
-    labLocation: string;
-    hviVersion: string;
-    reportNum: string;
-    lotNum: string;
-    customerName: string;
-    origin: string;
-    stations: string;
-    variety: string;
+    email?: string | null;
+    labLocation?: string | null;
+    hviVersion?: string | null;
+    reportNum?: string | null;
+    lotNum?: string | null;
+    customerName?: string | null;
+    origin?: string | null;
+    stations?: string | null;
+    variety?: string | null;
+    testingInstrumentType?: string | null;
+    dateOfTesting?: string | null;
+    dateOfSampling?: string | null;
+    samplingParty?: string | null;
+    samplingLocation?: string | null;
+    samplingPercentage?: string | null;
+    vesselOrConveyance?: string | null;
+    cropYear?: string | null;
+    conveyanceRefNo?: string | null;
     invoiceNumber?: string | null;
     sellerName?: string | null;
     buyerName?: string | null;
@@ -1025,15 +1133,24 @@ export type OnCreateReportSubscription = {
   id: string;
   name: string;
   samplesSenderName?: string | null;
-  email: string;
-  labLocation: string;
-  hviVersion: string;
-  reportNum: string;
-  lotNum: string;
-  customerName: string;
-  origin: string;
-  stations: string;
-  variety: string;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  testingInstrumentType?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
@@ -1049,15 +1166,24 @@ export type OnUpdateReportSubscription = {
   id: string;
   name: string;
   samplesSenderName?: string | null;
-  email: string;
-  labLocation: string;
-  hviVersion: string;
-  reportNum: string;
-  lotNum: string;
-  customerName: string;
-  origin: string;
-  stations: string;
-  variety: string;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  testingInstrumentType?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
@@ -1073,15 +1199,24 @@ export type OnDeleteReportSubscription = {
   id: string;
   name: string;
   samplesSenderName?: string | null;
-  email: string;
-  labLocation: string;
-  hviVersion: string;
-  reportNum: string;
-  lotNum: string;
-  customerName: string;
-  origin: string;
-  stations: string;
-  variety: string;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  testingInstrumentType?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
@@ -1298,6 +1433,15 @@ export class APIService {
           origin
           stations
           variety
+          testingInstrumentType
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
           invoiceNumber
           sellerName
           buyerName
@@ -1338,6 +1482,15 @@ export class APIService {
           origin
           stations
           variety
+          testingInstrumentType
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
           invoiceNumber
           sellerName
           buyerName
@@ -1378,6 +1531,15 @@ export class APIService {
           origin
           stations
           variety
+          testingInstrumentType
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
           invoiceNumber
           sellerName
           buyerName
@@ -1658,6 +1820,15 @@ export class APIService {
           origin
           stations
           variety
+          testingInstrumentType
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
           invoiceNumber
           sellerName
           buyerName
@@ -1698,6 +1869,15 @@ export class APIService {
             origin
             stations
             variety
+            testingInstrumentType
+            dateOfTesting
+            dateOfSampling
+            samplingParty
+            samplingLocation
+            samplingPercentage
+            vesselOrConveyance
+            cropYear
+            conveyanceRefNo
             invoiceNumber
             sellerName
             buyerName
@@ -1757,6 +1937,15 @@ export class APIService {
             origin
             stations
             variety
+            testingInstrumentType
+            dateOfTesting
+            dateOfSampling
+            samplingParty
+            samplingLocation
+            samplingPercentage
+            vesselOrConveyance
+            cropYear
+            conveyanceRefNo
             invoiceNumber
             sellerName
             buyerName
@@ -2073,6 +2262,15 @@ export class APIService {
           origin
           stations
           variety
+          testingInstrumentType
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
           invoiceNumber
           sellerName
           buyerName
@@ -2118,6 +2316,15 @@ export class APIService {
           origin
           stations
           variety
+          testingInstrumentType
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
           invoiceNumber
           sellerName
           buyerName
@@ -2163,6 +2370,15 @@ export class APIService {
           origin
           stations
           variety
+          testingInstrumentType
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
           invoiceNumber
           sellerName
           buyerName

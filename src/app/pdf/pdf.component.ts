@@ -237,24 +237,29 @@ export class PdfComponent implements OnInit {
     const {
       customerName,
       reportNum,
+      labLocation,
       stations,
       variety,
       invoiceNumber,
       sellerName,
       buyerName,
       lotNum,
+      testingInstrumentType,
+      dateOfTesting,
+      dateOfSampling,
+      samplingParty,
+      samplingLocation,
+      samplingPercentage,
+      vesselOrConveyance,
+      cropYear,
+      conveyanceRefNo,
       samplesSenderName,
       extractedRowsBody,
       numberOfSamples,
       createdAt,
       id,
     } = res;
-    console.log(
-      'extractedRowsBody',
-      extractedRowsBody,
-      'samplesSenderName',
-      samplesSenderName
-    );
+
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL(id);
 
     let qrImageProcessed = await this.getBase64ImageFromURL(qrImage);
@@ -276,7 +281,6 @@ export class PdfComponent implements OnInit {
 
       return date;
     };
-
     if (extractedRowsBody.length == 0) {
       this.displayStatus(false);
       // console.log('No data found', extractedRowsBody);
@@ -373,19 +377,19 @@ export class PdfComponent implements OnInit {
               ],
               [
                 'Lab / Ref No',
-                'N/A',
+                labLocation == '' ? 'N/A' : labLocation,
                 'Test Location',
                 testLocation == '' ? 'N/A' : testLocation,
               ],
               [
                 'Recipient / Customer name',
-                customerName,
+                customerName == '' ? 'N/A' : customerName,
                 'Testing Instrument type',
-                'N/A',
+                testingInstrumentType == '' ? 'N/A' : testingInstrumentType,
               ],
               [
                 'Client NumberClient Inv/Ref No. (As advised)',
-                invoiceNumber,
+                invoiceNumber == '' ? 'N/A' : invoiceNumber,
                 'Origin',
                 origin == '' ? 'N/A' : origin,
               ],
@@ -404,16 +408,33 @@ export class PdfComponent implements OnInit {
               ],
               [
                 'Vessel / Conveyance',
-                'N/A',
+                vesselOrConveyance == '' ? 'N/A' : vesselOrConveyance,
+
                 'Variety',
                 variety == '' ? 'N/A' : variety,
               ],
-              ['B/L or Conveyance  Ref  No.', 'N/A', 'Crop year', 'N/A'],
-              ['Sampling location', 'N/A', 'Date of sampling', 'N/A'],
-              ['Sampling %', 'N/A', 'Date of testing', 'N/A'],
+              [
+                'B/L or Conveyance  Ref  No.',
+                conveyanceRefNo == '' ? 'N/A' : conveyanceRefNo,
+
+                'Crop year',
+                cropYear == '' ? 'N/A' : cropYear,
+              ],
+              [
+                'Sampling location',
+                samplingLocation == '' ? 'N/A' : samplingLocation,
+                'Date of sampling',
+                dateOfSampling == '' ? formatedDate() : dateOfSampling,
+              ],
+              [
+                'Sampling %',
+                samplingPercentage == '' ? 'N/A' : samplingPercentage,
+                'Date of testing',
+                dateOfTesting == '' ? formatedDate() : dateOfTesting,
+              ],
               [
                 'Sampling party',
-                'N/A',
+                samplingParty == '' ? 'N/A' : samplingParty,
                 'Total sampling',
                 `${numberOfSamples} samples`,
               ],
@@ -478,10 +499,12 @@ export class PdfComponent implements OnInit {
                       width: 80,
                       text: `${address}, \nPh ${phone} \nFx ${fax}\nEm ${email}\n www.wiscontrol.com`,
                     },
-                    {
-                      width: 80,
-                      text: `${addressTranslation}, \nPh ${phone} \nFx ${fax}\nEm ${email}\n www.wiscontrol.com`,
-                    },
+                    this.selectedHviVersion !== 'v6'
+                      ? {
+                          width: 80,
+                          text: `${addressTranslation}, \nPh ${phone} \nFx ${fax}\nEm ${email}\n www.wiscontrol.com`,
+                        }
+                      : null,
                   ],
                 },
               ],
@@ -498,8 +521,10 @@ export class PdfComponent implements OnInit {
         (await this.stampImage) && {
           image: await this.stampImage,
           fit:
-            this.selectedHviVersion == 'v4' || this.selectedHviVersion == 'v6'
+            this.selectedHviVersion == 'v4'
               ? [500, 2800]
+              : this.selectedHviVersion == 'v6'
+              ? [500, 2800] //TBD change to fit to qr ode
               : [150, 150],
         },
         {
