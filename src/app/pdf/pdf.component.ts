@@ -420,13 +420,13 @@ export class PdfComponent implements OnInit {
 
               [
                 'Buyer name',
-                buyerName,
+                buyerName == '' ? 'N/A' : buyerName,
                 'Station(As advised)',
                 stations == '' ? 'N/A' : stations,
               ],
               [
                 'Seller name',
-                sellerName,
+                sellerName == '' ? 'N/A' : sellerName,
                 'Lot number',
                 lotNum == '' ? 'N/A' : lotNum,
               ],
@@ -521,11 +521,15 @@ export class PdfComponent implements OnInit {
                   columns: [
                     {
                       width: 80,
-                      text: `${address}, \nPh ${phone} \nFx ${fax}\nEm ${email}\n www.wiscontrol.com`,
+                      text: `${address}${
+                        this.selectedHviVersion === 'v5' ? `\nFx ${fax}` : ''
+                      }\nPh ${phone} \nEm ${email}\n www.wiscontrol.com`,
                     },
                     {
                       width: 80,
-                      text: `${addressTranslation}, \nPh ${phone} \nFx ${fax}\nEm ${email}\n www.wiscontrol.com`,
+                      text: `${addressTranslation}${
+                        this.selectedHviVersion === 'v5' ? `\nFx ${fax}` : ''
+                      }\nPh ${phone} \nEm ${email}\n www.wiscontrol.com`,
                     },
                   ],
                 },
