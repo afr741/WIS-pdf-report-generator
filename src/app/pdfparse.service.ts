@@ -912,8 +912,8 @@ export class PdfparseService {
       }
 
       // Filter and rename the column names in the header row.
-      const sortedColumns = Object.keys(masterObject).filter((key) =>
-        Object.values(columnMapping).includes(key)
+      const sortedColumns = Object.keys(masterObject).map((key) =>
+        Object.values(columnMapping).includes(key) ? key : key
       );
 
       // Process the data rows to match the sorted and filtered column names.
@@ -964,7 +964,8 @@ export class PdfparseService {
     function formatAndRoundResult(
       result: { headers: string[]; rows: Record<string, any>[] },
       roundToInteger: string[], // Columns to round to integer
-      roundToDecimal: string[] // Columns to round to 2 decimal points
+      roundOneDecimal: string[],
+      roundTwoDecimal: string[] // Columns to round to 2 decimal points
     ) {
       const { headers, rows } = result;
 
@@ -979,30 +980,42 @@ export class PdfparseService {
           if (value !== undefined && typeof value === 'number') {
             if (roundToInteger.includes(header)) {
               value = Math.round(value); // Round to integer
-            } else if (roundToDecimal.includes(header)) {
+            } else if (roundTwoDecimal.includes(header)) {
               value = value.toFixed(2); // Round to 2 decimal points
+            } else if (roundOneDecimal.includes(header)) {
+              value = value.toFixed(1); // Round to 2 decimal points
             }
           }
 
           // Replace undefined or missing values with "-"
           return value !== undefined ? String(value) : '-';
         });
-        formattedResult.push(formattedRow);
+        // Check if the length of the formattedRow is less than the headers length
+        // Check if most fields are undefined
+        const undefinedCount = formattedRow.filter(
+          (cell) => cell === '-'
+        ).length;
+        if (undefinedCount < headers.length * 0.7) {
+          // adjust the threshold as needed
+          formattedResult.push(formattedRow);
+        }
       });
 
       return formattedResult;
     }
 
-    const roundToInteger = ['SCI', 'SFI']; // Columns to round to integer
-    const roundToDecimal = ['Area', 'Len']; // Columns to round to 2 decimal points
+    const roundToInteger = ['SCI', 'TL']; // Columns to round to integer
+    const roundTwoDecimal = ['Area', 'Len'];
+    const roundOneDecimal = ['Rd', '+b', 'Unf', 'Str', 'SFI', 'ELG'];
 
     const extractedRowsBody = formatAndRoundResult(
       result,
       roundToInteger,
-      roundToDecimal
+      roundOneDecimal,
+      roundTwoDecimal
     );
     console.log('formattedOutput', extractedRowsBody);
-    const numberOfSamples = extractedRowsBody.length - 2;
+    const numberOfSamples = extractedRowsBody.length - 1;
 
     return {
       customerName,

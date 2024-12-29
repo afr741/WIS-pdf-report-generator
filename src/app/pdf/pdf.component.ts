@@ -295,8 +295,12 @@ export class PdfComponent implements OnInit {
     let localCompanyNameTranslation: any = 'N/A';
 
     let remarks: any = [
-      "a) The samples tested  will be stored for 3 months only, after which they will be disposed of at the Company's discretion, unless otherwise instructed.",
-      'b) Any comments and queries of results shown in this report should be made in writing within thirty days of the Report Date as shown above.',
+      `a) The samples tested  will be stored for ${
+        this.selectedHviVersion == 'v6' ? 'one Week' : '3 months'
+      } only, after which they will be disposed of at the Company's discretion, unless otherwise instructed.`,
+      `b) Any comments and queries of results shown in this report should be made in writing within ${
+        this.selectedHviVersion == 'v6' ? '2' : 'thirty'
+      } days of the Report Date as shown above.`,
       'c) The report shall not be used for Litigation or publicity.',
       'd) This report reflects the result of tests carried out on samples submitted to us by party listed above and tested on tye dates and location listed above.',
     ];
@@ -321,7 +325,7 @@ export class PdfComponent implements OnInit {
       // testConditionsList = this.activeTemplateInfo.testConditionsList;
     }
     let columnLength = extractedRowsBody[0].length;
-    let selectedColumnWidth = this.selectedHviVersion === 'v5' ? 25 : 22;
+    let selectedColumnWidth = 18;
     let columnWidthArray = columnLength
       ? Array(columnLength).fill(selectedColumnWidth)
       : [];
@@ -354,6 +358,26 @@ export class PdfComponent implements OnInit {
 
     let docDefinition = {
       pageSize: 'A4',
+      footer: (currentPage: any, pageCount: any) => {
+        var t = {
+          layout: 'noBorders',
+          fontSize: 6,
+          margin: [25, 0, 25, 0],
+          table: {
+            widths: ['*', '*'],
+            body: [
+              [
+                {
+                  text: 'Page  ' + currentPage.toString() + ' of ' + pageCount,
+                },
+              ],
+            ],
+          },
+        };
+
+        return t;
+      },
+      margin: [5, 0, 5, 0],
 
       content: [
         this.letterHeadImage && {
@@ -499,12 +523,10 @@ export class PdfComponent implements OnInit {
                       width: 80,
                       text: `${address}, \nPh ${phone} \nFx ${fax}\nEm ${email}\n www.wiscontrol.com`,
                     },
-                    this.selectedHviVersion !== 'v6'
-                      ? {
-                          width: 80,
-                          text: `${addressTranslation}, \nPh ${phone} \nFx ${fax}\nEm ${email}\n www.wiscontrol.com`,
-                        }
-                      : null,
+                    {
+                      width: 80,
+                      text: `${addressTranslation}, \nPh ${phone} \nFx ${fax}\nEm ${email}\n www.wiscontrol.com`,
+                    },
                   ],
                 },
               ],
@@ -512,23 +534,40 @@ export class PdfComponent implements OnInit {
           },
           layout: 'noBorders',
         },
+        this.selectedHviVersion == 'v6'
+          ? {
+              columns: [
+                (await this.stampImage) && {
+                  image: await this.stampImage,
+                  fit: [300, 900], //TBD change to fit to qr ode
+                },
+                {
+                  link: qrURL,
+                  image: await qrImageProcessed,
+                  fit: [90, 90],
+                  x: 100,
+                },
+              ],
+            }
+          : null,
+
+        this.selectedHviVersion !== 'v6'
+          ? {
+              link: qrURL,
+              image: await qrImageProcessed,
+              fit: [90, 90],
+              x: 430,
+            }
+          : null,
+
+        (await this.stampImage) && this.selectedHviVersion !== 'v6'
+          ? {
+              image: await this.stampImage,
+              fit: this.selectedHviVersion == 'v4' ? [500, 2800] : [150, 150],
+            }
+          : null,
         {
-          link: qrURL,
-          image: await qrImageProcessed,
-          fit: [90, 90],
-          x: 430,
-        },
-        (await this.stampImage) && {
-          image: await this.stampImage,
-          fit:
-            this.selectedHviVersion == 'v4'
-              ? [500, 2800]
-              : this.selectedHviVersion == 'v6'
-              ? [500, 2800] //TBD change to fit to qr ode
-              : [150, 150],
-        },
-        {
-          text: "- This is a PDF report including a QR Code for verification purposes, however as PDF is not 100% secure from being amended after issuance of the original. If you have not received this report directly from the WIS company who's name appears in the letterhead and you wish to verify the contents, please contact info@wiscontrol.com",
+          text: "* This is a PDF report including a QR Code for verification purposes, however as PDF is not 100% secure from being amended after issuance of the original. If you have not received this report directly from the WIS company who's name appears in the letterhead and you wish to verify the contents, please contact info@wiscontrol.com",
           style: 'qrCodeDisclaimer',
         },
       ],
@@ -556,6 +595,7 @@ export class PdfComponent implements OnInit {
           fontSize: 8,
         },
         qrCodeDisclaimer: {
+          margin: [0, 10],
           fontSize: 8,
         },
         remarksHeader: {
@@ -622,7 +662,7 @@ export class PdfComponent implements OnInit {
       setTimeout(() => {
         pdfMake
           .createPdf(this.pdfData, undefined, undefined, pdfFonts.pdfMake.vfs)
-          .download();
+          .download(`${dataItem.reportNum}-${dataItem.customerName}.pdf`);
         this.isButtonDisabled = false;
       }, 2000);
     });
