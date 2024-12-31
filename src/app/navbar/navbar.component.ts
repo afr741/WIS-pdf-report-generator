@@ -32,8 +32,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public isManagerUp: boolean = false;
 
   // public wisLogo: any = logo;
-  public kendokaAvatar: any =
-    'https://www.telerik.com/kendo-angular-ui-develop/components/navigation/appbar/assets/kendoka-angular.png';
+  public kendokaAvatar: any = '../../assets/images/settings.svg';
   public sectionName: string = '';
   public wislogo: any;
   public labNameList = [];
@@ -48,6 +47,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public async ngOnInit() {
     this.setSectionName(this.router.url);
 
+    this.wislogo = routeData[3].icon;
+
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
         this.setSectionName(event.url);
@@ -55,7 +56,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.wislogo = routeData.filter(
           (item) => item.routeId === navUrl
         )[0].icon;
-        console.log('route', this.router, 'kendokaAvatar', this.kendokaAvatar);
+        console.log('route', this.router);
       }
     });
 

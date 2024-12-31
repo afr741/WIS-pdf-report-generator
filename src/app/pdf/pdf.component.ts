@@ -668,7 +668,7 @@ export class PdfComponent implements OnInit {
         },
         contactsColumns: {
           fontSize: 6,
-          margin: [20, 0],
+          margin: [0, 0],
         },
       },
     };
