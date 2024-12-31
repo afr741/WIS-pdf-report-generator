@@ -40,6 +40,7 @@ export class PdfComponent implements OnInit {
   public isManagerUp: boolean = false;
   public isSuperUser: boolean = false;
   public isButtonDisabled: boolean = false;
+  public customFonts: any;
 
   private updateUserPreferenceSubscription: ZenObservable.Subscription | null =
     null;
@@ -54,7 +55,14 @@ export class PdfComponent implements OnInit {
     private notificationService: NotificationService,
     private authService: AuthService,
     private pdfService: PdfparseService
-  ) {}
+  ) {
+    (pdfMake as any).fonts = {
+      NotoSansSC: {
+        normal: `${window.location.origin}/assets/fonts/Noto_Sans_SC/static/NotoSansSC-Regular.ttf`,
+        bold: `${window.location.origin}/assets/fonts/Noto_Sans_SC/static/NotoSansSC-Bold.ttf`,
+      },
+    };
+  }
 
   ngOnInit() {
     this.isLoading = true;
@@ -260,6 +268,16 @@ export class PdfComponent implements OnInit {
       id,
     } = res;
 
+    console.log(
+      'samplingparty',
+      samplingParty,
+      'samplingLocation',
+      samplingLocation,
+      'samplingPercentage',
+      samplingPercentage,
+      'vesselOrConveyance',
+      vesselOrConveyance
+    );
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL(id);
 
     let qrImageProcessed = await this.getBase64ImageFromURL(qrImage);
@@ -295,22 +313,22 @@ export class PdfComponent implements OnInit {
     let localCompanyNameTranslation: any = 'N/A';
 
     let remarks: any = [
-      `a) The samples tested  will be stored for ${
-        this.selectedHviVersion == 'v6' ? 'one Week' : '3 months'
+      `a) The samples tested will be stored for ${
+        this.selectedHviVersion == 'v6' ? 'one week' : '3 months'
       } only, after which they will be disposed of at the Company's discretion, unless otherwise instructed.`,
       `b) Any comments and queries of results shown in this report should be made in writing within ${
         this.selectedHviVersion == 'v6' ? '2' : 'thirty'
       } days of the Report Date as shown above.`,
-      'c) The report shall not be used for Litigation or publicity.',
-      'd) This report reflects the result of tests carried out on samples submitted to us by party listed above and tested on tye dates and location listed above.',
+      'c) The report shall not be used for litigation or publicity.',
+      'd) This report reflects the results of tests carried out on samples submitted to us by the party listed above and tested on the dates and location listed above.',
     ];
     let testConditionsList: any = [
-      'The tests were made under the conditions laid down in the Guideline for Instrument Testing of Cotton, published by; ICAC Task Force on  commercial Standardization of Instrument Testing of Cotton (CSITC) and ITMF International Committee on Cotton Testing Methods (ICCTM)',
-      '1) Universal HVI Standards for Upland Cotton',
-      '2) A laboratory temperature of 21° +/- 1° C',
-      '3) A relative humidity of 65 +/- 2%',
-      '4) A sample moisture level between 6.75% and 8.25%',
-      '5) Standard instrument tolerance applicable',
+      'The tests were made under the conditions laid down in the Guideline for Instrument Testing of Cotton, published by the ICAC Task Force on Commercial Standardization of Instrument Testing of Cotton (CSITC) and the ITMF International Committee on Cotton Testing Methods (ICCTM).',
+      '1. Universal HVI Standards for Upland Cotton',
+      '2. A laboratory temperature of 21° +/- 1° C',
+      '3. A relative humidity of 65 +/- 2%',
+      '4. A sample moisture level between 6.75% and 8.25%',
+      '5. Standard instrument tolerance applicable',
     ];
     if (this.activeTemplateInfo) {
       phone = this.activeTemplateInfo.phone;
@@ -325,7 +343,7 @@ export class PdfComponent implements OnInit {
       // testConditionsList = this.activeTemplateInfo.testConditionsList;
     }
     let columnLength = extractedRowsBody[0].length;
-    let selectedColumnWidth = 18;
+    let selectedColumnWidth = this.selectedHviVersion == 'v4' ? 16 : 18;
     let columnWidthArray = columnLength
       ? Array(columnLength).fill(selectedColumnWidth)
       : [];
@@ -337,27 +355,28 @@ export class PdfComponent implements OnInit {
             if (itemInnerInner[0].text) {
               return {
                 text: itemInnerInner.text || itemInnerInner,
-                width: 100,
-                _minWidth: 100,
+                width: 90,
+                _minWidth: 90,
               };
             } else {
-              return { text: itemInnerInner, width: 100, _maxWidth: 100 };
+              return { text: itemInnerInner, width: 90, _maxWidth: 90 };
             }
           });
         } else if (typeof itemInner === 'object') {
           return {
             text: itemInner.text || itemInner,
-            width: 100,
-            _maxWidth: 100,
+            width: 90,
+            _maxWidth: 90,
           };
         } else {
-          return { text: itemInner, width: 100, _maxWidth: 100 };
+          return { text: itemInner, width: 90, _maxWidth: 90 };
         }
       });
     });
 
     let docDefinition = {
       pageSize: 'A4',
+
       footer: (currentPage: any, pageCount: any) => {
         var t = {
           layout: 'noBorders',
@@ -395,70 +414,91 @@ export class PdfComponent implements OnInit {
             body: [
               [
                 'CI / Report Number',
-                reportNum == '' ? 'N/A' : reportNum,
+                reportNum == '' || reportNum == null ? 'N/A' : reportNum,
                 'Report Date',
                 formatedDate(),
               ],
               [
                 'Lab / Ref No',
-                labLocation == '' ? 'N/A' : labLocation,
+                labLocation == '' || labLocation == null ? 'N/A' : labLocation,
                 'Test Location',
-                testLocation == '' ? 'N/A' : testLocation,
+                testLocation == '' || testLocation == null
+                  ? 'N/A'
+                  : testLocation,
               ],
               [
                 'Recipient / Customer name',
-                customerName == '' ? 'N/A' : customerName,
+                customerName == '' || customerName == null
+                  ? 'N/A'
+                  : customerName,
                 'Testing Instrument type',
-                testingInstrumentType == '' ? 'N/A' : testingInstrumentType,
+                testingInstrumentType == '' || testingInstrumentType == null
+                  ? 'N/A'
+                  : testingInstrumentType,
               ],
               [
-                'Client NumberClient Inv/Ref No. (As advised)',
-                invoiceNumber == '' ? 'N/A' : invoiceNumber,
+                'Client Inv/Ref No. (As advised)',
+                invoiceNumber == '' || invoiceNumber == null
+                  ? 'N/A'
+                  : invoiceNumber,
                 'Origin',
-                origin == '' ? 'N/A' : origin,
+                origin == '' || origin == null ? 'N/A' : origin,
               ],
-
               [
                 'Buyer name',
-                buyerName == '' ? 'N/A' : buyerName,
+                buyerName == '' || buyerName == null ? 'N/A' : buyerName,
                 'Station(As advised)',
-                stations == '' ? 'N/A' : stations,
+                stations == '' || stations == null ? 'N/A' : stations,
               ],
               [
                 'Seller name',
-                sellerName == '' ? 'N/A' : sellerName,
+                sellerName == '' || sellerName == null ? 'N/A' : sellerName,
                 'Lot number',
-                lotNum == '' ? 'N/A' : lotNum,
+                lotNum == '' || lotNum == null ? 'N/A' : lotNum,
               ],
               [
                 'Vessel / Conveyance',
-                vesselOrConveyance == '' ? 'N/A' : vesselOrConveyance,
+                vesselOrConveyance == '' || vesselOrConveyance == null
+                  ? 'N/A'
+                  : vesselOrConveyance,
 
                 'Variety',
-                variety == '' ? 'N/A' : variety,
+                variety == '' || variety == null ? 'N/A' : variety,
               ],
               [
                 'B/L or Conveyance  Ref  No.',
-                conveyanceRefNo == '' ? 'N/A' : conveyanceRefNo,
+                conveyanceRefNo == '' || conveyanceRefNo == null
+                  ? 'N/A'
+                  : conveyanceRefNo,
 
                 'Crop year',
-                cropYear == '' ? 'N/A' : cropYear,
+                cropYear == '' || cropYear == null ? 'N/A' : cropYear,
               ],
               [
                 'Sampling location',
-                samplingLocation == '' ? 'N/A' : samplingLocation,
+                samplingLocation == '' || samplingLocation == null
+                  ? 'N/A'
+                  : samplingLocation,
                 'Date of sampling',
-                dateOfSampling == '' ? formatedDate() : dateOfSampling,
+                dateOfSampling == '' || dateOfSampling == null
+                  ? formatedDate()
+                  : dateOfSampling,
               ],
               [
                 'Sampling %',
-                samplingPercentage == '' ? 'N/A' : samplingPercentage,
+                samplingPercentage == '' || samplingPercentage == null
+                  ? 'N/A'
+                  : samplingPercentage,
                 'Date of testing',
-                dateOfTesting == '' ? formatedDate() : dateOfTesting,
+                dateOfTesting == '' || dateOfTesting == null
+                  ? formatedDate()
+                  : dateOfTesting,
               ],
               [
                 'Sampling party',
-                samplingParty == '' ? 'N/A' : samplingParty,
+                samplingParty == '' || samplingParty == null
+                  ? 'N/A'
+                  : samplingParty,
                 'Total sampling',
                 `${numberOfSamples} samples`,
               ],
@@ -520,17 +560,21 @@ export class PdfComponent implements OnInit {
                   style: 'contactsColumns',
                   columns: [
                     {
-                      width: 80,
+                      width: 90,
                       text: `${address}${
-                        this.selectedHviVersion === 'v5' ? `\nFx ${fax}` : ''
+                        this.selectedHviVersion !== 'v5' ? `\nFx ${fax}` : ''
                       }\nPh ${phone} \nEm ${email}\n www.wiscontrol.com`,
                     },
-                    {
-                      width: 80,
-                      text: `${addressTranslation}${
-                        this.selectedHviVersion === 'v5' ? `\nFx ${fax}` : ''
-                      }\nPh ${phone} \nEm ${email}\n www.wiscontrol.com`,
-                    },
+                    this.selectedHviVersion !== 'v6'
+                      ? {
+                          width: 90,
+                          text: `${addressTranslation}${
+                            this.selectedHviVersion !== 'v5'
+                              ? `\nFx ${fax}`
+                              : ''
+                          }\nPh ${phone} \nEm ${email}\n www.wiscontrol.com`,
+                        }
+                      : null,
                   ],
                 },
               ],
@@ -538,48 +582,52 @@ export class PdfComponent implements OnInit {
           },
           layout: 'noBorders',
         },
-        this.selectedHviVersion == 'v6'
-          ? {
-              columns: [
-                (await this.stampImage) && {
-                  image: await this.stampImage,
-                  fit: [300, 900], //TBD change to fit to qr ode
-                },
-                {
-                  link: qrURL,
-                  image: await qrImageProcessed,
-                  fit: [90, 90],
-                  x: 100,
-                },
-              ],
-            }
-          : null,
-
-        this.selectedHviVersion !== 'v6'
-          ? {
+        {
+          style: 'stampAndQR',
+          columns: [
+            (await this.stampImage) && {
+              image: await this.stampImage,
+              fit: [300, 900], //TBD change to fit to qr ode
+            },
+            {
               link: qrURL,
               image: await qrImageProcessed,
               fit: [90, 90],
-              x: 430,
-            }
-          : null,
+              x: 100,
+            },
+          ],
+        },
+        // : null,
 
-        (await this.stampImage) && this.selectedHviVersion !== 'v6'
-          ? {
-              image: await this.stampImage,
-              fit: this.selectedHviVersion == 'v4' ? [500, 2800] : [150, 150],
-            }
-          : null,
+        // this.selectedHviVersion !== 'v6'
+        //   ? {
+        //       link: qrURL,
+        //       image: await qrImageProcessed,
+        //       fit: [90, 90],
+        //       x: 430,
+        //     }
+        //   : null,
+
+        // (await this.stampImage) && this.selectedHviVersion !== 'v6'
+        //   ? {
+        //       image: await this.stampImage,
+        //       fit: this.selectedHviVersion == 'v4' ? [500, 2800] : [150, 150],
+        //     }
+        //   : null,
         {
           text: "* This is a PDF report including a QR Code for verification purposes, however as PDF is not 100% secure from being amended after issuance of the original. If you have not received this report directly from the WIS company who's name appears in the letterhead and you wish to verify the contents, please contact info@wiscontrol.com",
           style: 'qrCodeDisclaimer',
         },
       ],
+      defaultStyle: {
+        font: 'NotoSansSC',
+      },
       styles: {
         header: {
           fontSize: 14,
           alignment: 'center',
         },
+        columnGap: 10,
         headerData: {
           fontSize: 8,
           margin: [0, 10, 0, 10],
@@ -620,6 +668,7 @@ export class PdfComponent implements OnInit {
         },
         contactsColumns: {
           fontSize: 6,
+          margin: [20, 0],
         },
       },
     };
@@ -649,7 +698,7 @@ export class PdfComponent implements OnInit {
         this.isButtonDisabled = true;
         setTimeout(() => {
           pdfMake
-            .createPdf(this.pdfData, undefined, undefined, pdfFonts.pdfMake.vfs)
+            .createPdf(this.pdfData, undefined, undefined, this.customFonts)
             .open();
           this.isButtonDisabled = false;
         }, 2000);
@@ -665,7 +714,7 @@ export class PdfComponent implements OnInit {
 
       setTimeout(() => {
         pdfMake
-          .createPdf(this.pdfData, undefined, undefined, pdfFonts.pdfMake.vfs)
+          .createPdf(this.pdfData, undefined, undefined, this.customFonts)
           .download(`${dataItem.reportNum}-${dataItem.customerName}.pdf`);
         this.isButtonDisabled = false;
       }, 2000);

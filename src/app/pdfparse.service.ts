@@ -374,19 +374,19 @@ export class PdfparseService {
 
     const masterObject = {
       'No.': ['No', 'No.', 'Sample Count'],
-      'S.B. No.': [],
-      'P.R No.': [],
+      'S.B. No.': ['S.B. No.'],
+      'P.R No.': ['P.R No.'],
       'HVI ID No': ['Gin Code'],
-      'Cont./Mark/Lot No': [
+      Container: ['Container'],
+      'Mark/Lot No': [
         'Lot',
         'Lot No.',
         'Lot ID',
         'Mark',
         'Mark No.',
         'Gin Bale Number',
-        'Container',
       ],
-      'Bale/Sample No.': ['Bale No.', 'Sample No.', 'Bale ID'],
+      'Bale/Sample No.': ['Bale No.', 'Sample No.', 'Bale ID', 'Bale '],
       SCI: ['SCI'],
       Mic: ['Mic'],
       Rd: ['Rd'],
@@ -400,7 +400,7 @@ export class PdfparseService {
       Str: ['Str', 'Strength'],
       SFI: ['SFI'],
       ELG: ['ELG', 'Elongation', 'Elonga-\ntion', 'Elonga-\r\ntion'],
-      Remarks: [],
+      Remarks: ['Remarks'],
     };
 
     type MasterObject = Record<string, string[]>;
@@ -454,8 +454,8 @@ export class PdfparseService {
       }
 
       // Filter and rename the column names in the header row.
-      const sortedColumns = Object.keys(masterObject).filter((key) =>
-        Object.values(columnMapping).includes(key)
+      const sortedColumns = Object.keys(masterObject).map((key) =>
+        Object.values(columnMapping).includes(key) ? key : key
       );
 
       // Process the data rows to match the sorted and filtered column names.
@@ -480,8 +480,9 @@ export class PdfparseService {
 
     function formatAndRoundResult(
       result: { headers: string[]; rows: Record<string, any>[] },
-      roundToInteger: string[], // Columns to round to integer
-      roundTo1Decimal: string[] // Columns to round to 2 decimal points
+      roundToInteger: string[],
+      roundOneDecimal: string[],
+      roundTwoDecimal: string[]
     ) {
       const { headers, rows } = result;
 
@@ -496,9 +497,9 @@ export class PdfparseService {
           if (value !== undefined && typeof value === 'number') {
             if (roundToInteger.includes(header)) {
               value = Math.round(value); // Round to integer
-            } else if (roundTo1Decimal.includes(header)) {
+            } else if (roundOneDecimal.includes(header)) {
               value = value.toFixed(1); // Round to 2 decimal points
-            } else {
+            } else if (roundTwoDecimal.includes(header)) {
               value = value.toFixed(2);
             }
           }
@@ -512,13 +513,15 @@ export class PdfparseService {
       return formattedResult;
     }
 
-    const roundToInteger = ['SFI', 'No.', 'T.L', 'Cnt']; // Columns to round to integer
-    const roundTo1Decimal = ['+b']; // Columns to round to 1 decimal points
+    const roundToInteger = ['SCI', 'TL']; // Columns to round to integer
+    const roundTwoDecimal = ['Area', 'Len', 'Mic'];
+    const roundOneDecimal = ['Rd', '+b', 'Unf', 'Str', 'SFI', 'ELG'];
 
     const extractedRowsBody = formatAndRoundResult(
       result,
       roundToInteger,
-      roundTo1Decimal
+      roundOneDecimal,
+      roundTwoDecimal
     );
     console.log('formattedOutput', extractedRowsBody);
     const numberOfSamples = extractedRowsBody.length - 2;
@@ -731,8 +734,8 @@ export class PdfparseService {
       }
 
       // Filter and rename the column names in the header row.
-      const sortedColumns = Object.keys(masterObject).filter((key) =>
-        Object.values(columnMapping).includes(key)
+      const sortedColumns = Object.keys(masterObject).map((key) =>
+        Object.values(columnMapping).includes(key) ? key : key
       );
       console.log(
         'sortedColumns',
@@ -766,8 +769,9 @@ export class PdfparseService {
 
     function formatAndRoundResult(
       result: { headers: string[]; rows: Record<string, any>[] },
-      roundToInteger: string[], // Columns to round to integer
-      roundToDecimal: string[] // Columns to round to 2 decimal points
+      roundToInteger: string[],
+      roundOneDecimal: string[],
+      roundTwoDecimal: string[]
     ) {
       const { headers, rows } = result;
 
@@ -784,9 +788,9 @@ export class PdfparseService {
           if (value !== undefined && typeof value === 'number') {
             if (roundToInteger.includes(header)) {
               value = Math.round(value); // Round to integer
-            } else if (roundTo1Decimal.includes(header)) {
+            } else if (roundOneDecimal.includes(header)) {
               value = value.toFixed(1); // Round to 2 decimal points
-            } else {
+            } else if (roundTwoDecimal.includes(header)) {
               value = value.toFixed(2);
             }
           }
@@ -800,13 +804,15 @@ export class PdfparseService {
       return formattedResult;
     }
 
-    const roundToInteger = ['SFI', 'No.', 'T.L', 'Cnt', 'Remarks']; // Columns to round to integer
-    const roundTo1Decimal = ['+b']; // Columns to round to 1 decimal points
+    const roundToInteger = ['SCI', 'TL']; // Columns to round to integer
+    const roundTwoDecimal = ['Area', 'Len', 'Mic'];
+    const roundOneDecimal = ['Rd', '+b', 'Unf', 'Str', 'SFI', 'ELG'];
 
     const extractedRowsBody = formatAndRoundResult(
       result,
       roundToInteger,
-      roundTo1Decimal
+      roundOneDecimal,
+      roundTwoDecimal
     );
     console.log('formattedOutput', extractedRowsBody);
     const numberOfSamples = extractedRowsBody.length - 2;
@@ -1005,7 +1011,7 @@ export class PdfparseService {
     }
 
     const roundToInteger = ['SCI', 'TL']; // Columns to round to integer
-    const roundTwoDecimal = ['Area', 'Len'];
+    const roundTwoDecimal = ['Area', 'Len', 'Mic'];
     const roundOneDecimal = ['Rd', '+b', 'Unf', 'Str', 'SFI', 'ELG'];
 
     const extractedRowsBody = formatAndRoundResult(

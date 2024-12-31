@@ -80,15 +80,17 @@
           ></kendo-textbox>
           <kendo-formerror> phone is required</kendo-formerror>
         </kendo-formfield>
-        <kendo-formfield>
-          <kendo-label labelCssClass="k-form-label" text="fax" />
-          <kendo-textbox
-            formControlName="fax"
-            #fax
-            placeholder="Enter the fax number"
-          ></kendo-textbox>
-          <kendo-formerror> fax is required</kendo-formerror>
-        </kendo-formfield>
+        <ng-container *ngIf="selectedHviVersion === 'v5'">
+          <kendo-formfield>
+            <kendo-label labelCssClass="k-form-label" text="fax" />
+            <kendo-textbox
+              formControlName="fax"
+              #fax
+              placeholder="Enter the fax number"
+            ></kendo-textbox>
+            <kendo-formerror> fax is required</kendo-formerror>
+          </kendo-formfield>
+        </ng-container>
 
         <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="email" />
