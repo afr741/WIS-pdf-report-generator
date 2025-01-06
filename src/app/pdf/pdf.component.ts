@@ -313,12 +313,8 @@ export class PdfComponent implements OnInit {
     let localCompanyNameTranslation: any = 'N/A';
 
     let remarks: any = [
-      `a) The samples tested will be stored for ${
-        this.selectedHviVersion == 'v6' ? 'one week' : '3 months'
-      } only, after which they will be disposed of at the Company's discretion, unless otherwise instructed.`,
-      `b) Any comments and queries of results shown in this report should be made in writing within ${
-        this.selectedHviVersion == 'v6' ? '2' : 'thirty'
-      } days of the Report Date as shown above.`,
+      `a) The samples tested will be stored for 3 months only, after which they will be disposed of at the Company's discretion, unless otherwise instructed.`,
+      `b) Any comments and queries of results shown in this report should be made in writing within thirty days of the Report Date as shown above.`,
       'c) The report shall not be used for litigation or publicity.',
       'd) This report reflects the results of tests carried out on samples submitted to us by the party listed above and tested on the dates and location listed above.',
     ];
@@ -360,11 +356,16 @@ export class PdfComponent implements OnInit {
             2: 42, // Pr.No
             3: 28, // HVI id
             4: 54, // Cont/mark/lot no
-            5: 28,
+            5: 28, // Bale/Bale/Sample No.
             19: 54, //Remarks
           }
         : isLandscapeMode && this.selectedHviVersion === 'v4'
-        ? { 0: 35, 5: 42, 6: 54, 19: 30 }
+        ? {
+            0: 35, // No./Average
+            5: 42, // Mark/Lot no
+            6: 54, // Bale/Sample No
+            19: 30, // Remarks
+          }
         : {};
     columnWidthArray = columnWidthArray.map((width, index) => {
       return customColumnWidths[index] || width;
