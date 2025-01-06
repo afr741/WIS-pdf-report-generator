@@ -342,11 +342,33 @@ export class PdfComponent implements OnInit {
       // remarks = this.activeTemplateInfo.remarksList;
       // testConditionsList = this.activeTemplateInfo.testConditionsList;
     }
+    const isLandscapeMode =
+      this.selectedHviVersion == 'v6' || this.selectedHviVersion == 'v4';
     let columnLength = extractedRowsBody[0].length;
-    let selectedColumnWidth = this.selectedHviVersion == 'v4' ? 16 : 18;
+
+    let selectedColumnWidth = isLandscapeMode
+      ? 24
+      : this.selectedHviVersion == 'v4'
+      ? 16
+      : 18;
     let columnWidthArray = columnLength
       ? Array(columnLength).fill(selectedColumnWidth)
       : [];
+    const customColumnWidths: any =
+      isLandscapeMode && this.selectedHviVersion === 'v6'
+        ? {
+            2: 42, // Pr.No
+            3: 28, // HVI id
+            4: 54, // Cont/mark/lot no
+            5: 28,
+            19: 54, //Remarks
+          }
+        : isLandscapeMode && this.selectedHviVersion === 'v4'
+        ? { 0: 35, 5: 42, 6: 54, 19: 30 }
+        : {};
+    columnWidthArray = columnWidthArray.map((width, index) => {
+      return customColumnWidths[index] || width;
+    });
     const modifiedBody = extractedRowsBody.map((item: any) => {
       // console.log('item', item);
       return item.map((itemInner: any) => {
@@ -376,11 +398,12 @@ export class PdfComponent implements OnInit {
 
     let docDefinition = {
       pageSize: 'A4',
+      pageOrientation: isLandscapeMode ? 'landscape' : 'portrait',
 
       footer: (currentPage: any, pageCount: any) => {
         var t = {
           layout: 'noBorders',
-          fontSize: 6,
+          fontSize: isLandscapeMode ? 8 : 6,
           margin: [25, 0, 25, 0],
           table: {
             widths: ['*', '*'],
@@ -400,7 +423,7 @@ export class PdfComponent implements OnInit {
 
       content: [
         this.letterHeadImage && {
-          width: 500,
+          width: isLandscapeMode ? 750 : 500,
           margin: [0, 10],
           image: await this.letterHeadImage,
         },
@@ -410,7 +433,8 @@ export class PdfComponent implements OnInit {
           layout: 'noBorders',
 
           table: {
-            widths: [90, 163, 85, 200],
+            widths: isLandscapeMode ? [100, 250, 100, 300] : [90, 163, 85, 200],
+
             body: [
               [
                 'CI / Report Number',
@@ -529,11 +553,12 @@ export class PdfComponent implements OnInit {
           },
         },
 
-        { text: '\n\nRemarks', style: 'remarksHeader' },
+        { text: '\n\nRemarks', style: 'remarksHeader', pageBreak: 'before' },
         remarks.length && {
           style: 'remarksBullets',
           layout: 'noBorders',
           table: {
+            width: 500,
             body: remarks.map((item: any) => [item]),
           },
         },
@@ -543,6 +568,7 @@ export class PdfComponent implements OnInit {
           style: 'remarksBullets',
           layout: 'noBorders',
           table: {
+            width: 500,
             body: testConditionsList.map((item: any) => [item]),
           },
         },
@@ -597,23 +623,7 @@ export class PdfComponent implements OnInit {
             },
           ],
         },
-        // : null,
 
-        // this.selectedHviVersion !== 'v6'
-        //   ? {
-        //       link: qrURL,
-        //       image: await qrImageProcessed,
-        //       fit: [90, 90],
-        //       x: 430,
-        //     }
-        //   : null,
-
-        // (await this.stampImage) && this.selectedHviVersion !== 'v6'
-        //   ? {
-        //       image: await this.stampImage,
-        //       fit: this.selectedHviVersion == 'v4' ? [500, 2800] : [150, 150],
-        //     }
-        //   : null,
         {
           text: "* This is a PDF report including a QR Code for verification purposes, however as PDF is not 100% secure from being amended after issuance of the original. If you have not received this report directly from the WIS company who's name appears in the letterhead and you wish to verify the contents, please contact info@wiscontrol.com",
           style: 'qrCodeDisclaimer',
@@ -641,7 +651,7 @@ export class PdfComponent implements OnInit {
         },
         dataTable: {
           margin: [0, 1],
-          fontSize: 6,
+          fontSize: isLandscapeMode ? 8 : 6,
         },
         qrCodeText: {
           fontSize: 8,
