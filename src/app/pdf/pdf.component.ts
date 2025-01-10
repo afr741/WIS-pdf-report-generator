@@ -364,7 +364,7 @@ export class PdfComponent implements OnInit {
             0: 35, // No./Average
             5: 42, // Mark/Lot no
             6: 54, // Bale/Sample No
-            19: 30, // Remarks
+            20: 54, // Remarks
           }
         : {};
     columnWidthArray = columnWidthArray.map((width, index) => {
