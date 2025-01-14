@@ -5,7 +5,7 @@ import { AuthService } from '../AuthService';
 import * as CryptoJS from 'crypto-js';
 import { APIService, Report, ReportTemplate } from '../API.service';
 import { PdfparseService } from '../pdfparse.service';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import * as QRCode from 'qrcode';
 import { Storage } from 'aws-amplify';
 import { ZenObservable } from 'zen-observable-ts';
@@ -35,8 +35,12 @@ export class PdfComponent implements OnInit {
   public error: string | null = null;
   public letterHeadPreviewUrl: string = '';
   public stampPreviewUrl: string = '';
+  public certificationImagePreviewUrl: string = '';
+
   public letterHeadImage: any = null;
   public stampImage: any = null;
+  public certificationImage: any = null;
+
   public isManagerUp: boolean = false;
   public isSuperUser: boolean = false;
   public isButtonDisabled: boolean = false;
@@ -186,6 +190,14 @@ export class PdfComponent implements OnInit {
         );
         this.stampImage = await this.getBase64ImageFromURL(
           this.stampPreviewUrl
+        );
+      }
+      if (this.activeTemplateInfo.certificationImageTop) {
+        this.certificationImagePreviewUrl = await Storage.get(
+          this.activeTemplateInfo.certificationImageTop
+        );
+        this.certificationImage = await this.getBase64ImageFromURL(
+          this.certificationImagePreviewUrl
         );
       }
     }
@@ -400,7 +412,7 @@ export class PdfComponent implements OnInit {
     let docDefinition = {
       pageSize: 'A4',
       pageOrientation: isLandscapeMode ? 'landscape' : 'portrait',
-
+      margin: [-20, 0],
       footer: (currentPage: any, pageCount: any) => {
         var t = {
           layout: 'noBorders',
@@ -420,12 +432,11 @@ export class PdfComponent implements OnInit {
 
         return t;
       },
-      margin: [5, 0, 5, 0],
 
       content: [
         this.letterHeadImage && {
           width: isLandscapeMode ? 750 : 500,
-          margin: [0, 10],
+          // margin: [0, 10],
           image: await this.letterHeadImage,
         },
         { text: 'S.I.T.C. Report', style: 'header' },
@@ -600,6 +611,12 @@ export class PdfComponent implements OnInit {
                               ? `\nFx ${fax}`
                               : ''
                           }\nPh ${phone} \nEm ${email}\n www.wiscontrol.com`,
+                        }
+                      : null,
+                    (await this.certificationImage)
+                      ? {
+                          image: await this.certificationImage,
+                          fit: [250, 400],
                         }
                       : null,
                   ],

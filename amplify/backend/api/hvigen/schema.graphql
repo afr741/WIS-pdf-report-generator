@@ -15,6 +15,7 @@ type ReportTemplate
   localCompanyNameTranslation: String
   letterHeadImageName: String
   stampImageName: String
+  certificationImageTop: String
   address: String
   addressTranslation: String
   phone: String

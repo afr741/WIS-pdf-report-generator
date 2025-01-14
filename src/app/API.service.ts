@@ -30,6 +30,7 @@ export type CreateReportTemplateInput = {
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
+  certificationImageTop?: string | null;
   address?: string | null;
   addressTranslation?: string | null;
   phone?: string | null;
@@ -49,6 +50,7 @@ export type ModelReportTemplateConditionInput = {
   localCompanyNameTranslation?: ModelStringInput | null;
   letterHeadImageName?: ModelStringInput | null;
   stampImageName?: ModelStringInput | null;
+  certificationImageTop?: ModelStringInput | null;
   address?: ModelStringInput | null;
   addressTranslation?: ModelStringInput | null;
   phone?: ModelStringInput | null;
@@ -129,6 +131,7 @@ export type ReportTemplate = {
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
+  certificationImageTop?: string | null;
   address?: string | null;
   addressTranslation?: string | null;
   phone?: string | null;
@@ -151,6 +154,7 @@ export type UpdateReportTemplateInput = {
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
+  certificationImageTop?: string | null;
   address?: string | null;
   addressTranslation?: string | null;
   phone?: string | null;
@@ -385,6 +389,7 @@ export type ModelReportTemplateFilterInput = {
   localCompanyNameTranslation?: ModelStringInput | null;
   letterHeadImageName?: ModelStringInput | null;
   stampImageName?: ModelStringInput | null;
+  certificationImageTop?: ModelStringInput | null;
   address?: ModelStringInput | null;
   addressTranslation?: ModelStringInput | null;
   phone?: ModelStringInput | null;
@@ -510,6 +515,7 @@ export type ModelSubscriptionReportTemplateFilterInput = {
   localCompanyNameTranslation?: ModelSubscriptionStringInput | null;
   letterHeadImageName?: ModelSubscriptionStringInput | null;
   stampImageName?: ModelSubscriptionStringInput | null;
+  certificationImageTop?: ModelSubscriptionStringInput | null;
   address?: ModelSubscriptionStringInput | null;
   addressTranslation?: ModelSubscriptionStringInput | null;
   phone?: ModelSubscriptionStringInput | null;
@@ -623,6 +629,7 @@ export type CreateReportTemplateMutation = {
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
+  certificationImageTop?: string | null;
   address?: string | null;
   addressTranslation?: string | null;
   phone?: string | null;
@@ -646,6 +653,7 @@ export type UpdateReportTemplateMutation = {
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
+  certificationImageTop?: string | null;
   address?: string | null;
   addressTranslation?: string | null;
   phone?: string | null;
@@ -669,6 +677,7 @@ export type DeleteReportTemplateMutation = {
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
+  certificationImageTop?: string | null;
   address?: string | null;
   addressTranslation?: string | null;
   phone?: string | null;
@@ -857,6 +866,7 @@ export type GetReportTemplateQuery = {
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
+  certificationImageTop?: string | null;
   address?: string | null;
   addressTranslation?: string | null;
   phone?: string | null;
@@ -882,6 +892,7 @@ export type ListReportTemplatesQuery = {
     localCompanyNameTranslation?: string | null;
     letterHeadImageName?: string | null;
     stampImageName?: string | null;
+    certificationImageTop?: string | null;
     address?: string | null;
     addressTranslation?: string | null;
     phone?: string | null;
@@ -1066,6 +1077,7 @@ export type OnCreateReportTemplateSubscription = {
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
+  certificationImageTop?: string | null;
   address?: string | null;
   addressTranslation?: string | null;
   phone?: string | null;
@@ -1089,6 +1101,7 @@ export type OnUpdateReportTemplateSubscription = {
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
+  certificationImageTop?: string | null;
   address?: string | null;
   addressTranslation?: string | null;
   phone?: string | null;
@@ -1112,6 +1125,7 @@ export type OnDeleteReportTemplateSubscription = {
   localCompanyNameTranslation?: string | null;
   letterHeadImageName?: string | null;
   stampImageName?: string | null;
+  certificationImageTop?: string | null;
   address?: string | null;
   addressTranslation?: string | null;
   phone?: string | null;
@@ -1309,6 +1323,7 @@ export class APIService {
           localCompanyNameTranslation
           letterHeadImageName
           stampImageName
+          certificationImageTop
           address
           addressTranslation
           phone
@@ -1348,6 +1363,7 @@ export class APIService {
           localCompanyNameTranslation
           letterHeadImageName
           stampImageName
+          certificationImageTop
           address
           addressTranslation
           phone
@@ -1387,6 +1403,7 @@ export class APIService {
           localCompanyNameTranslation
           letterHeadImageName
           stampImageName
+          certificationImageTop
           address
           addressTranslation
           phone
@@ -1732,6 +1749,7 @@ export class APIService {
           localCompanyNameTranslation
           letterHeadImageName
           stampImageName
+          certificationImageTop
           address
           addressTranslation
           phone
@@ -1771,6 +1789,7 @@ export class APIService {
             localCompanyNameTranslation
             letterHeadImageName
             stampImageName
+            certificationImageTop
             address
             addressTranslation
             phone
@@ -2113,6 +2132,7 @@ export class APIService {
           localCompanyNameTranslation
           letterHeadImageName
           stampImageName
+          certificationImageTop
           address
           addressTranslation
           phone
@@ -2161,6 +2181,7 @@ export class APIService {
           localCompanyNameTranslation
           letterHeadImageName
           stampImageName
+          certificationImageTop
           address
           addressTranslation
           phone
@@ -2209,6 +2230,7 @@ export class APIService {
           localCompanyNameTranslation
           letterHeadImageName
           stampImageName
+          certificationImageTop
           address
           addressTranslation
           phone

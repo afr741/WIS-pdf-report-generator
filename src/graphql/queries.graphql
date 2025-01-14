@@ -7,6 +7,7 @@ query GetReportTemplate($id: ID!) {
     localCompanyNameTranslation
     letterHeadImageName
     stampImageName
+    certificationImageTop
     address
     addressTranslation
     phone
@@ -37,6 +38,7 @@ query ListReportTemplates(
       localCompanyNameTranslation
       letterHeadImageName
       stampImageName
+      certificationImageTop
       address
       addressTranslation
       phone

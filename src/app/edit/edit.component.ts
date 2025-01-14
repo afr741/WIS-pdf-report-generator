@@ -29,6 +29,8 @@ export class EditComponent implements OnInit, OnDestroy {
   public createForm: FormGroup;
   private selectedFileLetterHead: File | null = null;
   private selectedStamp: File | null = null; // Store the selected file
+  private selectedCertifications: File | null = null; // Store the selected file
+
   public error?: string | null = null;
   public userId: string = '';
   public selectedHviVersion: string = '';
@@ -38,6 +40,8 @@ export class EditComponent implements OnInit, OnDestroy {
     null;
   letterHeadPreviewUrl: string | ArrayBuffer | null | undefined = null;
   stampPreviewUrl: string | ArrayBuffer | null | undefined = null;
+  certificationImageTopPreviewUrl: string | ArrayBuffer | null | undefined =
+    null;
   public selectedLab: any = '';
   public userInfo: UserInfo | null = null;
   public loader = {
@@ -61,6 +65,7 @@ export class EditComponent implements OnInit, OnDestroy {
       localCompanyNameTranslation: ['', Validators.required],
       letterHeadImage: [null, Validators.required],
       stampImage: [null, Validators.required],
+      certificationImageTop: [null, Validators.required],
       address: ['', Validators.required],
       addressTranslation: ['', Validators.required],
       phone: ['', Validators.required],
@@ -133,12 +138,7 @@ export class EditComponent implements OnInit, OnDestroy {
             } = this.activeTemplateInfo;
             console.log('activeTemplateInfo', this.activeTemplateInfo);
             console.log('fieldsToPrefill:', fieldsToPrefill);
-            console.log(
-              'remarksList:',
-              remarksList,
-              'testConditionsList',
-              testConditionsList
-            );
+
             console.log('createForm:', this.createForm);
             console.log(
               ' this.createForm.get("remarksList")',
@@ -178,6 +178,24 @@ export class EditComponent implements OnInit, OnDestroy {
               });
             }
 
+            // if (fieldsToPrefill.certificationImageTop) {
+            //   Storage.get(`${fieldsToPrefill.certificationImageTop}`).then(
+            //     (res) => {
+            //       if (res) {
+            //         console.log('certificationimage  res', res);
+            //         this.certificationImageTopPreviewUrl = res;
+            //       }
+            //     }
+            //   );
+            // }
+            const certificationImage = await Storage.get(
+              this.activeTemplateInfo &&
+                this.activeTemplateInfo.certificationImageTop
+                ? this.activeTemplateInfo.certificationImageTop
+                : 'wis-certificationImage'
+            );
+            this.certificationImageTopPreviewUrl = certificationImage;
+
             const letterHeadImageFromS3 = await Storage.get(
               this.activeTemplateInfo &&
                 this.activeTemplateInfo.letterHeadImageName
@@ -204,11 +222,13 @@ export class EditComponent implements OnInit, OnDestroy {
   public async onCreate(report: any) {
     console.log('report template', report);
     let stampImageNamePredefined = 'wis-stamp';
+    let certificationImagePredefined = 'wis-certifications';
     let letterHeadImageNamePredefined = 'wis-letterhead';
 
     let generatedStampImageName = `${stampImageNamePredefined}-${this.selectedLab}`;
+    let generatedCertificationsImageName = `${certificationImagePredefined}-${this.selectedLab}`;
     let generatedLetterHeadImageName = `${letterHeadImageNamePredefined}-${this.selectedLab}`;
-    const { stampImage, letterHeadImage, ...rest } = report;
+    const { stampImage, letterHeadImage, certificationImage, ...rest } = report;
     this.isLoading = true;
     //update report
     if (this.activeTemplateInfo && this.userInfo) {
@@ -218,7 +238,11 @@ export class EditComponent implements OnInit, OnDestroy {
         id: this.selectedLab,
       };
 
-      if (this.selectedFileLetterHead || this.selectedStamp) {
+      if (
+        this.selectedFileLetterHead ||
+        this.selectedStamp ||
+        this.selectedCertifications
+      ) {
         try {
           if (this.selectedFileLetterHead) {
             const letterheadUploadResponse = await Storage.put(
@@ -230,6 +254,12 @@ export class EditComponent implements OnInit, OnDestroy {
             const stampUploadResponse = await Storage.put(
               generatedStampImageName,
               this.selectedStamp
+            );
+          }
+          if (this.selectedCertifications) {
+            const stampUploadResponse = await Storage.put(
+              generatedCertificationsImageName,
+              this.selectedCertifications
             );
           }
         } catch (error: any) {
@@ -244,6 +274,7 @@ export class EditComponent implements OnInit, OnDestroy {
         ...rest,
         labLocation: this.selectedLab,
         stampImageName: generatedStampImageName,
+        certificationImageTop: generatedCertificationsImageName,
         letterHeadImageName: generatedLetterHeadImageName,
         id: this.selectedLab,
         templateId: this.selectedLab,
@@ -280,6 +311,20 @@ export class EditComponent implements OnInit, OnDestroy {
       reader.readAsDataURL(fileList[0].rawFile);
     }
   }
+
+  onFileChangeCertifications(event: any) {
+    const fileList: any = event.files;
+    if (fileList && fileList.length > 0) {
+      this.selectedCertifications = fileList[0].rawFile;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.certificationImageTopPreviewUrl = e.target?.result;
+        // console.log('letterhead file,', e.target?.result);
+      };
+      reader.readAsDataURL(fileList[0].rawFile);
+    }
+  }
   addAdditionalText(): void {
     this.remarksList.push(this.fb.control(''));
     this.createForm.setControl('remarksList', this.remarksList);
@@ -300,7 +345,7 @@ export class EditComponent implements OnInit, OnDestroy {
   private updateReportWithAttachment(
     reportTemplate: UpdateReportTemplateInput
   ) {
-    // console.log('reportTemplate', reportTemplate);
+    console.log('updateReportWithAttachment reportTemplate', reportTemplate);
     this.api
       .UpdateReportTemplate(reportTemplate)
       .then(() => {

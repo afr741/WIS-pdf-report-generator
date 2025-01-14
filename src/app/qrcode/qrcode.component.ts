@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { APIService, Report } from '../API.service';
-import { DataparseService } from '../dataparse.service';
+// import { DataparseService } from '../dataparse.service';
+import { PdfparseService } from '../pdfparse.service';
+
 import { ActivatedRoute } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 import { Storage } from 'aws-amplify';
@@ -40,7 +42,8 @@ export class QrcodeComponent implements OnInit {
 
   constructor(
     private api: APIService,
-    private dataParsingService: DataparseService,
+    // private dataParsingService: DataparseService,
+    private pdfService: PdfparseService,
     private route: ActivatedRoute
   ) {
     this.decodedID = '';
@@ -73,13 +76,29 @@ export class QrcodeComponent implements OnInit {
       this.dateCreated = new Date(this.dbEntryData[0].createdAt).toDateString();
 
       console.log('dbEntryData', this.dbEntryData);
-      this.dataRows = this.dataParsingService.parseData(
-        this.dbEntryData[0].dataRows,
-        this.dbEntryData[0].hviVersion
-      );
-      this.isLoading = false;
+      this.pdfService
+        .handleProcessingVersion(
+          this.dbEntryData[0],
+          this.dbEntryData[0].hviVersion,
+          (e: any) => {
+            console.log(e);
+          }
+        )
+        .then((data) => {
+          this.isLoading = false;
+          this.dataRows = data.extractedRowsBody;
+          console.log('data', data);
+        });
+      // this.dataRows = this.dataParsingService.handleProcessingVersion(
+      //   this.dbEntryData[0].dataRows,
+      //   this.dbEntryData[0].hviVersion
+      // );
     });
-    const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
+    const letterHeadImageFromS3 = await Storage.get(
+      `wis-letterhead-${this.dbEntryData[0].labLocation}`
+    );
+
+    console.log('letterHeadImageFromS3list', letterHeadImageFromS3);
     this.letterHeadPreviewUrl = letterHeadImageFromS3;
   }
 }

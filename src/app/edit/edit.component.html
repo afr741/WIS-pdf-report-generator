@@ -119,6 +119,23 @@
             />
           </div>
         </div>
+        <div class="asset-wrapper">
+          <div class="select-wrapper">
+            <p>Top certifications stamps</p>
+            <kendo-fileselect
+              formControlName="certificationImageTop"
+              (select)="onFileChangeCertifications($event)"
+              [multiple]="false"
+            ></kendo-fileselect>
+          </div>
+          <div *ngIf="certificationImageTopPreviewUrl">
+            <img
+              [src]="certificationImageTopPreviewUrl"
+              alt="Preview Image"
+              style="max-width: 300px; height: auto"
+            />
+          </div>
+        </div>
 
         <div class="asset-wrapper">
           <div class="select-wrapper">
