@@ -459,7 +459,11 @@ export class PdfparseService {
       );
 
       // Process the data rows to match the sorted and filtered column names.
-      const dataRows = relevantRows.slice(1).map((row) => {
+      const dataRows =
+        isFirstStructure && relevantRows.length > 1
+          ? relevantRows.slice(1)
+          : relevantRows;
+      const processedRows = dataRows.map((row) => {
         const filteredRow: Record<string, any> = {};
         for (const [originalKey, newKey] of Object.entries(columnMapping)) {
           if (sortedColumns.includes(newKey)) {
@@ -471,7 +475,7 @@ export class PdfparseService {
 
       return {
         headers: sortedColumns,
-        rows: dataRows,
+        rows: processedRows,
       };
     }
 
