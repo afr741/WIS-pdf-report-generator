@@ -354,7 +354,10 @@ export class PdfComponent implements OnInit {
     const isLandscapeMode =
       this.selectedHviVersion == 'v6' ||
       this.selectedHviVersion == 'v4' ||
-      this.selectedHviVersion == 'v2';
+      this.selectedHviVersion == 'v3' ||
+      this.selectedHviVersion == 'v2' ||
+      this.selectedHviVersion == 'v1';
+
     let columnLength = extractedRowsBody[0].length;
 
     let selectedColumnWidth = isLandscapeMode
@@ -383,7 +386,17 @@ export class PdfComponent implements OnInit {
           }
         : isLandscapeMode && this.selectedHviVersion === 'v2'
         ? {
+            2: 35,
             5: 34, // Bale/Sample No
+            13: 35, // C-G
+            22: 50, // Remarks
+          }
+        : isLandscapeMode && this.selectedHviVersion === 'v1'
+        ? {
+            0: 40, // No/Bale ID
+            2: 35, // Pr.No,
+            6: 32, // Mst
+            13: 35, // C-G
             22: 50, // Remarks
           }
         : {};
@@ -639,8 +652,19 @@ export class PdfComponent implements OnInit {
           columns: [
             (await this.stampImage) && {
               image: await this.stampImage,
-              fit: this.selectedHviVersion === 'v2' ? [140, 140] : [400, 900],
-              x: this.selectedHviVersion === 'v2' ? 250 : 0,
+              fit:
+                this.selectedHviVersion === 'v1'
+                  ? [200, 200]
+                  : this.selectedHviVersion === 'v2' ||
+                    this.selectedHviVersion === 'v3'
+                  ? [140, 140]
+                  : [400, 900],
+              x:
+                this.selectedHviVersion === 'v1' ||
+                this.selectedHviVersion === 'v2' ||
+                this.selectedHviVersion === 'v3'
+                  ? 250
+                  : 0,
             },
             (await qrImageProcessed) && {
               link: qrURL,
