@@ -183,7 +183,6 @@ export class PdfComponent implements OnInit {
           this.letterHeadPreviewUrl
         );
       }
-
       if (this.activeTemplateInfo.stampImageName) {
         this.stampPreviewUrl = await Storage.get(
           this.activeTemplateInfo.stampImageName
@@ -288,7 +287,9 @@ export class PdfComponent implements OnInit {
       'samplingPercentage',
       samplingPercentage,
       'vesselOrConveyance',
-      vesselOrConveyance
+      vesselOrConveyance,
+      'activeTemplateInfo',
+      this.activeTemplateInfo
     );
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL(id);
 
@@ -351,7 +352,9 @@ export class PdfComponent implements OnInit {
       // testConditionsList = this.activeTemplateInfo.testConditionsList;
     }
     const isLandscapeMode =
-      this.selectedHviVersion == 'v6' || this.selectedHviVersion == 'v4';
+      this.selectedHviVersion == 'v6' ||
+      this.selectedHviVersion == 'v4' ||
+      this.selectedHviVersion == 'v2';
     let columnLength = extractedRowsBody[0].length;
 
     let selectedColumnWidth = isLandscapeMode
@@ -377,6 +380,11 @@ export class PdfComponent implements OnInit {
             5: 42, // Mark/Lot no
             6: 54, // Bale/Sample No
             20: 54, // Remarks
+          }
+        : isLandscapeMode && this.selectedHviVersion === 'v2'
+        ? {
+            5: 34, // Bale/Sample No
+            22: 50, // Remarks
           }
         : {};
     columnWidthArray = columnWidthArray.map((width, index) => {
@@ -631,9 +639,10 @@ export class PdfComponent implements OnInit {
           columns: [
             (await this.stampImage) && {
               image: await this.stampImage,
-              fit: [300, 900], //TBD change to fit to qr ode
+              fit: this.selectedHviVersion === 'v2' ? [140, 140] : [400, 900],
+              x: this.selectedHviVersion === 'v2' ? 250 : 0,
             },
-            {
+            (await qrImageProcessed) && {
               link: qrURL,
               image: await qrImageProcessed,
               fit: [90, 90],

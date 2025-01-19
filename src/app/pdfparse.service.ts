@@ -142,7 +142,12 @@ export class PdfparseService {
       cropYear,
       conveyanceRefNo,
       id,
+      samplesSenderName,
+      sellerName,
+      buyerName,
+      invoiceNumber,
     } = report;
+    console.log('report', report);
 
     if (!dataRows || dataRows[0] === null) {
       handleShowError('Failed to extract data rows!');
@@ -150,63 +155,159 @@ export class PdfparseService {
     }
 
     let parsedRawData = JSON.parse(dataRows[0]);
+    console.log('parsedRawData', parsedRawData);
 
-    // number of elements based on elments in this row
+    type MasterObject = Record<string, string[]>;
 
-    const keys = Object.keys(parsedRawData[6]).sort((a, b) => {
-      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
-      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
-      return numA - numB;
-    });
+    function processPDFContent(parsedPDF: any[], masterObject: MasterObject) {
+      // Extract rows from the parsed PDF content starting with column names
+      // and ending before "WAKEFIELD INSPECTION SERVICES".
+      const startRowIndex = parsedPDF.findIndex((row) =>
+        Object.values(row).some((value: any) =>
+          Object.values(masterObject).flat().includes(value)
+        )
+      );
+      const endRowIndex =
+        parsedPDF.findIndex((row) =>
+          Object.values(row).some((value: any) =>
+            value.toString().trim().includes('Max')
+          )
+        ) + 1;
 
-    const averageRow = parsedRawData[parsedRawData.length - 6];
-    // Convert array of objects to array of arrays
-    const extractedRows = parsedRawData.map((obj: any, index: any) => {
-      return keys.map((key, keyIndex) => {
-        let original = [16];
-        let isOneDec = [3, 7, 9, 10, 11, 12, 14];
-        let isTwoDec = [4, 5, 8, 13, 15];
-        let isThreeDec = [6];
-        let cellValue = obj[key];
+      if (startRowIndex === -1 || endRowIndex === -1) {
+        throw new Error('Could not find valid start or end rows.');
+      }
 
-        //parsing skips the "row count" cell, have to manually insert it at position keyIndex 1
-        if (obj.__EMPTY && keyIndex == 1) {
-          return obj.__EMPTY;
+      const relevantRows = parsedPDF.slice(startRowIndex, endRowIndex);
+
+      // Map column names to keys in masterObject or omit if not found.
+      const columnMapping: Record<string, string> = {};
+      const headerRow: any = relevantRows[0];
+      for (const [key, value] of Object.entries(headerRow)) {
+        const matchingKey = Object.keys(masterObject).find((masterKey) =>
+          masterObject[masterKey].includes(String(value).trim())
+        );
+        if (matchingKey) {
+          columnMapping[key] = matchingKey;
         }
+      }
 
-        let roundedCellValue = original.includes(keyIndex)
-          ? cellValue
-          : isNaN(cellValue)
-          ? cellValue
-          : Number(cellValue).toFixed(
-              isOneDec.includes(keyIndex)
-                ? 1
-                : isTwoDec.includes(keyIndex)
-                ? 2
-                : isThreeDec.includes(keyIndex)
-                ? 3
-                : 0
-            );
-        return roundedCellValue || '';
+      // Filter and rename the column names in the header row.
+      const sortedColumns = Object.keys(masterObject).map((key) =>
+        Object.values(columnMapping).includes(key) ? key : key
+      );
+
+      // Process the data rows to match the sorted and filtered column names.
+      const dataRows = relevantRows.slice(1).map((row) => {
+        const filteredRow: Record<string, any> = {};
+        for (const [originalKey, newKey] of Object.entries(columnMapping)) {
+          if (sortedColumns.includes(newKey)) {
+            filteredRow[newKey] = row[originalKey];
+          }
+        }
+        return filteredRow;
       });
-    });
-    // to find the start of data body using "Time" word
-    let bodyStartIndex = extractedRows.findIndex((array: any) =>
-      array.includes('SCI')
-    );
 
-    // to find the end of data body using "Average" word
-    let bodyEndIndex = extractedRows.findIndex((array: any) =>
-      array.some(
-        (element: any) => typeof element === 'string' && element.includes('Max')
-      )
-    );
+      return {
+        headers: sortedColumns,
+        rows: dataRows,
+      };
+    }
 
-    let extractedRowsBody = extractedRows.slice(
-      bodyStartIndex,
-      bodyEndIndex + 1
+    // Example usage
+
+    const masterObject = {
+      'No.': ['No', 'No.', 'Sample Count', 'S.No'],
+      'S.B. No.': ['S.B. No', 'S.B.No'],
+      'P.R No.': ['P.R No', 'P.R No.', 'TrID'],
+      'HVI ID No': ['ID No'],
+      'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
+      'Bale/Sample No.': ['Bale ID'],
+      Mst: ['Mst'],
+      Amt: ['Amt'],
+      UHML: ['UHML'],
+      SCI: ['SCI'],
+      Mic: ['Mic'],
+      Rd: ['Rd'],
+      '+b': ['+b'],
+      'C-G': ['CGrd'],
+      Area: ['TrAr'],
+      Cnt: ['TrCnt'],
+      'T.L': ['T.L'],
+      Len: ['Len'],
+      Unf: ['Unf'],
+      Str: ['Str'],
+      SFI: ['SF'],
+      ELG: ['Elg'],
+      Remarks: ['Remarks'],
+    };
+
+    const result = processPDFContent(parsedRawData, masterObject);
+    console.log(result);
+
+    function formatAndRoundResult(
+      result: { headers: string[]; rows: Record<string, any>[] },
+      roundToInteger: string[], // Columns to round to integer
+      roundOneDecimal: string[],
+      roundTwoDecimal: string[] // Columns to round to 2 decimal points
+    ) {
+      const { headers, rows } = result;
+
+      // Initialize the final array with the headers as the first row.
+      const formattedResult: string[][] = [headers];
+
+      // Iterate over each row and map it to an array of strings.
+      rows.forEach((row) => {
+        const formattedRow = headers.map((header) => {
+          let value = row[header];
+
+          if (value !== undefined && typeof value === 'number') {
+            if (roundToInteger.includes(header)) {
+              value = Math.round(value); // Round to integer
+            } else if (roundTwoDecimal.includes(header)) {
+              value = value.toFixed(2); // Round to 2 decimal points
+            } else if (roundOneDecimal.includes(header)) {
+              value = value.toFixed(1); // Round to 2 decimal points
+            }
+          }
+
+          // Replace undefined or missing values with "-"
+          return value !== undefined ? String(value) : '-';
+        });
+        // Check if the length of the formattedRow is less than the headers length
+        // Check if most fields are undefined
+        const undefinedCount = formattedRow.filter(
+          (cell) => cell === '-'
+        ).length;
+        if (undefinedCount < headers.length * 0.7) {
+          // adjust the threshold as needed
+          formattedResult.push(formattedRow);
+        }
+      });
+
+      return formattedResult;
+    }
+
+    const roundToInteger = ['P.R No.', 'Amt']; // Columns to round to integer
+    const roundTwoDecimal = ['UHML', 'Mic', 'Mat', 'SFI', 'C-G', 'Area'];
+    const roundOneDecimal = [
+      'SCI',
+      'Mst',
+      'Str',
+      'UI',
+      'ELG',
+      'Rd',
+      '+b',
+      'Cnt',
+    ];
+    const extractedRowsBody = formatAndRoundResult(
+      result,
+      roundToInteger,
+      roundOneDecimal,
+      roundTwoDecimal
     );
-    const numberOfSamples = extractedRowsBody.length - 9;
+    console.log('formattedOutput', extractedRowsBody);
+    const numberOfSamples = extractedRowsBody.length - 7;
 
     return {
       customerName,
@@ -214,6 +315,9 @@ export class PdfparseService {
       stations,
       labLocation,
       variety,
+      sellerName,
+      buyerName,
+      invoiceNumber,
       lotNum,
       extractedRowsBody,
       createdAt,
@@ -228,6 +332,7 @@ export class PdfparseService {
       conveyanceRefNo,
       id,
       numberOfSamples,
+      samplesSenderName,
     };
   }
   // Hujand
