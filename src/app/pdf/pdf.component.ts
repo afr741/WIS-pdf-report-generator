@@ -175,30 +175,49 @@ export class PdfComponent implements OnInit {
 
   async fetchTemplateImages() {
     if (this.activeTemplateInfo) {
+      this.isLoading = true;
+      const imagePromises = [];
+
       if (this.activeTemplateInfo.letterHeadImageName) {
-        this.letterHeadPreviewUrl = await Storage.get(
-          this.activeTemplateInfo.letterHeadImageName
-        );
-        this.letterHeadImage = await this.getBase64ImageFromURL(
-          this.letterHeadPreviewUrl
+        imagePromises.push(
+          Storage.get(this.activeTemplateInfo.letterHeadImageName).then((url) =>
+            this.getBase64ImageFromURL(url).then((image) => {
+              this.letterHeadImage = image;
+            })
+          )
         );
       }
+
       if (this.activeTemplateInfo.stampImageName) {
-        this.stampPreviewUrl = await Storage.get(
-          this.activeTemplateInfo.stampImageName
+        imagePromises.push(
+          Storage.get(this.activeTemplateInfo.stampImageName).then((url) =>
+            this.getBase64ImageFromURL(url).then((image) => {
+              this.stampImage = image;
+            })
+          )
         );
-        this.stampImage = await this.getBase64ImageFromURL(
-          this.stampPreviewUrl
-        );
+        console.log('stampImage', this.stampImage);
       }
+
       if (this.activeTemplateInfo.certificationImageTop) {
-        this.certificationImagePreviewUrl = await Storage.get(
-          this.activeTemplateInfo.certificationImageTop
-        );
-        this.certificationImage = await this.getBase64ImageFromURL(
-          this.certificationImagePreviewUrl
+        imagePromises.push(
+          Storage.get(this.activeTemplateInfo.certificationImageTop).then(
+            (url) =>
+              this.getBase64ImageFromURL(url).then((image) => {
+                this.certificationImage = image;
+              })
+          )
         );
       }
+
+      Promise.all(imagePromises)
+        .then(() => {
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          console.error('Error loading images:', error);
+          this.isLoading = false;
+        });
     }
   }
 
@@ -538,7 +557,7 @@ export class PdfComponent implements OnInit {
                   : samplingLocation,
                 'Date of sampling',
                 dateOfSampling == '' || dateOfSampling == null
-                  ? formatedDate()
+                  ? 'N/A'
                   : dateOfSampling,
               ],
               [
@@ -548,7 +567,7 @@ export class PdfComponent implements OnInit {
                   : samplingPercentage,
                 'Date of testing',
                 dateOfTesting == '' || dateOfTesting == null
-                  ? formatedDate()
+                  ? 'N/A'
                   : dateOfTesting,
               ],
               [
@@ -586,7 +605,11 @@ export class PdfComponent implements OnInit {
           },
         },
 
-        { text: '\n\nRemarks', style: 'remarksHeader', pageBreak: 'before' },
+        {
+          text: '\n\nRemarks',
+          style: 'remarksHeader',
+          pageBreak: this.selectedHviVersion !== 'v6' ? 'before' : 'none',
+        },
         remarks.length && {
           style: 'remarksBullets',
           layout: 'noBorders',
@@ -637,7 +660,10 @@ export class PdfComponent implements OnInit {
                     (await this.certificationImage)
                       ? {
                           image: await this.certificationImage,
-                          fit: [250, 400],
+                          fit:
+                            this.selectedHviVersion == 'v4'
+                              ? [100, 100]
+                              : [250, 400],
                         }
                       : null,
                   ],

@@ -178,23 +178,16 @@ export class EditComponent implements OnInit, OnDestroy {
               });
             }
 
-            // if (fieldsToPrefill.certificationImageTop) {
-            //   Storage.get(`${fieldsToPrefill.certificationImageTop}`).then(
-            //     (res) => {
-            //       if (res) {
-            //         console.log('certificationimage  res', res);
-            //         this.certificationImageTopPreviewUrl = res;
-            //       }
-            //     }
-            //   );
-            // }
-            const certificationImage = await Storage.get(
-              this.activeTemplateInfo &&
-                this.activeTemplateInfo.certificationImageTop
-                ? this.activeTemplateInfo.certificationImageTop
-                : 'wis-certificationImage'
-            );
-            this.certificationImageTopPreviewUrl = certificationImage;
+            if (fieldsToPrefill.certificationImageTop) {
+              Storage.get(`${fieldsToPrefill.certificationImageTop}`).then(
+                (res) => {
+                  if (res) {
+                    console.log('certificationimage  res', res);
+                    this.certificationImageTopPreviewUrl = res;
+                  }
+                }
+              );
+            }
 
             const letterHeadImageFromS3 = await Storage.get(
               this.activeTemplateInfo &&
@@ -234,6 +227,7 @@ export class EditComponent implements OnInit, OnDestroy {
     if (this.activeTemplateInfo && this.userInfo) {
       let modifiedReport: UpdateReportTemplateInput = {
         ...rest,
+        certificationImageTop: generatedCertificationsImageName,
         labLocation: this.selectedLab,
         id: this.selectedLab,
       };
@@ -267,6 +261,7 @@ export class EditComponent implements OnInit, OnDestroy {
           this.error = error;
         }
       }
+      console.log('passoed tto updated modifiedReport', modifiedReport);
       this.updateReportWithAttachment(modifiedReport);
     } else {
       //create new report
@@ -348,8 +343,8 @@ export class EditComponent implements OnInit, OnDestroy {
     console.log('updateReportWithAttachment reportTemplate', reportTemplate);
     this.api
       .UpdateReportTemplate(reportTemplate)
-      .then(() => {
-        console.log('Item updated!', reportTemplate);
+      .then((res) => {
+        console.log('Item updated!', res);
         this.displayStatus(true);
       })
       .catch((e) => {
