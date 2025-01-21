@@ -33,7 +33,7 @@ export class QrcodeComponent implements OnInit {
     themeColor: <LoaderThemeColor>'info',
     size: <LoaderSize>'large',
   };
-  letterHeadPreviewUrl: string | ArrayBuffer | null | undefined = null;
+  public letterheadImageUrl: string = '../../assets/images/letterhead.png';
 
   // when pinging this page
   // take the query param from page URL
@@ -136,12 +136,5 @@ export class QrcodeComponent implements OnInit {
         // );
       })
       .catch((e: any) => console.log('error', e));
-
-    const letterHeadImageFromS3 = await Storage.get(
-      `wis-letterhead-${this.dbEntryData[0].labLocation}`
-    );
-
-    console.log('letterHeadImageFromS3list', letterHeadImageFromS3);
-    this.letterHeadPreviewUrl = letterHeadImageFromS3;
   }
 }
