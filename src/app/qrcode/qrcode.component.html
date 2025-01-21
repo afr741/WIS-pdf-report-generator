@@ -1,46 +1,47 @@
 <div class="qrcode-wrapper">
-  <div *ngIf="!isLoading && dbEntryData[0] != null; else loading">
-    <div>
-      <a href="http://www.wiscontrol.com/">
-        <img [src]="letterHeadPreviewUrl" alt="wis-banner" class="wis-banner" />
-      </a>
-    </div>
+  <!-- <div *ngIf="!isLoading && dbEntryData[0] != null; else loading"> -->
+  <div>
+    <a href="http://www.wiscontrol.com/">
+      <img [src]="letterHeadPreviewUrl" alt="wis-banner" class="wis-banner" />
+    </a>
+  </div>
 
-    <kendo-listview
-      [data]="dbEntryData"
-      containerClass="k-d-flex k-flex-col k-flex-nowrap"
+  <kendo-listview
+    [data]="dbEntryData"
+    containerClass="k-d-flex k-flex-col k-flex-nowrap"
+  >
+    <ng-template kendoListViewHeaderTemplate>
+      <div class="header"><h3>REPORT INFORMATION</h3></div>
+    </ng-template>
+    <ng-template
+      kendoListViewItemTemplate
+      let-dataItem="dataItem"
+      let-isFirst="isFirst"
     >
-      <ng-template kendoListViewHeaderTemplate>
-        <div class="header"><h3>REPORT INFORMATION</h3></div>
-      </ng-template>
-      <ng-template
-        kendoListViewItemTemplate
-        let-dataItem="dataItem"
-        let-isFirst="isFirst"
-      >
-        <div class="contact" [class.border-top]="10">
-          <div class="contact-details">
-            <div class="contact-field">
-              Customer name: {{ dbEntryData[0].customerName }}
-            </div>
-            <div class="contact-field">
-              Lot number: {{ dbEntryData[0].lotNum }}
-            </div>
-            <!-- <div class="contact-field">
+      <div class="contact" [class.border-top]="10">
+        <div class="contact-details">
+          <div class="contact-field">
+            Customer name: {{ dbEntryData[0].customerName }}
+          </div>
+          <div class="contact-field">
+            Lot number: {{ dbEntryData[0].lotNum }}
+          </div>
+          <!-- <div class="contact-field">
               Location: {{ dbEntryData[0].testLocation }}
             </div> -->
-            <div class="contact-field">Origin: {{ dbEntryData[0].origin }}</div>
-            <div class="contact-field">
-              Stations: {{ dbEntryData[0].stations }}
-            </div>
-            <div class="contact-field">Date created: {{ dateCreated }}</div>
-            <div class="contact-field">
-              Samples sent By: {{ dbEntryData[0].samplesSenderName }}
-            </div>
+          <div class="contact-field">Origin: {{ dbEntryData[0].origin }}</div>
+          <div class="contact-field">
+            Stations: {{ dbEntryData[0].stations }}
+          </div>
+          <div class="contact-field">Date created: {{ dateCreated }}</div>
+          <div class="contact-field">
+            Samples sent By: {{ dbEntryData[0].samplesSenderName }}
           </div>
         </div>
-      </ng-template>
-    </kendo-listview>
+      </div>
+    </ng-template>
+  </kendo-listview>
+  <div *ngIf="!isLoading && dbEntryData[0] != null; else loading">
     <div class="data-grid-wrapper">
       <kendo-grid
         [kendoGridBinding]="dataRows"
