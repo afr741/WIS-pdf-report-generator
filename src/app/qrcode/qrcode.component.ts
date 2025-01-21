@@ -12,6 +12,7 @@ import {
   LoaderThemeColor,
   LoaderSize,
 } from '@progress/kendo-angular-indicators';
+import { API, GRAPHQL_AUTH_MODE } from '@aws-amplify/api';
 
 @Component({
   selector: 'app-qrcode',
@@ -70,14 +71,47 @@ export class QrcodeComponent implements OnInit {
   async ngOnInit() {
     const queryParams = this.route.snapshot.queryParams;
 
+    const fetchProducts = async () => {
+      try {
+        const productsData = await API.graphql({
+          query: `query GetReport($id: ID!) {
+        getReport(id: $id) {
+          __typename
+          id
+          name
+          email
+          labLocation
+          hviVersion
+          reportNum
+          lotNum
+          customerName
+          origin
+          stations
+          variety
+          attachmentUrl
+          dataRows
+          createdAt
+          updatedAt
+          owner
+        }
+      }`,
+          variables: { id: this.decodedID },
+          authMode: GRAPHQL_AUTH_MODE.API_KEY,
+        });
+        console.log('productsData', productsData);
+        return productsData;
+      } catch (error) {
+        return error;
+      }
+    };
+
     this.decodeQueryParam(queryParams['code']);
     console.log('this.decodedID', this.decodedID);
 
-    await this.api
-      .GetReport(this.decodedID)
-      .then((event) => {
+    await fetchProducts()
+      .then((event: any) => {
         console.log('then event', event);
-        this.dbEntryData = [event];
+        this.dbEntryData = [event.data.getReport];
         this.dateCreated = new Date(
           this.dbEntryData[0].createdAt
         ).toDateString();
