@@ -63,6 +63,7 @@ export class QrcodeComponent implements OnInit {
       originalEncryptedText,
       this.secretKey
     ).toString(CryptoJS.enc.Utf8);
+    console.log('decryptedText', decryptedText);
     this.decodedID = decryptedText;
   }
 
@@ -70,30 +71,38 @@ export class QrcodeComponent implements OnInit {
     const queryParams = this.route.snapshot.queryParams;
 
     this.decodeQueryParam(queryParams['code']);
+    console.log('this.decodedID', this.decodedID);
 
-    await this.api.GetReport(this.decodedID).then((event) => {
-      this.dbEntryData = [event];
-      this.dateCreated = new Date(this.dbEntryData[0].createdAt).toDateString();
+    await this.api
+      .GetReport(this.decodedID)
+      .then((event) => {
+        console.log('then event', event);
+        this.dbEntryData = [event];
+        this.dateCreated = new Date(
+          this.dbEntryData[0].createdAt
+        ).toDateString();
 
-      console.log('dbEntryData', this.dbEntryData);
-      this.pdfService
-        .handleProcessingVersion(
-          this.dbEntryData[0],
-          this.dbEntryData[0].hviVersion,
-          (e: any) => {
-            console.log(e);
-          }
-        )
-        .then((data) => {
-          this.isLoading = false;
-          this.dataRows = data.extractedRowsBody;
-          console.log('data', data);
-        });
-      // this.dataRows = this.dataParsingService.handleProcessingVersion(
-      //   this.dbEntryData[0].dataRows,
-      //   this.dbEntryData[0].hviVersion
-      // );
-    });
+        console.log('dbEntryData', this.dbEntryData);
+        this.pdfService
+          .handleProcessingVersion(
+            this.dbEntryData[0],
+            this.dbEntryData[0].hviVersion,
+            (e: any) => {
+              console.log(e);
+            }
+          )
+          .then((data) => {
+            this.isLoading = false;
+            this.dataRows = data.extractedRowsBody;
+            console.log('data', data);
+          });
+        // this.dataRows = this.dataParsingService.handleProcessingVersion(
+        //   this.dbEntryData[0].dataRows,
+        //   this.dbEntryData[0].hviVersion
+        // );
+      })
+      .catch((e: any) => console.log('error', e));
+
     const letterHeadImageFromS3 = await Storage.get(
       `wis-letterhead-${this.dbEntryData[0].labLocation}`
     );
