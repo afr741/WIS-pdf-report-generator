@@ -110,6 +110,7 @@ export class PdfComponent implements OnInit {
           if (event.items.length == 0) {
             this.reports = [];
           }
+          // console.log('event.items ', event.items);
           this.reports = (event.items as Report[])
             .sort((a, b) => {
               // sort by most recent date

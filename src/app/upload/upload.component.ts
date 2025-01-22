@@ -120,8 +120,7 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   public async onCreate(report: Report) {
     if (this.selectedFile) {
-      this.isLoading = true;
-      const uniqueIdentifier = new Date().getTime();
+      const uniqueIdentifier = crypto.randomUUID();
       const fileNameWithoutSpaces = this.selectedFile.name.replace(/ /g, '');
 
       const key = `${report.name.replace(
@@ -130,22 +129,24 @@ export class UploadComponent implements OnInit, OnDestroy {
       )}_${uniqueIdentifier}_${fileNameWithoutSpaces}`;
 
       try {
+        this.isLoading = true;
         const uploadResponse = await Storage.put(key, this.selectedFile, {
           contentType:
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           level: 'private',
+        }).then((res) => {
+          console.log('res', res);
+          report.attachmentUrl = res.key;
+          report.dataRows = [JSON.stringify(this.jsonData)];
+          report.email = this.reportEmail;
+          report.labLocation = this.selectedLab;
+          report.hviVersion = this.selectedHviVersion;
+
+          this.currentReport = report;
+
+          this.createReportWithAttachment(report);
         });
         // Update the report's attachmentUrl with the URL of the uploaded file
-
-        console.log('uploadresponse', uploadResponse);
-        report.attachmentUrl = uploadResponse.key;
-        report.dataRows = [JSON.stringify(this.jsonData)];
-        report.email = this.reportEmail;
-        report.labLocation = this.selectedLab;
-        report.hviVersion = this.selectedHviVersion;
-        this.currentReport = report;
-
-        this.createReportWithAttachment(report);
       } catch (error: any) {
         this.isLoading = false;
         console.log('Error uploading file locally: ', error);
@@ -185,20 +186,20 @@ export class UploadComponent implements OnInit, OnDestroy {
     if (report.name === '') {
       this.error = 'name is required';
     } else {
-      console.log('currentreport', this.currentReport);
-
       console.log('report inside create report', report);
       this.api
         .CreateReport(report)
-        .then(() => {
-          this.isLoading = false;
-          console.log('Item created!', report);
-          this.router.navigate(['/pdf']);
+        .then((res) => {
+          console.log('Item created!', res);
         })
         .catch((e) => {
           this.isLoading = false;
           console.log('Error creating report...', e);
           this.error = 'Error creating report';
+        })
+        .finally(() => {
+          this.isLoading = false;
+          this.router.navigate(['/pdf']);
         });
     }
   }
