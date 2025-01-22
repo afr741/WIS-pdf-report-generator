@@ -8,7 +8,6 @@ export class PdfparseService {
   constructor() {}
 
   //Dushanbe
-
   processPDFDataV1(report: Report, handleShowError: any) {
     let {
       dataRows,
@@ -550,27 +549,27 @@ export class PdfparseService {
 
     const masterObject = {
       'No.': ['No', 'No.', 'Sample Count', 'S.No'],
-      'S.B. No.': ['S.B. No', 'S.B.No'],
-      'P.R No.': ['P.R No', 'P.R No.', 'TrID'],
-      'HVI ID No': ['ID No'],
+      Grade: ['Grade'],
+      'P.R No.': ['P.R No', 'P.R No.', 'Tr ID'],
+      // 'HVI ID No': ['ID No'],
       'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
       'Bale/Sample No.': ['Bale ID'],
       Mst: ['Mst'],
-      Amt: ['Amt'],
       UHML: ['UHML'],
       SCI: ['SCI'],
       Mic: ['Mic'],
       Rd: ['Rd'],
       '+b': ['+b'],
-      'C-G': ['CGrd'],
-      Area: ['TrAr'],
-      Cnt: ['TrCnt'],
+      'C-G': ['C Grd'],
+      Area: ['Tr Ar'],
+      Cnt: ['Cnt'],
       'T.L': ['T.L'],
       Len: ['Len'],
-      Unf: ['Unf'],
+      Unf: ['UI'],
       Str: ['Str'],
-      SFI: ['SF'],
+      SFI: ['SFI'],
       ELG: ['Elg'],
+      Nep: ['Nep'],
       Remarks: ['Remarks'],
     };
 
@@ -626,7 +625,7 @@ export class PdfparseService {
       'SCI',
       'Mst',
       'Str',
-      'UI',
+      'Unf',
       'ELG',
       'Rd',
       '+b',
@@ -639,7 +638,7 @@ export class PdfparseService {
       roundTwoDecimal
     );
     console.log('formattedOutput', extractedRowsBody);
-    const numberOfSamples = extractedRowsBody.length - 7;
+    const numberOfSamples = extractedRowsBody.length - 8;
 
     return {
       customerName,
