@@ -391,11 +391,12 @@ export class PdfComponent implements OnInit {
     const customColumnWidths: any =
       isLandscapeMode && this.selectedHviVersion === 'v6'
         ? {
-            2: 42, // Pr.No
-            3: 28, // HVI id
-            4: 54, // Cont/mark/lot no
-            5: 28, // Bale/Bale/Sample No.
-            19: 54, //Remarks
+            0: 42, // Pr.No
+            1: 42, // Pr.No
+            2: 28, // HVI id
+            3: 54, // Cont/mark/lot no
+            4: 28, // Bale/Bale/Sample No.
+            18: 56, //Remarks
           }
         : isLandscapeMode && this.selectedHviVersion === 'v4'
         ? {
@@ -494,7 +495,7 @@ export class PdfComponent implements OnInit {
           layout: 'noBorders',
 
           table: {
-            widths: isLandscapeMode ? [100, 250, 100, 300] : [90, 163, 85, 200],
+            widths: isLandscapeMode ? [150, 250, 150, 300] : [90, 163, 85, 200],
 
             body: [
               [
