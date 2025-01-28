@@ -80,6 +80,7 @@ export class PdfparseService {
         'lastRowToReplace',
         lastRowToReplace
       );
+
       for (const [key, value] of Object.entries(headerRow)) {
         const matchingKey = Object.keys(masterObject).find((masterKey) =>
           masterObject[masterKey].includes(String(value).trim())

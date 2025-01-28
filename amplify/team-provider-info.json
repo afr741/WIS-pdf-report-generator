@@ -16,16 +16,6 @@
         "hvigend8bb609a": {},
         "userPoolGroups": {}
       },
-      "function": {
-        "hvigenphasetwolayer": {
-          "deploymentBucketName": "amplify-hvigen-phasethree-a1162-deployment",
-          "s3Key": "amplify-builds/hvigenphasetwolayer-LambdaLayerVersiond966712f-build.zip"
-        },
-        "hvigenv2processor": {
-          "deploymentBucketName": "amplify-hvigen-phasethree-a1162-deployment",
-          "s3Key": "amplify-builds/hvigenv2processor-524964696d5937366e55-build.zip"
-        }
-      },
       "storage": {
         "hvipdfgeneratorstorage": {}
       },

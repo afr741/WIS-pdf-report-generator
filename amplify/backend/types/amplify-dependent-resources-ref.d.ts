@@ -22,18 +22,6 @@ export type AmplifyDependentResourcesAttributes = {
       "managersGroupRole": "string"
     }
   },
-  "function": {
-    "hvigenphasetwolayer": {
-      "Arn": "string"
-    },
-    "hvigenv2processor": {
-      "Arn": "string",
-      "LambdaExecutionRole": "string",
-      "LambdaExecutionRoleArn": "string",
-      "Name": "string",
-      "Region": "string"
-    }
-  },
   "storage": {
     "hvipdfgeneratorstorage": {
       "BucketName": "string",
