@@ -73,6 +73,7 @@ export class EditComponent implements OnInit, OnDestroy {
       email: ['', Validators.required],
       origin: ['', Validators.required],
       testLocation: ['', Validators.required],
+      testingInstrumentType: ['', Validators.required],
       remarksList: this.fb.array([this.fb.control('')]),
       testConditionsList: this.fb.array([this.fb.control('')]),
     });

@@ -19,6 +19,7 @@ mutation CreateReportTemplate(
     testLocation
     origin
     labLocation
+    testingInstrumentType
     remarksList
     testConditionsList
     id
@@ -48,6 +49,7 @@ mutation UpdateReportTemplate(
     testLocation
     origin
     labLocation
+    testingInstrumentType
     remarksList
     testConditionsList
     id
@@ -77,6 +79,7 @@ mutation DeleteReportTemplate(
     testLocation
     origin
     labLocation
+    testingInstrumentType
     remarksList
     testConditionsList
     id
@@ -104,7 +107,6 @@ mutation CreateReport(
     origin
     stations
     variety
-    testingInstrumentType
     dateOfTesting
     dateOfSampling
     samplingParty
@@ -142,7 +144,6 @@ mutation UpdateReport(
     origin
     stations
     variety
-    testingInstrumentType
     dateOfTesting
     dateOfSampling
     samplingParty
@@ -180,7 +181,6 @@ mutation DeleteReport(
     origin
     stations
     variety
-    testingInstrumentType
     dateOfTesting
     dateOfSampling
     samplingParty

@@ -283,7 +283,6 @@ export class PdfComponent implements OnInit {
       sellerName,
       buyerName,
       lotNum,
-      testingInstrumentType,
       dateOfTesting,
       dateOfSampling,
       samplingParty,
@@ -340,6 +339,7 @@ export class PdfComponent implements OnInit {
     let phone: any = 'N/A';
     let address: any = 'N/A';
     let addressTranslation: any = 'N/A';
+    let testingInstrumentType: any = 'N/A';
     let fax: any = 'N/A';
     let email: any = 'N/A';
     let localCompanyName: any = 'N/A';
@@ -363,6 +363,7 @@ export class PdfComponent implements OnInit {
       phone = this.activeTemplateInfo.phone;
       address = this.activeTemplateInfo.address;
       addressTranslation = this.activeTemplateInfo.addressTranslation;
+      testingInstrumentType = this.activeTemplateInfo.testingInstrumentType;
       fax = this.activeTemplateInfo.fax;
       email = this.activeTemplateInfo.email;
       localCompanyName = this.activeTemplateInfo.localCompanyName;

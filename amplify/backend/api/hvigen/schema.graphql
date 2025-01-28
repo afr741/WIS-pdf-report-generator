@@ -24,6 +24,7 @@ type ReportTemplate
   testLocation: String
   origin: String
   labLocation: String
+  testingInstrumentType: String
   remarksList: [String]
   testConditionsList: [String]
 }
@@ -52,7 +53,6 @@ type Report
   origin: String
   stations: String
   variety: String
-  testingInstrumentType: String
   dateOfTesting: String
   dateOfSampling: String
   samplingParty: String

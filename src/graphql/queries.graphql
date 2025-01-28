@@ -16,6 +16,7 @@ query GetReportTemplate($id: ID!) {
     testLocation
     origin
     labLocation
+    testingInstrumentType
     remarksList
     testConditionsList
     id
@@ -47,6 +48,7 @@ query ListReportTemplates(
       testLocation
       origin
       labLocation
+      testingInstrumentType
       remarksList
       testConditionsList
       id
@@ -74,7 +76,6 @@ query GetReport($id: ID!) {
     origin
     stations
     variety
-    testingInstrumentType
     dateOfTesting
     dateOfSampling
     samplingParty
@@ -114,7 +115,6 @@ query ListReports(
       origin
       stations
       variety
-      testingInstrumentType
       dateOfTesting
       dateOfSampling
       samplingParty
@@ -167,7 +167,6 @@ query ReportsByAttachmentUrlAndName(
       origin
       stations
       variety
-      testingInstrumentType
       dateOfTesting
       dateOfSampling
       samplingParty

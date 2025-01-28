@@ -19,6 +19,7 @@ subscription OnCreateReportTemplate(
     testLocation
     origin
     labLocation
+    testingInstrumentType
     remarksList
     testConditionsList
     id
@@ -48,6 +49,7 @@ subscription OnUpdateReportTemplate(
     testLocation
     origin
     labLocation
+    testingInstrumentType
     remarksList
     testConditionsList
     id
@@ -77,6 +79,7 @@ subscription OnDeleteReportTemplate(
     testLocation
     origin
     labLocation
+    testingInstrumentType
     remarksList
     testConditionsList
     id
@@ -104,7 +107,6 @@ subscription OnCreateReport(
     origin
     stations
     variety
-    testingInstrumentType
     dateOfTesting
     dateOfSampling
     samplingParty
@@ -142,7 +144,6 @@ subscription OnUpdateReport(
     origin
     stations
     variety
-    testingInstrumentType
     dateOfTesting
     dateOfSampling
     samplingParty
@@ -180,7 +181,6 @@ subscription OnDeleteReport(
     origin
     stations
     variety
-    testingInstrumentType
     dateOfTesting
     dateOfSampling
     samplingParty

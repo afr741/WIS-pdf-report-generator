@@ -39,6 +39,7 @@ export type CreateReportTemplateInput = {
   testLocation?: string | null;
   origin?: string | null;
   labLocation?: string | null;
+  testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
   id?: string | null;
@@ -59,6 +60,7 @@ export type ModelReportTemplateConditionInput = {
   testLocation?: ModelStringInput | null;
   origin?: ModelStringInput | null;
   labLocation?: ModelStringInput | null;
+  testingInstrumentType?: ModelStringInput | null;
   remarksList?: ModelStringInput | null;
   testConditionsList?: ModelStringInput | null;
   and?: Array<ModelReportTemplateConditionInput | null> | null;
@@ -140,6 +142,7 @@ export type ReportTemplate = {
   testLocation?: string | null;
   origin?: string | null;
   labLocation?: string | null;
+  testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
   id: string;
@@ -163,6 +166,7 @@ export type UpdateReportTemplateInput = {
   testLocation?: string | null;
   origin?: string | null;
   labLocation?: string | null;
+  testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
   id: string;
@@ -185,7 +189,6 @@ export type CreateReportInput = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
-  testingInstrumentType?: string | null;
   dateOfTesting?: string | null;
   dateOfSampling?: string | null;
   samplingParty?: string | null;
@@ -213,7 +216,6 @@ export type ModelReportConditionInput = {
   origin?: ModelStringInput | null;
   stations?: ModelStringInput | null;
   variety?: ModelStringInput | null;
-  testingInstrumentType?: ModelStringInput | null;
   dateOfTesting?: ModelStringInput | null;
   dateOfSampling?: ModelStringInput | null;
   samplingParty?: ModelStringInput | null;
@@ -249,7 +251,6 @@ export type Report = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
-  testingInstrumentType?: string | null;
   dateOfTesting?: string | null;
   dateOfSampling?: string | null;
   samplingParty?: string | null;
@@ -281,7 +282,6 @@ export type UpdateReportInput = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
-  testingInstrumentType?: string | null;
   dateOfTesting?: string | null;
   dateOfSampling?: string | null;
   samplingParty?: string | null;
@@ -398,6 +398,7 @@ export type ModelReportTemplateFilterInput = {
   testLocation?: ModelStringInput | null;
   origin?: ModelStringInput | null;
   labLocation?: ModelStringInput | null;
+  testingInstrumentType?: ModelStringInput | null;
   remarksList?: ModelStringInput | null;
   testConditionsList?: ModelStringInput | null;
   id?: ModelIDInput | null;
@@ -428,7 +429,6 @@ export type ModelReportFilterInput = {
   origin?: ModelStringInput | null;
   stations?: ModelStringInput | null;
   variety?: ModelStringInput | null;
-  testingInstrumentType?: ModelStringInput | null;
   dateOfTesting?: ModelStringInput | null;
   dateOfSampling?: ModelStringInput | null;
   samplingParty?: ModelStringInput | null;
@@ -524,6 +524,7 @@ export type ModelSubscriptionReportTemplateFilterInput = {
   testLocation?: ModelSubscriptionStringInput | null;
   origin?: ModelSubscriptionStringInput | null;
   labLocation?: ModelSubscriptionStringInput | null;
+  testingInstrumentType?: ModelSubscriptionStringInput | null;
   remarksList?: ModelSubscriptionStringInput | null;
   testConditionsList?: ModelSubscriptionStringInput | null;
   id?: ModelSubscriptionIDInput | null;
@@ -577,7 +578,6 @@ export type ModelSubscriptionReportFilterInput = {
   origin?: ModelSubscriptionStringInput | null;
   stations?: ModelSubscriptionStringInput | null;
   variety?: ModelSubscriptionStringInput | null;
-  testingInstrumentType?: ModelSubscriptionStringInput | null;
   dateOfTesting?: ModelSubscriptionStringInput | null;
   dateOfSampling?: ModelSubscriptionStringInput | null;
   samplingParty?: ModelSubscriptionStringInput | null;
@@ -638,6 +638,7 @@ export type CreateReportTemplateMutation = {
   testLocation?: string | null;
   origin?: string | null;
   labLocation?: string | null;
+  testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
   id: string;
@@ -662,6 +663,7 @@ export type UpdateReportTemplateMutation = {
   testLocation?: string | null;
   origin?: string | null;
   labLocation?: string | null;
+  testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
   id: string;
@@ -686,6 +688,7 @@ export type DeleteReportTemplateMutation = {
   testLocation?: string | null;
   origin?: string | null;
   labLocation?: string | null;
+  testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
   id: string;
@@ -708,7 +711,6 @@ export type CreateReportMutation = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
-  testingInstrumentType?: string | null;
   dateOfTesting?: string | null;
   dateOfSampling?: string | null;
   samplingParty?: string | null;
@@ -741,7 +743,6 @@ export type UpdateReportMutation = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
-  testingInstrumentType?: string | null;
   dateOfTesting?: string | null;
   dateOfSampling?: string | null;
   samplingParty?: string | null;
@@ -774,7 +775,6 @@ export type DeleteReportMutation = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
-  testingInstrumentType?: string | null;
   dateOfTesting?: string | null;
   dateOfSampling?: string | null;
   samplingParty?: string | null;
@@ -875,6 +875,7 @@ export type GetReportTemplateQuery = {
   testLocation?: string | null;
   origin?: string | null;
   labLocation?: string | null;
+  testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
   id: string;
@@ -901,6 +902,7 @@ export type ListReportTemplatesQuery = {
     testLocation?: string | null;
     origin?: string | null;
     labLocation?: string | null;
+    testingInstrumentType?: string | null;
     remarksList?: Array<string | null> | null;
     testConditionsList?: Array<string | null> | null;
     id: string;
@@ -925,7 +927,6 @@ export type GetReportQuery = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
-  testingInstrumentType?: string | null;
   dateOfTesting?: string | null;
   dateOfSampling?: string | null;
   samplingParty?: string | null;
@@ -960,7 +961,6 @@ export type ListReportsQuery = {
     origin?: string | null;
     stations?: string | null;
     variety?: string | null;
-    testingInstrumentType?: string | null;
     dateOfTesting?: string | null;
     dateOfSampling?: string | null;
     samplingParty?: string | null;
@@ -997,7 +997,6 @@ export type ReportsByAttachmentUrlAndNameQuery = {
     origin?: string | null;
     stations?: string | null;
     variety?: string | null;
-    testingInstrumentType?: string | null;
     dateOfTesting?: string | null;
     dateOfSampling?: string | null;
     samplingParty?: string | null;
@@ -1086,6 +1085,7 @@ export type OnCreateReportTemplateSubscription = {
   testLocation?: string | null;
   origin?: string | null;
   labLocation?: string | null;
+  testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
   id: string;
@@ -1110,6 +1110,7 @@ export type OnUpdateReportTemplateSubscription = {
   testLocation?: string | null;
   origin?: string | null;
   labLocation?: string | null;
+  testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
   id: string;
@@ -1134,6 +1135,7 @@ export type OnDeleteReportTemplateSubscription = {
   testLocation?: string | null;
   origin?: string | null;
   labLocation?: string | null;
+  testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
   id: string;
@@ -1156,7 +1158,6 @@ export type OnCreateReportSubscription = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
-  testingInstrumentType?: string | null;
   dateOfTesting?: string | null;
   dateOfSampling?: string | null;
   samplingParty?: string | null;
@@ -1189,7 +1190,6 @@ export type OnUpdateReportSubscription = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
-  testingInstrumentType?: string | null;
   dateOfTesting?: string | null;
   dateOfSampling?: string | null;
   samplingParty?: string | null;
@@ -1222,7 +1222,6 @@ export type OnDeleteReportSubscription = {
   origin?: string | null;
   stations?: string | null;
   variety?: string | null;
-  testingInstrumentType?: string | null;
   dateOfTesting?: string | null;
   dateOfSampling?: string | null;
   samplingParty?: string | null;
@@ -1332,6 +1331,7 @@ export class APIService {
           testLocation
           origin
           labLocation
+          testingInstrumentType
           remarksList
           testConditionsList
           id
@@ -1372,6 +1372,7 @@ export class APIService {
           testLocation
           origin
           labLocation
+          testingInstrumentType
           remarksList
           testConditionsList
           id
@@ -1412,6 +1413,7 @@ export class APIService {
           testLocation
           origin
           labLocation
+          testingInstrumentType
           remarksList
           testConditionsList
           id
@@ -1450,7 +1452,6 @@ export class APIService {
           origin
           stations
           variety
-          testingInstrumentType
           dateOfTesting
           dateOfSampling
           samplingParty
@@ -1499,7 +1500,6 @@ export class APIService {
           origin
           stations
           variety
-          testingInstrumentType
           dateOfTesting
           dateOfSampling
           samplingParty
@@ -1548,7 +1548,6 @@ export class APIService {
           origin
           stations
           variety
-          testingInstrumentType
           dateOfTesting
           dateOfSampling
           samplingParty
@@ -1758,6 +1757,7 @@ export class APIService {
           testLocation
           origin
           labLocation
+          testingInstrumentType
           remarksList
           testConditionsList
           id
@@ -1798,6 +1798,7 @@ export class APIService {
             testLocation
             origin
             labLocation
+            testingInstrumentType
             remarksList
             testConditionsList
             id
@@ -1839,7 +1840,6 @@ export class APIService {
           origin
           stations
           variety
-          testingInstrumentType
           dateOfTesting
           dateOfSampling
           samplingParty
@@ -1888,7 +1888,6 @@ export class APIService {
             origin
             stations
             variety
-            testingInstrumentType
             dateOfTesting
             dateOfSampling
             samplingParty
@@ -1956,7 +1955,6 @@ export class APIService {
             origin
             stations
             variety
-            testingInstrumentType
             dateOfTesting
             dateOfSampling
             samplingParty
@@ -2141,6 +2139,7 @@ export class APIService {
           testLocation
           origin
           labLocation
+          testingInstrumentType
           remarksList
           testConditionsList
           id
@@ -2190,6 +2189,7 @@ export class APIService {
           testLocation
           origin
           labLocation
+          testingInstrumentType
           remarksList
           testConditionsList
           id
@@ -2239,6 +2239,7 @@ export class APIService {
           testLocation
           origin
           labLocation
+          testingInstrumentType
           remarksList
           testConditionsList
           id
@@ -2284,7 +2285,6 @@ export class APIService {
           origin
           stations
           variety
-          testingInstrumentType
           dateOfTesting
           dateOfSampling
           samplingParty
@@ -2338,7 +2338,6 @@ export class APIService {
           origin
           stations
           variety
-          testingInstrumentType
           dateOfTesting
           dateOfSampling
           samplingParty
@@ -2392,7 +2391,6 @@ export class APIService {
           origin
           stations
           variety
-          testingInstrumentType
           dateOfTesting
           dateOfSampling
           samplingParty
