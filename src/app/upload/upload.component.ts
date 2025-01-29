@@ -27,7 +27,7 @@ import {
 })
 export class UploadComponent implements OnInit, OnDestroy {
   public createForm: FormGroup;
-  public reports: Array<Report> = [];
+  // public reports: Array<Report> = [];
   private selectedFile: File | null = null; // Store the selected file
   public error?: string | null = null;
   public isLoading: boolean = false;
@@ -93,13 +93,6 @@ export class UploadComponent implements OnInit, OnDestroy {
         this.selectedLab = updatedUser.labLocation;
         this.selectedHviVersion = updatedUser.hviVersion;
       });
-    this.createSubscription = this.api
-      .OnCreateReportListener()
-      .subscribe((event: any) => {
-        const newReport = event.value.data.onCreateReport;
-        this.reports = [newReport, ...this.reports];
-        console.log('sub created newReport', newReport, 'event', event);
-      });
 
     this.api.ListUserInfos().then((user: any) => {
       if (user.items.length > 0) {
@@ -119,6 +112,7 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   public async onCreate(report: Report) {
     if (this.selectedFile) {
+      this.error = '';
       const uniqueIdentifier = new Date().getTime();
       console.log('uniqueIdentifier', uniqueIdentifier);
       const fileNameWithoutSpaces = this.selectedFile.name.replace(/ /g, '');
@@ -141,7 +135,7 @@ export class UploadComponent implements OnInit, OnDestroy {
           report.email = this.reportEmail;
           report.labLocation = this.selectedLab;
           report.hviVersion = this.selectedHviVersion;
-
+          console.log('onCreate report structure', report);
           // Create the report and wait until it's found in the list of existing reports
           this.createReportAndWaitForConfirmation(report);
         });
@@ -155,38 +149,82 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   // Create the report and wait until it's found in the list of existing reports
   private async createReportAndWaitForConfirmation(report: Report) {
-    try {
-      await this.api.CreateReport(report);
+    const maxRetries = 8; // Maximum number of retries
+    let attempt = 0;
+    let success = false;
 
-      // Wait until the report is found in the list of existing reports
-      await this.waitForReportToBeFound(report);
-    } catch (error: any) {
-      console.log('Error creating report:', error);
-      this.error = 'Error creating report';
+    while (attempt < maxRetries && !success) {
+      try {
+        console.log(`Attempt ${attempt + 1} to create report...`);
+
+        // Check if the report already exists before creating it again
+        let existingReports = await this.api.ListReports();
+        let existingReport = existingReports.items.find(
+          (r: any) => r.name === report.name
+        );
+
+        if (existingReport) {
+          console.log('Report already exists:', existingReport);
+          this.currentReport = existingReport;
+          this.isLoading = false;
+          this.router.navigate(['/pdf']);
+          return;
+        }
+
+        // Attempt to create the report
+        const res = await this.api.CreateReport(report);
+        console.log('Report creation response:', res);
+
+        // Wait for the report to appear in ListReports
+        success = await this.waitForReportToBeFound(report);
+      } catch (error: any) {
+        console.error(`Error creating report (attempt ${attempt + 1}):`, error);
+      }
+
+      if (!success) {
+        attempt++;
+        const delay = Math.pow(1, attempt) * 1000; // Exponential backoff: 2^attempt * 1000ms
+        console.log(`Retrying in ${delay / 1000} seconds...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    if (!success) {
+      console.error('Failed to create report after multiple attempts.');
+      this.error = 'Error creating report. Please try again later.';
       this.isLoading = false;
     }
   }
 
   // Wait until the report is found in the list of existing reports
-  private async waitForReportToBeFound(report: Report) {
-    let existingReports = await this.api.ListReports();
-    let existingReport = existingReports.items.find(
-      (r: any) => r.name === report.name
-    );
+  private async waitForReportToBeFound(report: Report): Promise<boolean> {
+    let retries = 0;
+    const maxRetries = 4;
+    const delayMs = 1500;
 
-    while (!existingReport) {
-      // If the report is not found, wait for 1 second and try again
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      existingReports = await this.api.ListReports();
-      existingReport = existingReports.items.find(
+    while (retries < maxRetries) {
+      console.log(`Checking if report exists (attempt ${retries + 1})...`);
+      let existingReports = await this.api.ListReports();
+      let existingReport = existingReports.items.find(
         (r: any) => r.name === report.name
       );
+      console.log('existingReports', existingReports);
+      console.log('existingReport', existingReport);
+
+      if (existingReport) {
+        console.log('Report found:', existingReport);
+        this.currentReport = existingReport;
+        this.isLoading = false;
+        this.router.navigate(['/pdf']);
+        return true;
+      }
+
+      retries++;
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
     }
 
-    console.log('Report found:', existingReport);
-    this.currentReport = existingReport;
-    this.isLoading = false;
-    this.router.navigate(['/pdf']);
+    console.warn('Report not found after multiple checks.');
+    return false;
   }
 
   // Handle file change event and update the formData
@@ -215,37 +253,6 @@ export class UploadComponent implements OnInit, OnDestroy {
       fileReader.readAsArrayBuffer(file);
     }
   }
-
-  // private createReportWithAttachment(report: Report) {
-  //   if (report.name === '') {
-  //     this.error = 'name is required';
-  //   } else {
-  //     console.log('report inside create report', report);
-  //     this.api
-  //       .CreateReport(report)
-  //       .then((res) => {
-  //         console.log('Item created!', res);
-  //       })
-  //       .catch((e) => {
-  //         this.isLoading = false;
-  //         console.log('Error creating report...', e);
-  //         this.error = 'Error creating report';
-  //       })
-  //       .finally(() => {
-  //         this.isLoading = false;
-  //         this.api.ListReports().then((event) => {
-  //           const updatedReports = (event.items as Report[]).sort((a, b) => {
-  //             // sort by most recent date
-  //             let dateA: any = new Date(a.updatedAt);
-  //             let dateB: any = new Date(b.updatedAt);
-  //             return dateB - dateA;
-  //           });
-  //           console.log('ListReports updatedReports', updatedReports);
-  //         });
-  //         this.router.navigate(['/pdf']);
-  //       });
-  //   }
-  // }
 
   ngOnDestroy() {
     if (this.modifyUserPreferenceSubscription) {

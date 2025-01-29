@@ -1,5 +1,4 @@
 <div class="qrcode-wrapper">
-  <!-- <div *ngIf="!isLoading && dbEntryData[0] != null; else loading"> -->
   <div>
     <a href="http://www.wiscontrol.com/">
       <img [src]="letterheadImageUrl" alt="wis-banner" class="wis-banner" />
@@ -21,21 +20,56 @@
       <div class="contact" [class.border-top]="10">
         <div class="contact-details">
           <div class="contact-field">
-            Customer name: {{ dbEntryData[0].customerName }}
+            Customer name: {{ dbEntryData[0].customerName || "N/A" }}
           </div>
           <div class="contact-field">
-            Lot number: {{ dbEntryData[0].lotNum }}
+            Lot number: {{ dbEntryData[0].lotNum || "N/A" }}
           </div>
-          <!-- <div class="contact-field">
-              Location: {{ dbEntryData[0].testLocation }}
-            </div> -->
-          <div class="contact-field">Origin: {{ dbEntryData[0].origin }}</div>
+
           <div class="contact-field">
-            Stations: {{ dbEntryData[0].stations }}
+            Origin: {{ dbEntryData[0].origin || "N/A" }}
           </div>
-          <div class="contact-field">Date created: {{ dateCreated }}</div>
           <div class="contact-field">
-            Samples sent By: {{ dbEntryData[0].samplesSenderName }}
+            Stations: {{ dbEntryData[0].stations || "N/A" }}
+          </div>
+          <div class="contact-field">
+            Date created: {{ dateCreated || "N/A" }}
+          </div>
+          <div class="contact-field">
+            Samples sent By: {{ dbEntryData[0].samplesSenderName || "N/A" }}
+          </div>
+          <div class="contact-field">
+            Origin: {{ dbEntryData[0].origin || "N/A" }}
+          </div>
+          <div class="contact-field">
+            Variety: {{ dbEntryData[0].variety || "N/A" }}
+          </div>
+          <div class="contact-field">
+            Sampling Party: {{ dbEntryData[0].samplingParty || "N/A" }}
+          </div>
+          <div class="contact-field">
+            Sampling Location: {{ dbEntryData[0].samplingLocation || "N/A" }}
+          </div>
+          <div class="contact-field">
+            Sampling Percentage:
+            {{ dbEntryData[0].samplingPercentage || "N/A" }}
+          </div>
+
+          <div class="contact-field">
+            Vessel Or Conveyance :
+            {{ dbEntryData[0].vesselOrConveyance || "N/A" }}
+          </div>
+          <div class="contact-field">
+            crop year: {{ dbEntryData[0].cropYear || "N/A" }}
+          </div>
+          <div class="contact-field">
+            Invoice Number: {{ dbEntryData[0].invoiceNumber || "N/A" }}
+          </div>
+          <div class="contact-field">
+            Seller Name: {{ dbEntryData[0].sellerName || "N/A" }}
+          </div>
+          <div class="contact-field">
+            Buyer Name: {{ dbEntryData[0].buyerName || "N/A" }}
           </div>
         </div>
       </div>
