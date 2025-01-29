@@ -77,17 +77,13 @@
   </kendo-listview>
   <div *ngIf="!isLoading && dbEntryData[0] != null; else loading">
     <div class="data-grid-wrapper">
-      <kendo-grid
-        [kendoGridBinding]="dataRows"
-        scrollable="scrollable"
-        class="qr-data-grid"
-      >
-        <ng-container *ngFor="let column of dataColumnNames">
-          <kendo-grid-column
-            [field]="column"
-            [title]="column"
-          ></kendo-grid-column>
-        </ng-container>
+      <kendo-grid [data]="gridData">
+        <kendo-grid-column
+          *ngFor="let column of columnsConfig"
+          [field]="column.field"
+          [title]="column.title"
+        >
+        </kendo-grid-column>
       </kendo-grid>
     </div>
   </div>

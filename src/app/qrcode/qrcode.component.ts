@@ -25,7 +25,10 @@ export class QrcodeComponent implements OnInit {
   public dbEntryData: Report[] = [];
   public dataRows: any = {};
   public rawDataRows: any[] = [];
-  public dataColumnNames: string[] = [];
+
+  public columnsConfig: Array<{ field: string; title: string }> = [];
+  public gridData: Array<any> = [];
+
   public dateCreated: string = '';
   public isLoading: boolean = true;
   public loader = {
@@ -128,12 +131,23 @@ export class QrcodeComponent implements OnInit {
           .then((data) => {
             this.isLoading = false;
             this.dataRows = data.extractedRowsBody;
+
             console.log('data', data);
+
+            const columnNames = data.extractedRowsBody[0];
+            this.columnsConfig = columnNames.map((name: any) => ({
+              field: name,
+              title: name,
+            }));
+
+            // Extract rows from the remaining data
+            this.gridData = data.extractedRowsBody.slice(1).map((row: any) => {
+              return row.reduce((acc: any, value: any, index: any) => {
+                acc[columnNames[index]] = value; // Map each value to its corresponding column name
+                return acc;
+              }, {});
+            });
           });
-        // this.dataRows = this.dataParsingService.handleProcessingVersion(
-        //   this.dbEntryData[0].dataRows,
-        //   this.dbEntryData[0].hviVersion
-        // );
       })
       .catch((e: any) => console.log('error', e));
   }
