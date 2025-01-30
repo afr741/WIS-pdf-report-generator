@@ -121,15 +121,15 @@ export class PdfparseService {
     // Example usage
 
     const masterObject = {
-      'No.': ['No', 'No.', 'Sample Count', 'S.No', 'Bale ID'],
-      'S.B. No.': ['S.B. No', 'S.B.No'],
-      'P.R No.': ['P.R No', 'P.R No.', 'Tr ID'],
-      'HVI ID No': ['ID No'],
+      'Bale/Sample No.': ['Bale', 'Bale ID'],
       'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
-      'Bale/Sample No.': ['Bale'],
+      'No.': ['No', 'No.', 'Sample Count', 'S.No'],
       Mst: ['Moist'],
       Amt: ['Amt'],
       UHML: ['UHML'],
+      'Tr ID': ['Tr ID'],
+      UI: ['UI'],
+      Mat: ['Mat'],
       SCI: ['SCI'],
       Mic: ['Mic'],
       Rd: ['Rd'],
@@ -138,7 +138,7 @@ export class PdfparseService {
       Area: ['Tr Area'],
       Cnt: ['Tr Cnt'],
       'T.L': ['T.L'],
-      Unf: ['Unf', 'UI'],
+      Unf: ['Unf'],
       Str: ['Str'],
       SFI: ['SFI'],
       ELG: ['Elg'],
@@ -191,7 +191,7 @@ export class PdfparseService {
     }
 
     const roundToInteger = ['P.R No.', 'Amt']; // Columns to round to integer
-    const roundTwoDecimal = ['UHML', 'Mic', 'Mat', 'SFI', 'C-G', 'Area'];
+    const roundTwoDecimal = ['UHML', 'Mic', 'Mat', 'SFI', 'C-G', 'Area', 'UI'];
     const roundOneDecimal = [
       'SCI',
       'Mst',
@@ -331,15 +331,15 @@ export class PdfparseService {
     // Example usage
 
     const masterObject = {
-      'No.': ['No', 'No.', 'Sample Count', 'S.No'],
-      'S.B. No.': ['S.B. No', 'S.B.No'],
-      'P.R No.': ['P.R No', 'P.R No.', 'TrID'],
+      'Bale/Sample No.': ['Bale ID'],
       'HVI ID No': ['ID No'],
       'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
-      'Bale/Sample No.': ['Bale ID'],
       Mst: ['Mst'],
       Amt: ['Amt'],
       UHML: ['UHML'],
+      UI: ['UI'],
+      Mat: ['Mat'],
+      TrID: ['TrID'],
       SCI: ['SCI'],
       Mic: ['Mic'],
       Rd: ['Rd'],
@@ -544,15 +544,15 @@ export class PdfparseService {
     // Example usage
 
     const masterObject = {
-      'No.': ['No', 'No.', 'Sample Count', 'S.No'],
-      Grade: ['Grade'],
-      'P.R No.': ['P.R No', 'P.R No.', 'Tr ID'],
-      // 'HVI ID No': ['ID No'],
-      'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
       'Bale/Sample No.': ['Bale ID'],
+      'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
       Mst: ['Mst'],
       UHML: ['UHML'],
+      UI: ['UI'],
+      'Tr ID': ['Tr ID'],
+      Amt: ['Amt'],
       SCI: ['SCI'],
+      Grade: ['Grade'],
       Mic: ['Mic'],
       Rd: ['Rd'],
       '+b': ['+b'],
@@ -561,11 +561,10 @@ export class PdfparseService {
       Cnt: ['Cnt'],
       'T.L': ['T.L'],
       Len: ['Len'],
-      Unf: ['UI'],
+      Unf: ['Unf'],
       Str: ['Str'],
       SFI: ['SFI'],
       ELG: ['Elg'],
-      Nep: ['Nep'],
       Remarks: ['Remarks'],
     };
 
@@ -616,7 +615,7 @@ export class PdfparseService {
     }
 
     const roundToInteger = ['P.R No.', 'Amt']; // Columns to round to integer
-    const roundTwoDecimal = ['UHML', 'Mic', 'Mat', 'SFI', 'C-G', 'Area'];
+    const roundTwoDecimal = ['UHML', 'Mic', 'Mat', 'SFI', 'C-G', 'Area', 'UI'];
     const roundOneDecimal = [
       'SCI',
       'Mst',

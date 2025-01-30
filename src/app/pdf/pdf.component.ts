@@ -408,26 +408,23 @@ export class PdfComponent implements OnInit {
           }
         : isLandscapeMode && this.selectedHviVersion === 'v3'
         ? {
-            2: 35, // Pr.No,
+            0: 35, // Bale ID,
             4: 35, // Bale/Sample No
-            11: 35, // G-C
-            16: 35, // Umf
+            12: 35, // G-C
             21: 50, // Remarks
           }
         : isLandscapeMode && this.selectedHviVersion === 'v2'
         ? {
-            2: 35,
-            5: 34, // Bale/Sample No
-            13: 35, // C-G
-            22: 50, // Remarks
+            0: 35,
+            14: 35, // C-G
+            23: 50, // Remarks
           }
         : isLandscapeMode && this.selectedHviVersion === 'v1'
         ? {
-            0: 40, // No/Bale ID
-            2: 35, // Pr.No,
-            6: 32, // Mst
+            0: 35, //No/Average
+            3: 32, // Mst
             13: 35, // C-G
-            22: 50, // Remarks
+            21: 50, // Remarks
           }
         : {};
     columnWidthArray = columnWidthArray.map((width, index) => {
