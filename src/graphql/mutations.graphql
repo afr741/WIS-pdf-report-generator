@@ -118,6 +118,7 @@ mutation CreateReport(
     invoiceNumber
     sellerName
     buyerName
+    testingInstrumentType
     attachmentUrl
     dataRows
     createdAt
@@ -155,6 +156,7 @@ mutation UpdateReport(
     invoiceNumber
     sellerName
     buyerName
+    testingInstrumentType
     attachmentUrl
     dataRows
     createdAt
@@ -192,6 +194,7 @@ mutation DeleteReport(
     invoiceNumber
     sellerName
     buyerName
+    testingInstrumentType
     attachmentUrl
     dataRows
     createdAt

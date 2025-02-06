@@ -33,11 +33,8 @@ type Report
   @model
   @auth(
     rules: [
-      # allow owners ability to update and delete their these messages (user pools)
       { allow: owner }
-      # allow all authenticated users to access this data
       { allow: private, provider: userPools }
-      # allow all guest users (not authenticated) to access this data
       { allow: public, provider: apiKey }
     ]
   ) {
@@ -64,8 +61,8 @@ type Report
   invoiceNumber: String
   sellerName: String
   buyerName: String
+  testingInstrumentType: String
   attachmentUrl: String!
-    @index(name: "attachmentUrlIndex", sortKeyFields: ["name"])
   dataRows: [AWSJSON]
 }
 
@@ -75,10 +72,6 @@ type UserInfo
     rules: [
       # allow owners ability to update and delete their these messages (user pools)
       { allow: owner }
-      # allow all authenticated users to access this data
-      { allow: private, provider: userPools }
-      # allow all guest users (not authenticated) to access this data
-      { allow: public, provider: apiKey }
     ]
   ) {
   id: ID!
@@ -99,6 +92,6 @@ type Labs
   ) {
   labCountry: String!
   labCode: String!
-  label: String!
-  defaultHVIProcessingVersion: String!
+  label: String
+  defaultHVIProcessingVersion: String
 }

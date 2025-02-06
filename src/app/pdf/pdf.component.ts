@@ -59,14 +59,7 @@ export class PdfComponent implements OnInit {
     private notificationService: NotificationService,
     private authService: AuthService,
     private pdfService: PdfparseService
-  ) {
-    (pdfMake as any).fonts = {
-      NotoSansSC: {
-        normal: `${window.location.origin}/assets/fonts/Noto_Sans_SC/static/NotoSansSC-Regular.ttf`,
-        bold: `${window.location.origin}/assets/fonts/Noto_Sans_SC/static/NotoSansSC-Bold.ttf`,
-      },
-    };
-  }
+  ) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -75,6 +68,7 @@ export class PdfComponent implements OnInit {
       .subscribe((user: any) => {
         const updatedUser = user.value.data.onUpdateUserInfo;
         this.selectedHviVersion = updatedUser.hviVersion;
+        this.updateFonts();
         if (this.selectedLab !== updatedUser.labLocation) {
           this.selectedLab = updatedUser.labLocation;
           fetchTemplateData().then(() => fetchData());
@@ -174,6 +168,18 @@ export class PdfComponent implements OnInit {
     this.updateUserPreferenceSubscription = null;
   }
 
+  updateFonts() {
+    (pdfMake as any).fonts =
+      this.selectedHviVersion === 'v5'
+        ? {
+            NotoSansSC: {
+              normal: `${window.location.origin}/assets/fonts/Noto_Sans_SC/static/NotoSansSC-Regular.ttf`,
+              bold: `${window.location.origin}/assets/fonts/Noto_Sans_SC/static/NotoSansSC-Bold.ttf`,
+            },
+          }
+        : (pdfMake as any).fonts;
+  }
+
   async fetchTemplateImages() {
     if (this.activeTemplateInfo) {
       this.isLoading = true;
@@ -182,7 +188,16 @@ export class PdfComponent implements OnInit {
       if (this.activeTemplateInfo.letterHeadImageName) {
         imagePromises.push(
           Storage.get(this.activeTemplateInfo.letterHeadImageName).then((url) =>
-            this.getBase64ImageFromURL(url).then((image) => {
+            /*************  ✨ Codeium Command ⭐  *************/
+            /**
+             * Fetches the template images associated with the currently selected lab.
+             * If the lab has a letterhead, stamp, or certification image, it will be fetched and stored in
+             * the component's properties.
+             * @returns {Promise<void>}
+             */
+            /******  d3550224-273f-4527-b128-a859096a25fb  *******/ this.getBase64ImageFromURL(
+              url
+            ).then((image) => {
               this.letterHeadImage = image;
             })
           )
@@ -715,7 +730,7 @@ export class PdfComponent implements OnInit {
         },
       ],
       defaultStyle: {
-        font: 'NotoSansSC',
+        font: this.selectedHviVersion === 'v5' ? 'NotoSansSC' : null,
       },
       styles: {
         header: {
@@ -793,7 +808,14 @@ export class PdfComponent implements OnInit {
         this.isButtonDisabled = true;
         setTimeout(() => {
           pdfMake
-            .createPdf(this.pdfData, undefined, undefined, this.customFonts)
+            .createPdf(
+              this.pdfData,
+              undefined,
+              undefined,
+              this.selectedHviVersion === 'v5'
+                ? this.customFonts
+                : pdfFonts.pdfMake.vfs
+            )
             .open();
           this.isButtonDisabled = false;
         }, 2000);
@@ -818,6 +840,10 @@ export class PdfComponent implements OnInit {
 
   handlBackButton() {
     this.router.navigate(['/upload']);
+  }
+
+  handleViewAgain() {
+    window.location.reload();
   }
 
   handleEditTemplate(): void {

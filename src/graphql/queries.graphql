@@ -87,6 +87,7 @@ query GetReport($id: ID!) {
     invoiceNumber
     sellerName
     buyerName
+    testingInstrumentType
     attachmentUrl
     dataRows
     createdAt
@@ -126,58 +127,7 @@ query ListReports(
       invoiceNumber
       sellerName
       buyerName
-      attachmentUrl
-      dataRows
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-
-query ReportsByAttachmentUrlAndName(
-  $attachmentUrl: String!
-  $name: ModelStringKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelReportFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  reportsByAttachmentUrlAndName(
-    attachmentUrl: $attachmentUrl
-    name: $name
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      name
-      samplesSenderName
-      email
-      labLocation
-      hviVersion
-      reportNum
-      lotNum
-      customerName
-      origin
-      stations
-      variety
-      dateOfTesting
-      dateOfSampling
-      samplingParty
-      samplingLocation
-      samplingPercentage
-      vesselOrConveyance
-      cropYear
-      conveyanceRefNo
-      invoiceNumber
-      sellerName
-      buyerName
+      testingInstrumentType
       attachmentUrl
       dataRows
       createdAt

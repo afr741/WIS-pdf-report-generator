@@ -68,6 +68,7 @@ export class UploadComponent implements OnInit, OnDestroy {
       vesselOrConveyance: ['', Validators.required],
       cropYear: ['', Validators.required],
       conveyanceRefNo: ['', Validators.required],
+      testingInstrumentType: ['', Validators.required], //temp to be removed
     });
   }
 

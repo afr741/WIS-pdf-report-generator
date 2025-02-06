@@ -118,6 +118,7 @@ subscription OnCreateReport(
     invoiceNumber
     sellerName
     buyerName
+    testingInstrumentType
     attachmentUrl
     dataRows
     createdAt
@@ -155,6 +156,7 @@ subscription OnUpdateReport(
     invoiceNumber
     sellerName
     buyerName
+    testingInstrumentType
     attachmentUrl
     dataRows
     createdAt
@@ -192,6 +194,7 @@ subscription OnDeleteReport(
     invoiceNumber
     sellerName
     buyerName
+    testingInstrumentType
     attachmentUrl
     dataRows
     createdAt

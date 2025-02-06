@@ -15,7 +15,7 @@
           "additionalAuthenticationProviders": [
             {
               "apiKeyConfig": {
-                "apiKeyExpirationDate": "2025-02-01T19:20:27.585Z",
+                "apiKeyExpirationDate": "2026-02-03T19:35:24.290Z",
                 "apiKeyExpirationDays": 365,
                 "description": "hvigen-dev_api_key"
               },

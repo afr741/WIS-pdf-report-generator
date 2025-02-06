@@ -200,6 +200,7 @@ export type CreateReportInput = {
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
+  testingInstrumentType?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
 };
@@ -227,6 +228,7 @@ export type ModelReportConditionInput = {
   invoiceNumber?: ModelStringInput | null;
   sellerName?: ModelStringInput | null;
   buyerName?: ModelStringInput | null;
+  testingInstrumentType?: ModelStringInput | null;
   attachmentUrl?: ModelStringInput | null;
   dataRows?: ModelStringInput | null;
   and?: Array<ModelReportConditionInput | null> | null;
@@ -262,6 +264,7 @@ export type Report = {
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
+  testingInstrumentType?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -293,6 +296,7 @@ export type UpdateReportInput = {
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
+  testingInstrumentType?: string | null;
   attachmentUrl?: string | null;
   dataRows?: Array<string | null> | null;
 };
@@ -341,8 +345,8 @@ export type DeleteUserInfoInput = {
 export type CreateLabsInput = {
   labCountry: string;
   labCode: string;
-  label: string;
-  defaultHVIProcessingVersion: string;
+  label?: string | null;
+  defaultHVIProcessingVersion?: string | null;
   id?: string | null;
 };
 
@@ -363,8 +367,8 @@ export type Labs = {
   __typename: "Labs";
   labCountry: string;
   labCode: string;
-  label: string;
-  defaultHVIProcessingVersion: string;
+  label?: string | null;
+  defaultHVIProcessingVersion?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -440,6 +444,7 @@ export type ModelReportFilterInput = {
   invoiceNumber?: ModelStringInput | null;
   sellerName?: ModelStringInput | null;
   buyerName?: ModelStringInput | null;
+  testingInstrumentType?: ModelStringInput | null;
   attachmentUrl?: ModelStringInput | null;
   dataRows?: ModelStringInput | null;
   createdAt?: ModelStringInput | null;
@@ -455,21 +460,6 @@ export type ModelReportConnection = {
   items: Array<Report | null>;
   nextToken?: string | null;
 };
-
-export type ModelStringKeyConditionInput = {
-  eq?: string | null;
-  le?: string | null;
-  lt?: string | null;
-  ge?: string | null;
-  gt?: string | null;
-  between?: Array<string | null> | null;
-  beginsWith?: string | null;
-};
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC"
-}
 
 export type ModelUserInfoFilterInput = {
   id?: ModelIDInput | null;
@@ -589,6 +579,7 @@ export type ModelSubscriptionReportFilterInput = {
   invoiceNumber?: ModelSubscriptionStringInput | null;
   sellerName?: ModelSubscriptionStringInput | null;
   buyerName?: ModelSubscriptionStringInput | null;
+  testingInstrumentType?: ModelSubscriptionStringInput | null;
   attachmentUrl?: ModelSubscriptionStringInput | null;
   dataRows?: ModelSubscriptionStringInput | null;
   createdAt?: ModelSubscriptionStringInput | null;
@@ -722,6 +713,7 @@ export type CreateReportMutation = {
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
+  testingInstrumentType?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -754,6 +746,7 @@ export type UpdateReportMutation = {
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
+  testingInstrumentType?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -786,6 +779,7 @@ export type DeleteReportMutation = {
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
+  testingInstrumentType?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -827,8 +821,8 @@ export type CreateLabsMutation = {
   __typename: "Labs";
   labCountry: string;
   labCode: string;
-  label: string;
-  defaultHVIProcessingVersion: string;
+  label?: string | null;
+  defaultHVIProcessingVersion?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -839,8 +833,8 @@ export type UpdateLabsMutation = {
   __typename: "Labs";
   labCountry: string;
   labCode: string;
-  label: string;
-  defaultHVIProcessingVersion: string;
+  label?: string | null;
+  defaultHVIProcessingVersion?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -851,8 +845,8 @@ export type DeleteLabsMutation = {
   __typename: "Labs";
   labCountry: string;
   labCode: string;
-  label: string;
-  defaultHVIProcessingVersion: string;
+  label?: string | null;
+  defaultHVIProcessingVersion?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -938,6 +932,7 @@ export type GetReportQuery = {
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
+  testingInstrumentType?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -972,42 +967,7 @@ export type ListReportsQuery = {
     invoiceNumber?: string | null;
     sellerName?: string | null;
     buyerName?: string | null;
-    attachmentUrl: string;
-    dataRows?: Array<string | null> | null;
-    createdAt: string;
-    updatedAt: string;
-    owner?: string | null;
-  } | null>;
-  nextToken?: string | null;
-};
-
-export type ReportsByAttachmentUrlAndNameQuery = {
-  __typename: "ModelReportConnection";
-  items: Array<{
-    __typename: "Report";
-    id: string;
-    name: string;
-    samplesSenderName?: string | null;
-    email?: string | null;
-    labLocation?: string | null;
-    hviVersion?: string | null;
-    reportNum?: string | null;
-    lotNum?: string | null;
-    customerName?: string | null;
-    origin?: string | null;
-    stations?: string | null;
-    variety?: string | null;
-    dateOfTesting?: string | null;
-    dateOfSampling?: string | null;
-    samplingParty?: string | null;
-    samplingLocation?: string | null;
-    samplingPercentage?: string | null;
-    vesselOrConveyance?: string | null;
-    cropYear?: string | null;
-    conveyanceRefNo?: string | null;
-    invoiceNumber?: string | null;
-    sellerName?: string | null;
-    buyerName?: string | null;
+    testingInstrumentType?: string | null;
     attachmentUrl: string;
     dataRows?: Array<string | null> | null;
     createdAt: string;
@@ -1045,8 +1005,8 @@ export type GetLabsQuery = {
   __typename: "Labs";
   labCountry: string;
   labCode: string;
-  label: string;
-  defaultHVIProcessingVersion: string;
+  label?: string | null;
+  defaultHVIProcessingVersion?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -1059,8 +1019,8 @@ export type ListLabsQuery = {
     __typename: "Labs";
     labCountry: string;
     labCode: string;
-    label: string;
-    defaultHVIProcessingVersion: string;
+    label?: string | null;
+    defaultHVIProcessingVersion?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -1169,6 +1129,7 @@ export type OnCreateReportSubscription = {
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
+  testingInstrumentType?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -1201,6 +1162,7 @@ export type OnUpdateReportSubscription = {
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
+  testingInstrumentType?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -1233,6 +1195,7 @@ export type OnDeleteReportSubscription = {
   invoiceNumber?: string | null;
   sellerName?: string | null;
   buyerName?: string | null;
+  testingInstrumentType?: string | null;
   attachmentUrl: string;
   dataRows?: Array<string | null> | null;
   createdAt: string;
@@ -1274,8 +1237,8 @@ export type OnCreateLabsSubscription = {
   __typename: "Labs";
   labCountry: string;
   labCode: string;
-  label: string;
-  defaultHVIProcessingVersion: string;
+  label?: string | null;
+  defaultHVIProcessingVersion?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -1286,8 +1249,8 @@ export type OnUpdateLabsSubscription = {
   __typename: "Labs";
   labCountry: string;
   labCode: string;
-  label: string;
-  defaultHVIProcessingVersion: string;
+  label?: string | null;
+  defaultHVIProcessingVersion?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -1298,8 +1261,8 @@ export type OnDeleteLabsSubscription = {
   __typename: "Labs";
   labCountry: string;
   labCode: string;
-  label: string;
-  defaultHVIProcessingVersion: string;
+  label?: string | null;
+  defaultHVIProcessingVersion?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -1463,6 +1426,7 @@ export class APIService {
           invoiceNumber
           sellerName
           buyerName
+          testingInstrumentType
           attachmentUrl
           dataRows
           createdAt
@@ -1511,6 +1475,7 @@ export class APIService {
           invoiceNumber
           sellerName
           buyerName
+          testingInstrumentType
           attachmentUrl
           dataRows
           createdAt
@@ -1559,6 +1524,7 @@ export class APIService {
           invoiceNumber
           sellerName
           buyerName
+          testingInstrumentType
           attachmentUrl
           dataRows
           createdAt
@@ -1851,6 +1817,7 @@ export class APIService {
           invoiceNumber
           sellerName
           buyerName
+          testingInstrumentType
           attachmentUrl
           dataRows
           createdAt
@@ -1899,6 +1866,7 @@ export class APIService {
             invoiceNumber
             sellerName
             buyerName
+            testingInstrumentType
             attachmentUrl
             dataRows
             createdAt
@@ -1922,83 +1890,6 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
     return <ListReportsQuery>response.data.listReports;
-  }
-  async ReportsByAttachmentUrlAndName(
-    attachmentUrl: string,
-    name?: ModelStringKeyConditionInput,
-    sortDirection?: ModelSortDirection,
-    filter?: ModelReportFilterInput,
-    limit?: number,
-    nextToken?: string
-  ): Promise<ReportsByAttachmentUrlAndNameQuery> {
-    const statement = `query ReportsByAttachmentUrlAndName($attachmentUrl: String!, $name: ModelStringKeyConditionInput, $sortDirection: ModelSortDirection, $filter: ModelReportFilterInput, $limit: Int, $nextToken: String) {
-        reportsByAttachmentUrlAndName(
-          attachmentUrl: $attachmentUrl
-          name: $name
-          sortDirection: $sortDirection
-          filter: $filter
-          limit: $limit
-          nextToken: $nextToken
-        ) {
-          __typename
-          items {
-            __typename
-            id
-            name
-            samplesSenderName
-            email
-            labLocation
-            hviVersion
-            reportNum
-            lotNum
-            customerName
-            origin
-            stations
-            variety
-            dateOfTesting
-            dateOfSampling
-            samplingParty
-            samplingLocation
-            samplingPercentage
-            vesselOrConveyance
-            cropYear
-            conveyanceRefNo
-            invoiceNumber
-            sellerName
-            buyerName
-            attachmentUrl
-            dataRows
-            createdAt
-            updatedAt
-            owner
-          }
-          nextToken
-        }
-      }`;
-    const gqlAPIServiceArguments: any = {
-      attachmentUrl
-    };
-    if (name) {
-      gqlAPIServiceArguments.name = name;
-    }
-    if (sortDirection) {
-      gqlAPIServiceArguments.sortDirection = sortDirection;
-    }
-    if (filter) {
-      gqlAPIServiceArguments.filter = filter;
-    }
-    if (limit) {
-      gqlAPIServiceArguments.limit = limit;
-    }
-    if (nextToken) {
-      gqlAPIServiceArguments.nextToken = nextToken;
-    }
-    const response = (await API.graphql(
-      graphqlOperation(statement, gqlAPIServiceArguments)
-    )) as any;
-    return <ReportsByAttachmentUrlAndNameQuery>(
-      response.data.reportsByAttachmentUrlAndName
-    );
   }
   async GetUserInfo(id: string): Promise<GetUserInfoQuery> {
     const statement = `query GetUserInfo($id: ID!) {
@@ -2296,6 +2187,7 @@ export class APIService {
           invoiceNumber
           sellerName
           buyerName
+          testingInstrumentType
           attachmentUrl
           dataRows
           createdAt
@@ -2349,6 +2241,7 @@ export class APIService {
           invoiceNumber
           sellerName
           buyerName
+          testingInstrumentType
           attachmentUrl
           dataRows
           createdAt
@@ -2402,6 +2295,7 @@ export class APIService {
           invoiceNumber
           sellerName
           buyerName
+          testingInstrumentType
           attachmentUrl
           dataRows
           createdAt
