@@ -7,16 +7,19 @@
       "mode": "AMAZON_COGNITO_USER_POOLS",
       "cognitoUserPoolId": "authhvigend8bb609a"
     },
-    "conflictResolution": {},
+    "conflictResolution": {
+      "defaultResolutionStrategy": {
+        "type": "NONE"
+      }
+    },
     "additionalAuthTypes": [
       {
-        "mode": "API_KEY",
-        "expirationTime": 365,
-        "apiKeyExpirationDate": "2026-02-03T19:35:24.290Z",
-        "keyDescription": "hvigen-dev_api_key"
+        "mode": "AWS_IAM"
       },
       {
-        "mode": "AWS_IAM"
+        "mode": "API_KEY",
+        "keyDescription": "api key description",
+        "expirationTime": 30
       }
     ]
   }

@@ -1,15 +1,4 @@
-type ReportTemplate
-  @model
-  @auth(
-    rules: [
-      # allow owners ability to update and delete their these messages (user pools)
-      { allow: owner }
-      # allow all authenticated users to access this data
-      { allow: private, provider: userPools }
-      # allow all guest users (not authenticated) to access this data
-      { allow: public, provider: apiKey }
-    ]
-  ) {
+type ReportTemplate @model @auth(rules: [{allow: owner}, {allow: private, provider: userPools}, {allow: public, provider: apiKey}]) {
   templateId: ID!
   localCompanyName: String
   localCompanyNameTranslation: String
@@ -29,15 +18,7 @@ type ReportTemplate
   testConditionsList: [String]
 }
 
-type Report
-  @model
-  @auth(
-    rules: [
-      { allow: owner }
-      { allow: private, provider: userPools }
-      { allow: public, provider: apiKey }
-    ]
-  ) {
+type Report @model @auth(rules: [{allow: owner}, {allow: private, provider: userPools}, {allow: public, provider: apiKey}]) {
   id: ID!
   name: String!
   samplesSenderName: String
@@ -66,32 +47,15 @@ type Report
   dataRows: [AWSJSON]
 }
 
-type UserInfo
-  @model
-  @auth(
-    rules: [
-      # allow owners ability to update and delete their these messages (user pools)
-      { allow: owner }
-    ]
-  ) {
+type UserInfo @model @auth(rules: [{allow: owner}]) {
   id: ID!
   labLocation: String!
   hviVersion: String!
 }
 
-type Labs
-  @model
-  @auth(
-    rules: [
-      { allow: owner }
-      # allow all authenticated users to access this data
-      { allow: private, provider: userPools }
-      # allow all guest users (not authenticated) to access this data
-      { allow: public, provider: apiKey }
-    ]
-  ) {
+type Labs @model @auth(rules: [{allow: owner}, {allow: private, provider: userPools}, {allow: public, provider: apiKey}]) {
   labCountry: String!
   labCode: String!
   label: String
   defaultHVIProcessingVersion: String
-}
+} 

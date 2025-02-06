@@ -14,15 +14,14 @@
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
-              "apiKeyConfig": {
-                "apiKeyExpirationDate": "2026-02-03T19:35:24.290Z",
-                "apiKeyExpirationDays": 365,
-                "description": "hvigen-dev_api_key"
-              },
-              "authenticationType": "API_KEY"
+              "authenticationType": "AWS_IAM"
             },
             {
-              "authenticationType": "AWS_IAM"
+              "apiKeyConfig": {
+                "apiKeyExpirationDays": 30,
+                "description": "api key description"
+              },
+              "authenticationType": "API_KEY"
             }
           ],
           "defaultAuthentication": {
