@@ -412,7 +412,7 @@ export class PdfComponent implements OnInit {
             2: 28, // HVI id
             3: 54, // Cont/mark/lot no
             4: 28, // Bale/Bale/Sample No.
-            18: 56, //Remarks
+            18: 75, //Remarks
           }
         : isLandscapeMode && this.selectedHviVersion === 'v4'
         ? {
@@ -567,7 +567,9 @@ export class PdfComponent implements OnInit {
                 variety == '' || variety == null ? 'N/A' : variety,
               ],
               [
-                'B/L or Conveyance  Ref  No.',
+                this.selectedHviVersion === 'v6'
+                  ? 'BL No / Samples received from'
+                  : 'B/L or Conveyance  Ref  No.',
                 conveyanceRefNo == '' || conveyanceRefNo == null
                   ? 'N/A'
                   : conveyanceRefNo,

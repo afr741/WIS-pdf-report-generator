@@ -195,16 +195,36 @@
           <kendo-formerror>Crop Year</kendo-formerror>
         </kendo-formfield>
 
-        <kendo-formfield>
-          <kendo-label labelCssClass="k-form-label" text="Conveyance Ref No" />
-          <kendo-textbox
-            formControlName="conveyanceRefNo"
-            #conveyanceRefNo
-            required
-            placeholder="Conveyance Ref No"
-          ></kendo-textbox>
-          <kendo-formerror>Conveyance Ref No</kendo-formerror>
-        </kendo-formfield>
+        <ng-container *ngIf="selectedHviVersion === 'v6'; else defaultBlock">
+          <kendo-formfield>
+            <kendo-label
+              labelCssClass="k-form-label"
+              text="BL No / Samples received from"
+            />
+            <kendo-textbox
+              formControlName="conveyanceRefNo"
+              #conveyanceRefNo
+              required
+              placeholder="BL No / Samples received from"
+            ></kendo-textbox>
+            <kendo-formerror>BL No / Samples received from</kendo-formerror>
+          </kendo-formfield>
+        </ng-container>
+        <ng-template #defaultBlock>
+          <kendo-formfield>
+            <kendo-label
+              labelCssClass="k-form-label"
+              text="B/L or Conveyance Ref No"
+            />
+            <kendo-textbox
+              formControlName="conveyanceRefNo"
+              #conveyanceRefNo
+              required
+              placeholder="B/L or Conveyance Ref No"
+            ></kendo-textbox>
+            <kendo-formerror>B/L or Conveyance Ref No</kendo-formerror>
+          </kendo-formfield>
+        </ng-template>
       </ng-container>
 
       <div class="row">
