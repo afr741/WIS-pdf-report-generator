@@ -421,22 +421,24 @@ export class PdfComponent implements OnInit {
             6: 54, // Bale/Sample No
             20: 54, // Remarks
           }
-        : isLandscapeMode && this.selectedHviVersion === 'v3'
+        : isLandscapeMode && this.selectedHviVersion === 'v3' //Khujand
         ? {
             0: 35, // Bale ID,
-            4: 35, // Bale/Sample No
+            5: 35, // TrId
             12: 35, // G-C
             21: 50, // Remarks
           }
-        : isLandscapeMode && this.selectedHviVersion === 'v2'
+        : isLandscapeMode && this.selectedHviVersion === 'v2' //bohtar
         ? {
             0: 35,
-            14: 35, // C-G
+            8: 30,
+            13: 30, // C-G
             23: 50, // Remarks
           }
         : isLandscapeMode && this.selectedHviVersion === 'v1'
         ? {
             0: 35, //No/Average
+            6: 30, //Tr ID,
             3: 32, // Mst
             13: 35, // C-G
             21: 50, // Remarks

@@ -152,7 +152,8 @@ export class PdfparseService {
       result: { headers: string[]; rows: Record<string, any>[] },
       roundToInteger: string[], // Columns to round to integer
       roundOneDecimal: string[],
-      roundTwoDecimal: string[] // Columns to round to 2 decimal points
+      roundTwoDecimal: string[], // Columns to round to 2 decimal points
+      roundThreeDecimal: string[]
     ) {
       const { headers, rows } = result;
 
@@ -167,6 +168,8 @@ export class PdfparseService {
           if (value !== undefined && typeof value === 'number') {
             if (roundToInteger.includes(header)) {
               value = Math.round(value); // Round to integer
+            } else if (roundThreeDecimal.includes(header)) {
+              value = value.toFixed(3); // Round to 3 decimal points
             } else if (roundTwoDecimal.includes(header)) {
               value = value.toFixed(2); // Round to 2 decimal points
             } else if (roundOneDecimal.includes(header)) {
@@ -191,7 +194,7 @@ export class PdfparseService {
     }
 
     const roundToInteger = ['P.R No.', 'Amt']; // Columns to round to integer
-    const roundTwoDecimal = ['UHML', 'Mic', 'Mat', 'SFI', 'C-G', 'Area', 'UI'];
+    const roundTwoDecimal = ['Mic', 'Mat', 'SFI', 'C-G', 'Area', 'UI'];
     const roundOneDecimal = [
       'SCI',
       'Mst',
@@ -202,11 +205,13 @@ export class PdfparseService {
       '+b',
       'Cnt',
     ];
+    const roundThreeDecimal = ['UHML'];
     const extractedRowsBody = formatAndRoundResult(
       result,
       roundToInteger,
       roundOneDecimal,
-      roundTwoDecimal
+      roundTwoDecimal,
+      roundThreeDecimal
     );
     console.log('formattedOutput', extractedRowsBody);
     const numberOfSamples = extractedRowsBody.length - 3;
@@ -363,7 +368,8 @@ export class PdfparseService {
       result: { headers: string[]; rows: Record<string, any>[] },
       roundToInteger: string[], // Columns to round to integer
       roundOneDecimal: string[],
-      roundTwoDecimal: string[] // Columns to round to 2 decimal points
+      roundTwoDecimal: string[], // Columns to round to 2 decimal points
+      roundThreeDecimal: string[]
     ) {
       const { headers, rows } = result;
 
@@ -378,6 +384,8 @@ export class PdfparseService {
           if (value !== undefined && typeof value === 'number') {
             if (roundToInteger.includes(header)) {
               value = Math.round(value); // Round to integer
+            } else if (roundThreeDecimal.includes(header)) {
+              value = value.toFixed(3); // Round to 3 decimal points
             } else if (roundTwoDecimal.includes(header)) {
               value = value.toFixed(2); // Round to 2 decimal points
             } else if (roundOneDecimal.includes(header)) {
@@ -403,7 +411,7 @@ export class PdfparseService {
     }
 
     const roundToInteger = ['P.R No.', 'Amt']; // Columns to round to integer
-    const roundTwoDecimal = ['UHML', 'Mic', 'Mat', 'SFI', 'C-G', 'Area'];
+    const roundTwoDecimal = ['Mic', 'Mat', 'SFI', 'C-G', 'Area'];
     const roundOneDecimal = [
       'SCI',
       'Mst',
@@ -414,14 +422,16 @@ export class PdfparseService {
       '+b',
       'Cnt',
     ];
+    const roundThreeDecimal = ['UHML'];
     const extractedRowsBody = formatAndRoundResult(
       result,
       roundToInteger,
       roundOneDecimal,
-      roundTwoDecimal
+      roundTwoDecimal,
+      roundThreeDecimal
     );
     console.log('formattedOutput', extractedRowsBody);
-    const numberOfSamples = extractedRowsBody.length - 7;
+    const numberOfSamples = extractedRowsBody.length - 8;
 
     return {
       customerName,
@@ -575,7 +585,8 @@ export class PdfparseService {
       result: { headers: string[]; rows: Record<string, any>[] },
       roundToInteger: string[], // Columns to round to integer
       roundOneDecimal: string[],
-      roundTwoDecimal: string[] // Columns to round to 2 decimal points
+      roundTwoDecimal: string[], // Columns to round to 2 decimal points
+      roundThreeDecimal: string[]
     ) {
       const { headers, rows } = result;
 
@@ -594,6 +605,8 @@ export class PdfparseService {
               value = value.toFixed(2); // Round to 2 decimal points
             } else if (roundOneDecimal.includes(header)) {
               value = value.toFixed(1); // Round to 2 decimal points
+            } else if (roundThreeDecimal.includes(header)) {
+              value = value.toFixed(3); // Round to 2 decimal points
             }
           }
 
@@ -615,7 +628,7 @@ export class PdfparseService {
     }
 
     const roundToInteger = ['P.R No.', 'Amt']; // Columns to round to integer
-    const roundTwoDecimal = ['UHML', 'Mic', 'Mat', 'SFI', 'C-G', 'Area', 'UI'];
+    const roundTwoDecimal = ['Mic', 'Mat', 'SFI', 'C-G', 'Area', 'UI'];
     const roundOneDecimal = [
       'SCI',
       'Mst',
@@ -626,11 +639,14 @@ export class PdfparseService {
       '+b',
       'Cnt',
     ];
+    const roundThreeDecimal = ['UHML'];
+
     const extractedRowsBody = formatAndRoundResult(
       result,
       roundToInteger,
       roundOneDecimal,
-      roundTwoDecimal
+      roundTwoDecimal,
+      roundThreeDecimal
     );
     console.log('formattedOutput', extractedRowsBody);
     const numberOfSamples = extractedRowsBody.length - 8;
