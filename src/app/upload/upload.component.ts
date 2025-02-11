@@ -70,6 +70,9 @@ export class UploadComponent implements OnInit, OnDestroy {
       conveyanceRefNo: ['', Validators.required],
       testingInstrumentType: ['', Validators.required], //temp to be removed
     });
+    this.createForm.valueChanges.subscribe((formData) => {
+      localStorage.setItem('formData', JSON.stringify(formData));
+    });
   }
 
   public loader = {
@@ -86,6 +89,10 @@ export class UploadComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     /* subscribe to new report being created */
 
+    const storedFormData = localStorage.getItem('formData');
+    if (storedFormData) {
+      this.createForm.patchValue(JSON.parse(storedFormData));
+    }
     this.modifyUserPreferenceSubscription = this.api
       .OnUpdateUserInfoListener()
       .subscribe((user: any) => {
@@ -230,6 +237,10 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   // Handle file change event and update the formData
   public onFileChange(event: any) {
+    this.createForm.valueChanges.subscribe((formData) => {
+      localStorage.setItem('formData', JSON.stringify(formData));
+    });
+
     console.log('File changed', event);
     const fileList: any = event.files;
 
