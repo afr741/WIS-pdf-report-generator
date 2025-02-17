@@ -835,7 +835,14 @@ export class PdfComponent implements OnInit {
 
       setTimeout(() => {
         pdfMake
-          .createPdf(this.pdfData, undefined, undefined, this.customFonts)
+          .createPdf(
+            this.pdfData,
+            undefined,
+            undefined,
+            this.selectedHviVersion === 'v5'
+              ? this.customFonts
+              : pdfFonts.pdfMake.vfs
+          )
           .download(`${dataItem.reportNum}-${dataItem.customerName}.pdf`);
         this.isButtonDisabled = false;
       }, 2000);
