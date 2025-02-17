@@ -568,13 +568,13 @@ export class PdfComponent implements OnInit {
               ],
               [
                 this.selectedHviVersion === 'v6'
-                  ? 'BL No / Samples received from'
+                  ? 'BL No / Samples from'
                   : 'B/L or Conveyance  Ref  No.',
                 conveyanceRefNo == '' || conveyanceRefNo == null
                   ? 'N/A'
                   : conveyanceRefNo,
 
-                'Crop year',
+                'Growth / Crop year',
                 cropYear == '' || cropYear == null ? 'N/A' : cropYear,
               ],
               [
@@ -604,6 +604,14 @@ export class PdfComponent implements OnInit {
                   : samplingParty,
                 'Total sampling',
                 `${numberOfSamples} samples`,
+              ],
+              [
+                '',
+                '',
+                'Samples Sent By',
+                samplesSenderName == '' || samplesSenderName == null
+                  ? 'N/A'
+                  : samplesSenderName,
               ],
             ],
           },

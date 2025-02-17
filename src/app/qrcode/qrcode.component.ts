@@ -147,6 +147,9 @@ export class QrcodeComponent implements OnInit {
                 return acc;
               }, {});
             });
+            console.log('columnsConfig', this.columnsConfig);
+
+            console.log('gridData', this.gridData);
           });
       })
       .catch((e: any) => console.log('error', e));

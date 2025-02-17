@@ -1281,11 +1281,11 @@ export class PdfparseService {
     // Example usage
 
     const masterObject = {
-      'No.': ['No', 'No.', 'Sample Count', 'S.No'],
-      'P.R No.': ['P.R No', 'P.R No.', 'P.R.No.'],
+      No: ['No', 'No.', 'Sample Count', 'S.No'],
+      'P R No': ['P.R No', 'P.R No.', 'P.R.No.'],
       'HVI ID No': ['ID No'],
-      'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
-      'S.B. No.': ['S.B. No', 'S.B.No', 'Bale No.', 'Sample No.', 'Bale ID'],
+      'Cont/Mark/Lot No': ['Lot No.', ' Lot No.'],
+      'S B  No': ['S.B. No', 'S.B.No', 'Bale No.', 'Sample No.', 'Bale ID'],
       // 'Bale/Sample No.': ['Bale No.', 'Sample No.', 'Bale ID'], removed per Senthil's req
       SCI: ['SCI'],
       Mic: ['Mic'],
@@ -1294,7 +1294,7 @@ export class PdfparseService {
       'C-G': ['C-G'],
       Area: ['Area'],
       Cnt: ['Cnt'],
-      'T.L': ['T.L'],
+      'T L': ['T.L'],
       Len: ['Len'],
       Unf: ['Unf'],
       Str: ['Str'],
