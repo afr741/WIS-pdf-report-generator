@@ -122,8 +122,8 @@ export class PdfparseService {
     // Example usage
 
     const masterObject = {
-      'Bale/Sample No.': ['Bale', 'Bale ID'],
-      'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
+      'Bale/Sample No': ['Bale', 'Bale ID'],
+      'Cont/Mark/Lot No': ['Lot No.', ' Lot No.'],
       'No.': ['No', 'No.', 'Sample Count', 'S.No'],
       Mst: ['Moist'],
       Amt: ['Amt'],
@@ -138,7 +138,7 @@ export class PdfparseService {
       'C-G': ['C Grade'],
       Area: ['Tr Area'],
       Cnt: ['Tr Cnt'],
-      'T.L': ['T.L'],
+      'T L': ['T.L'],
       Unf: ['Unf'],
       Str: ['Str'],
       SFI: ['SFI'],
@@ -339,9 +339,9 @@ export class PdfparseService {
     // Example usage
 
     const masterObject = {
-      'Bale/Sample No.': ['Bale ID'],
+      'Bale/Sample No': ['Bale ID'],
       'HVI ID No': ['ID No'],
-      'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
+      'Cont/Mark/Lot No': ['Lot No.', ' Lot No.'],
       Mst: ['Mst'],
       Amt: ['Amt'],
       UHML: ['UHML'],
@@ -355,7 +355,7 @@ export class PdfparseService {
       'C-G': ['CGrd'],
       Area: ['TrAr'],
       Cnt: ['TrCnt'],
-      'T.L': ['T.L'],
+      'T L': ['T.L'],
       Len: ['Len'],
       Unf: ['Unf'],
       Str: ['Str'],
@@ -559,8 +559,8 @@ export class PdfparseService {
     // Example usage
 
     const masterObject = {
-      'Bale/Sample No.': ['Bale ID'],
-      'Cont./Mark/Lot No': ['Lot No.', ' Lot No.'],
+      'Bale/Sample No': ['Bale ID'],
+      'Cont/Mark/Lot No': ['Lot No.', ' Lot No.'],
       Mst: ['Mst'],
       UHML: ['UHML'],
       UI: ['UI'],
@@ -574,7 +574,7 @@ export class PdfparseService {
       'C-G': ['C Grd'],
       Area: ['Tr Ar'],
       Cnt: ['Cnt'],
-      'T.L': ['T.L'],
+      'T L': ['T.L'],
       Len: ['Len'],
       Unf: ['Unf'],
       Str: ['Str'],
@@ -720,8 +720,8 @@ export class PdfparseService {
 
     const masterObject = {
       'No.': ['No', 'No.', 'Sample Count'],
-      'S.B. No.': ['S.B. No.'],
-      'P.R No.': ['P.R No.'],
+      'S B No.': ['S.B. No.'],
+      'P R No': ['P.R No.'],
       'HVI ID No': ['Gin Code'],
       Container: ['Container'],
       'Mark/Lot No': [
@@ -740,7 +740,7 @@ export class PdfparseService {
       'C-G': ['C-G', 'Color Grade'],
       Area: ['Area'],
       Cnt: ['Cnt', 'Count'],
-      'T.L': ['T.L', 'Leaf'],
+      'T L': ['T.L', 'Leaf'],
       Len: ['Len', 'Length'],
       Unf: ['Unf', 'Uniformity', 'Unifor-\r\nmity'],
       Str: ['Str', 'Strength'],
@@ -1027,11 +1027,11 @@ export class PdfparseService {
 
     const masterObject = {
       'No.': ['No.', 'Package No', 'Sub ID'],
-      'S.B. No.': ['S.B. No.'],
-      'P.R No.': ['P.R No.'],
+      'S B No': ['S.B. No.'],
+      'P R No': ['P.R No.'],
       'HVI ID No': ['HVI ID No'],
-      'Cont./Mark/Lot No': ['Lot No'],
-      'Bale/Sample No.': ['Sample number'],
+      'Cont/Mark/Lot No': ['Lot No'],
+      'Bale/Sample No': ['Sample number'],
       SCI: ['SCI'],
       Mic: ['Mic'],
       Rd: ['Rd'],
@@ -1039,7 +1039,7 @@ export class PdfparseService {
       'C-G': ['C Grade', 'C-G'],
       Area: ['Tr Area'],
       Cnt: ['Tr Cnt'],
-      'T.L': ['Tr Grade'],
+      'T L': ['Tr Grade'],
       Len: ['Len'],
       Unf: ['Unf'],
       Str: ['Str'],
