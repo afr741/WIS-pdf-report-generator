@@ -39,6 +39,15 @@
       </kendo-formfield>
       <ng-container>
         <kendo-formfield>
+          <kendo-label labelCssClass="k-form-label" text="Origin" />
+          <kendo-textbox
+            formControlName="origin"
+            #origin
+            placeholder="Origin"
+          ></kendo-textbox>
+          <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+        </kendo-formfield>
+        <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="Stations" />
           <kendo-textbox
             formControlName="stations"

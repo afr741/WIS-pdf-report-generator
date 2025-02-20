@@ -292,6 +292,7 @@ export class PdfComponent implements OnInit {
       customerName,
       reportNum,
       labLocation,
+      origin,
       stations,
       variety,
       invoiceNumber,
@@ -329,12 +330,8 @@ export class PdfComponent implements OnInit {
 
     let qrImageProcessed = await this.getBase64ImageFromURL(qrImage);
     let testLocation = 'N/A';
-    let origin = '';
     if (this.activeTemplateInfo?.testLocation) {
       testLocation = this.activeTemplateInfo?.testLocation;
-    }
-    if (this.activeTemplateInfo?.origin) {
-      origin = this.activeTemplateInfo?.origin;
     }
 
     let formatedDate = () => {
