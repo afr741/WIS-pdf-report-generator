@@ -13,8 +13,8 @@
     },
     "categories": {
       "auth": {
-        "hvigend8bb609a": {},
-        "userPoolGroups": {}
+        "userPoolGroups": {},
+        "wispdfgeneratorv1c92bf7b7": {}
       },
       "storage": {
         "hvipdfgeneratorstorage": {}

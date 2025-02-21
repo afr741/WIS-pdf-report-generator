@@ -1,12 +1,10 @@
 export type AmplifyDependentResourcesAttributes = {
-  "api": {
-    "wispdfgeneratorv1": {
-      "GraphQLAPIEndpointOutput": "string",
-      "GraphQLAPIIdOutput": "string",
-      "GraphQLAPIKeyOutput": "string"
-    }
-  },
   "auth": {
+    "userPoolGroups": {
+      "adminsGroupRole": "string",
+      "labsGroupRole": "string",
+      "managersGroupRole": "string"
+    },
     "wispdfgeneratorv1c92bf7b7": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
@@ -15,11 +13,6 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolArn": "string",
       "UserPoolId": "string",
       "UserPoolName": "string"
-    },
-    "userPoolGroups": {
-      "adminsGroupRole": "string",
-      "labsGroupRole": "string",
-      "managersGroupRole": "string"
     }
   },
   "storage": {

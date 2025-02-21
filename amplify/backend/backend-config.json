@@ -29,6 +29,22 @@
     }
   },
   "auth": {
+    "userPoolGroups": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "wispdfgeneratorv1c92bf7b7"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups"
+    },
     "wispdfgeneratorv1c92bf7b7": {
       "customAuth": false,
       "dependsOn": [],
@@ -54,22 +70,6 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
-    },
-    "userPoolGroups": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId",
-            "AppClientIDWeb",
-            "AppClientID",
-            "IdentityPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "hvigend8bb609a"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Cognito-UserPool-Groups"
     }
   },
   "function": {},
@@ -81,7 +81,7 @@
             "UserPoolId"
           ],
           "category": "auth",
-          "resourceName": "hvigend8bb609a"
+          "resourceName": "wispdfgeneratorv1c92bf7b7"
         },
         {
           "attributes": [
