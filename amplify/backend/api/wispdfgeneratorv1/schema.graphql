@@ -1,14 +1,10 @@
-# This "input" configures a global authorization rule to enable public access to
-# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-input AMPLIFY {
-  globalAuthRule: AuthRule = { allow: public }
-} # FOR TESTING ONLY!
-type ReportTemplate @model @auth(rules: [{ allow: public }]) {
+type ReportTemplate @model @auth(rules: [{allow: owner}, {allow: private, provider: userPools}, {allow: public, provider: apiKey}]) {
   templateId: ID!
   localCompanyName: String
   localCompanyNameTranslation: String
   letterHeadImageName: String
   stampImageName: String
+  certificationImageTop: String
   address: String
   addressTranslation: String
   phone: String
@@ -16,20 +12,50 @@ type ReportTemplate @model @auth(rules: [{ allow: public }]) {
   email: String
   testLocation: String
   origin: String
+  labLocation: String
+  testingInstrumentType: String
+  remarksList: [String]
+  testConditionsList: [String]
 }
 
-type Report @model @auth(rules: [{ allow: public }]) {
+type Report @model @auth(rules: [{allow: owner}, {allow: private, provider: userPools}, {allow: public, provider: apiKey}]) {
   id: ID!
   name: String!
-  testLocation: String!
-  reportNum: String!
-  lotNum: String!
-  customerName: String!
-  origin: String!
-  stations: String!
-  variety: String!
+  samplesSenderName: String
+  email: String
+  labLocation: String
+  hviVersion: String
+  reportNum: String
+  lotNum: String
+  customerName: String
+  origin: String
+  stations: String
+  variety: String
+  dateOfTesting: String
+  dateOfSampling: String
+  samplingParty: String
+  samplingLocation: String
+  samplingPercentage: String
+  vesselOrConveyance: String
+  cropYear: String
+  conveyanceRefNo: String
+  invoiceNumber: String
+  sellerName: String
+  buyerName: String
+  testingInstrumentType: String
   attachmentUrl: String!
-    @index(name: "attachmentUrlIndex", sortKeyFields: ["name"])
   dataRows: [AWSJSON]
-  reportTemplate: ReportTemplate
 }
+
+type UserInfo @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  labLocation: String!
+  hviVersion: String!
+}
+
+type Labs @model @auth(rules: [{allow: owner}, {allow: private, provider: userPools}, {allow: public, provider: apiKey}]) {
+  labCountry: String!
+  labCode: String!
+  label: String
+  defaultHVIProcessingVersion: String
+} 

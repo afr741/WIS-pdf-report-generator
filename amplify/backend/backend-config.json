@@ -4,12 +4,23 @@
       "dependsOn": [],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [],
-          "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 7
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
             },
-            "authenticationType": "API_KEY"
+            {
+              "apiKeyConfig": {
+                "apiKeyExpirationDays": 30,
+                "description": "api key description"
+              },
+              "authenticationType": "API_KEY"
+            }
+          ],
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authhvigend8bb609a"
+            }
           }
         }
       },
@@ -43,54 +54,55 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
-    }
-  },
-  "function": {
-    "v1hvifileprocessing": {
-      "build": true,
+    },
+    "userPoolGroups": {
       "dependsOn": [
         {
           "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
           ],
-          "category": "api",
-          "resourceName": "wispdfgeneratorv1"
+          "category": "auth",
+          "resourceName": "hvigend8bb609a"
         }
       ],
       "providerPlugin": "awscloudformation",
-      "service": "Lambda"
+      "service": "Cognito-UserPool-Groups"
     }
   },
-  "parameters": {
-    "AMPLIFY_function_v1hvifileprocessing_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "v1hvifileprocessing"
-        }
-      ]
-    },
-    "AMPLIFY_function_v1hvifileprocessing_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "v1hvifileprocessing"
-        }
-      ]
-    }
-  },
+  "function": {},
   "storage": {
-    "v1hvipdfgenstorage": {
+    "hvipdfgeneratorstorage": {
       "dependsOn": [
         {
           "attributes": [
-            "Name",
-            "Arn",
-            "LambdaExecutionRole"
+            "UserPoolId"
           ],
-          "category": "function",
-          "resourceName": "v1hvifileprocessing"
+          "category": "auth",
+          "resourceName": "hvigend8bb609a"
+        },
+        {
+          "attributes": [
+            "labsGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "managersGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "adminsGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
         }
       ],
       "providerPlugin": "awscloudformation",

@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 import { Router, NavigationEnd } from '@angular/router';
 
-import { AuthService } from './AuthService';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,7 +11,7 @@ export class AppComponent implements OnInit {
   title = 'authdemo';
   public shouldRenderLogout: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
@@ -26,10 +24,5 @@ export class AppComponent implements OnInit {
         }
       }
     });
-  }
-  async handleLogOut() {
-    await this.authService
-      .onSignOut()
-      .then(() => this.router.navigate(['/login']));
   }
 }

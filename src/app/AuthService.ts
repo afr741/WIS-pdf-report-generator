@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Observable, catchError, from, switchMap, throwError } from 'rxjs';
+
 import { Auth } from 'aws-amplify';
+import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { Observable, from, switchMap, catchError, throwError } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -62,7 +63,22 @@ export class AuthService {
   public isAuthenticated(): boolean {
     return Auth.currentAuthenticatedUser() !== null;
   }
+  public async getUserEmailAndLab() {
+    const emailAndLab = await Auth.currentAuthenticatedUser().then(
+      (userInfo: any) => {
+        return {
+          email: userInfo.signInUserSession.idToken.payload.email,
+          userGroup:
+            userInfo.signInUserSession.accessToken.payload['cognito:groups'],
+        };
+      }
+    );
+    return emailAndLab;
+  }
 
+  public async getCurrentUserInfo() {
+    return Auth.currentAuthenticatedUser();
+  }
   public async onSignOut() {
     localStorage.removeItem('id_token');
     //temp workaround for persistence

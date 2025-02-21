@@ -69,11 +69,14 @@ export class LoginComponent implements OnInit {
           String(email),
           String(password)
         );
-        console.log(user);
+        let userGroupList = await this.authService
+          .getUserEmailAndLab()
+          .then((userInfo) => userInfo.userGroup);
+        console.log('user', userGroupList);
         if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
           return this.router.navigate(['/reset']);
         } else {
-          return this.router.navigate(['upload']);
+          return this.router.navigate(['landing']);
         }
       } else {
         this.isLoading = false;
@@ -87,8 +90,12 @@ export class LoginComponent implements OnInit {
       if (error.code == 'UserNotFoundException') {
         this.error = error.message;
       }
-      this.error = error.message;
+
+      this.error = error;
       console.log(error);
+      if (error === 'The user is not authenticated') {
+        return this.router.navigate(['/reset']);
+      }
     }
     return null;
   }

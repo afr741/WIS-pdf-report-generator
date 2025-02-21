@@ -15,19 +15,15 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolArn": "string",
       "UserPoolId": "string",
       "UserPoolName": "string"
-    }
-  },
-  "function": {
-    "v1hvifileprocessing": {
-      "Arn": "string",
-      "LambdaExecutionRole": "string",
-      "LambdaExecutionRoleArn": "string",
-      "Name": "string",
-      "Region": "string"
+    },
+    "userPoolGroups": {
+      "adminsGroupRole": "string",
+      "labsGroupRole": "string",
+      "managersGroupRole": "string"
     }
   },
   "storage": {
-    "v1hvipdfgenstorage": {
+    "hvipdfgeneratorstorage": {
       "BucketName": "string",
       "Region": "string"
     }

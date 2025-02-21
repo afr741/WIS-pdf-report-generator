@@ -7,16 +7,14 @@
       (ngSubmit)="onCreate(createForm.value)"
     >
       <fieldset class="k-form-fieldset">
-        <!-- <legend class="k-form-legend">Uploa</legend> -->
-
-        <kendo-formfield>
+        <!-- <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="Origin" />
           <kendo-textbox
             formControlName="origin"
             #origin
             placeholder="Origin"
           ></kendo-textbox>
-        </kendo-formfield>
+        </kendo-formfield> -->
 
         <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="Test location" />
@@ -24,6 +22,18 @@
             formControlName="testLocation"
             #testLocation
             placeholder="Enter Location"
+          ></kendo-textbox>
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label
+            labelCssClass="k-form-label"
+            text="Testing Instrument Type"
+          />
+          <kendo-textbox
+            formControlName="testingInstrumentType"
+            #testingInstrumentType
+            placeholder="Enter testing instrument type"
           ></kendo-textbox>
         </kendo-formfield>
 
@@ -82,22 +92,24 @@
           ></kendo-textbox>
           <kendo-formerror> phone is required</kendo-formerror>
         </kendo-formfield>
-        <kendo-formfield>
-          <kendo-label labelCssClass="k-form-label" text="fax" />
-          <kendo-textbox
-            formControlName="fax"
-            #fax
-            placeholder="Enter the fax number"
-          ></kendo-textbox>
-          <kendo-formerror> fax is required</kendo-formerror>
-        </kendo-formfield>
+        <ng-container *ngIf="selectedHviVersion === 'v5'">
+          <kendo-formfield>
+            <kendo-label labelCssClass="k-form-label" text="fax" />
+            <kendo-textbox
+              formControlName="fax"
+              #fax
+              placeholder="Enter the fax number"
+            ></kendo-textbox>
+            <kendo-formerror> fax is required</kendo-formerror>
+          </kendo-formfield>
+        </ng-container>
 
         <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="email" />
           <kendo-textbox
             formControlName="email"
             #email
-            placeholder="Enter the email number"
+            placeholder="Enter the email address"
           ></kendo-textbox>
           <kendo-formerror> email is required</kendo-formerror>
         </kendo-formfield>
@@ -114,6 +126,23 @@
           <div *ngIf="letterHeadPreviewUrl">
             <img
               [src]="letterHeadPreviewUrl"
+              alt="Preview Image"
+              style="max-width: 300px; height: auto"
+            />
+          </div>
+        </div>
+        <div class="asset-wrapper">
+          <div class="select-wrapper">
+            <p>Top certifications stamps</p>
+            <kendo-fileselect
+              formControlName="certificationImageTop"
+              (select)="onFileChangeCertifications($event)"
+              [multiple]="false"
+            ></kendo-fileselect>
+          </div>
+          <div *ngIf="certificationImageTopPreviewUrl">
+            <img
+              [src]="certificationImageTopPreviewUrl"
               alt="Preview Image"
               style="max-width: 300px; height: auto"
             />
@@ -137,6 +166,70 @@
             />
           </div>
         </div>
+        <!--
+        <div class="asset-wrapper">
+          <div class="select-wrapper">
+            <p>Remarks</p>
+
+            <div formArrayName="remarksList">
+              <div *ngFor="let control of remarksList.controls; let i = index">
+                <div class="inputSection">
+                  <kendo-textbox
+                    [formControlName]="i"
+                    #remarkItem
+                    placeholder="Additional text {{ i + 1 }}"
+                    style="width: 100%"
+                  ></kendo-textbox>
+                  <button
+                    type="button"
+                    class="close"
+                    aria-label="Close"
+                    (click)="deleteRemark(i)"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" (click)="addAdditionalText()">
+              Add more remarks
+            </button>
+          </div>
+          <div class="select-wrapper">
+            <p>Test and Lab Conditions</p>
+            <div formArrayName="testConditionsList">
+              <div
+                *ngFor="
+                  let control of testConditionsList.controls;
+                  let i = index
+                "
+              >
+                <div class="inputSection">
+                  <kendo-textbox
+                    [formControlName]="i"
+                    #conditionItem
+                    placeholder="Additional text {{ i + 1 }}"
+                  ></kendo-textbox>
+                  <div class="col-2">
+                    <button
+                      type="button"
+                      class="close"
+                      aria-label="Close"
+                      (click)="deleteRemark2(i)"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" (click)="addAdditionalText2()">
+              Add more conditions
+            </button>
+          </div>
+        </div> -->
 
         <div class="k-form-buttons">
           <button

@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { APIService, Report } from '../API.service';
+// import { DataparseService } from '../dataparse.service';
+import { PdfparseService } from '../pdfparse.service';
+
 import { ActivatedRoute } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 import { Storage } from 'aws-amplify';
@@ -9,6 +12,7 @@ import {
   LoaderThemeColor,
   LoaderSize,
 } from '@progress/kendo-angular-indicators';
+import { API, GRAPHQL_AUTH_MODE } from '@aws-amplify/api';
 
 @Component({
   selector: 'app-qrcode',
@@ -21,7 +25,10 @@ export class QrcodeComponent implements OnInit {
   public dbEntryData: Report[] = [];
   public dataRows: any = {};
   public rawDataRows: any[] = [];
-  public dataColumnNames: string[] = [];
+
+  public columnsConfig: Array<{ field: string; title: string }> = [];
+  public gridData: Array<any> = [];
+
   public dateCreated: string = '';
   public isLoading: boolean = true;
   public loader = {
@@ -29,7 +36,7 @@ export class QrcodeComponent implements OnInit {
     themeColor: <LoaderThemeColor>'info',
     size: <LoaderSize>'large',
   };
-  letterHeadPreviewUrl: string | ArrayBuffer | null | undefined = null;
+  public letterheadImageUrl: string = '../../assets/images/letterhead.png';
 
   // when pinging this page
   // take the query param from page URL
@@ -37,7 +44,12 @@ export class QrcodeComponent implements OnInit {
   // use the graphql api to to retrieve the db entry using attachementurlname
   // use retrieved data to display the results in html template
 
-  constructor(private api: APIService, private route: ActivatedRoute) {
+  constructor(
+    private api: APIService,
+    // private dataParsingService: DataparseService,
+    private pdfService: PdfparseService,
+    private route: ActivatedRoute
+  ) {
     this.decodedID = '';
   }
 
@@ -55,135 +67,91 @@ export class QrcodeComponent implements OnInit {
       originalEncryptedText,
       this.secretKey
     ).toString(CryptoJS.enc.Utf8);
-    console.log('Decrypted Text:', decryptedText);
-
+    console.log('decryptedText', decryptedText);
     this.decodedID = decryptedText;
-  }
-
-  parseData(data: any): any {
-    if (!data || data[0] === null) return;
-    let parsedRawData = JSON.parse(data[0]);
-    let removedEmptyArraysData = parsedRawData.filter(
-      (array: []) => array.length !== 0
-    );
-
-    console.log('raw ALL', removedEmptyArraysData);
-    // to find the start of data extraction
-
-    let timeIndex = removedEmptyArraysData.findIndex((array: any) =>
-      array.includes('Time')
-    );
-
-    // to find the end of data extraction
-    let averageIndex = removedEmptyArraysData.findIndex((array: any) =>
-      array.some(
-        (element: any) =>
-          typeof element === 'string' && element.includes('Average')
-      )
-    );
-    console.log('time', timeIndex, 'average', averageIndex);
-    let extractedRows = removedEmptyArraysData.slice(
-      timeIndex + 1,
-      averageIndex + 2
-    );
-
-    let numberOfSamples = extractedRows.length - 4;
-
-    const lastTwoArrays = extractedRows.slice(-2);
-    let summaryChanged = lastTwoArrays[0];
-    summaryChanged.push(numberOfSamples.toFixed(0));
-    let slicedSummary = lastTwoArrays[1].slice(2);
-    const mainArr: any = [null].concat(summaryChanged).concat(slicedSummary);
-
-    const combinedArray = mainArr;
-    extractedRows.splice(-2);
-    extractedRows.push(combinedArray);
-
-    console.log(
-      'lastTwoArrays',
-      lastTwoArrays,
-      'mainArr:',
-      mainArr,
-      'extractedRows prior: ',
-      extractedRows
-    );
-
-    let arrayedRows = [];
-    let firstRow = extractedRows[0];
-    for (let i = 0; i < extractedRows.length; i++) {
-      let innerArray = extractedRows[i];
-      if (i < extractedRows.length - 1) {
-        innerArray.splice(2, 0, '');
-      }
-      let filteredArray = [];
-
-      for (let j = 0; j < innerArray.length; j++) {
-        let isNoDecs = [1, 5, 6, 28];
-        let isOneDec = [9, 14, 18, 19, 21, 22, 26];
-        let isThreeDec = [13];
-
-        if (firstRow[j] !== null) {
-          if (innerArray[j] === null || innerArray[j] === undefined) {
-            // Replace null with an empty string
-            innerArray[j] = '';
-          } else {
-            innerArray[j] =
-              typeof innerArray[j] == 'string'
-                ? innerArray[j]
-                : Number(innerArray[j]).toFixed(
-                    isNoDecs.includes(j)
-                      ? 0
-                      : isOneDec.includes(j)
-                      ? 1
-                      : isThreeDec.includes(j)
-                      ? 3
-                      : 2
-                  ); //
-          }
-
-          filteredArray.push(innerArray[j]);
-        }
-      }
-
-      arrayedRows.push(filteredArray);
-    }
-
-    // converting data into a data structure where first row(dataColumnNames) values is the key of each subsequent array item
-
-    this.dataColumnNames = arrayedRows[0];
-
-    const [keys, ...values] = arrayedRows; // Destructuring keys and values
-
-    this.dataRows = values.map((row: any) => {
-      const obj: any = {};
-      keys.forEach((key: any, index: any) => {
-        obj[key] = row[index];
-      });
-      return obj;
-    });
-
-    console.log(
-      'dataRows',
-      this.dataRows,
-      'dataColumnNames',
-      this.dataColumnNames
-    );
   }
 
   async ngOnInit() {
     const queryParams = this.route.snapshot.queryParams;
 
+    const fetchProducts = async () => {
+      try {
+        const productsData = await API.graphql({
+          query: `query GetReport($id: ID!) {
+        getReport(id: $id) {
+          __typename
+          id
+          name
+          email
+          labLocation
+          hviVersion
+          reportNum
+          lotNum
+          customerName
+          origin
+          stations
+          variety
+          attachmentUrl
+          dataRows
+          createdAt
+          updatedAt
+          owner
+        }
+      }`,
+          variables: { id: this.decodedID },
+          authMode: GRAPHQL_AUTH_MODE.API_KEY,
+        });
+        console.log('productsData', productsData);
+        return productsData;
+      } catch (error) {
+        return error;
+      }
+    };
+
     this.decodeQueryParam(queryParams['code']);
+    console.log('this.decodedID', this.decodedID);
 
-    await this.api.GetReport(this.decodedID).then((event) => {
-      this.dbEntryData = [event];
-      this.dateCreated = new Date(this.dbEntryData[0].createdAt).toDateString();
+    await fetchProducts()
+      .then((event: any) => {
+        console.log('then event', event);
+        this.dbEntryData = [event.data.getReport];
+        this.dateCreated = new Date(
+          this.dbEntryData[0].createdAt
+        ).toDateString();
 
-      console.log('dbEntryData', this.dbEntryData[0]);
-      this.parseData(this.dbEntryData[0].dataRows);
-      this.isLoading = false;
-    });
-    const letterHeadImageFromS3 = await Storage.get('wis-letterhead');
-    this.letterHeadPreviewUrl = letterHeadImageFromS3;
+        console.log('dbEntryData', this.dbEntryData);
+        this.pdfService
+          .handleProcessingVersion(
+            this.dbEntryData[0],
+            this.dbEntryData[0].hviVersion,
+            (e: any) => {
+              console.log(e);
+            }
+          )
+          .then((data) => {
+            this.isLoading = false;
+            this.dataRows = data.extractedRowsBody;
+
+            console.log('data', data);
+
+            const columnNames = data.extractedRowsBody[0];
+            this.columnsConfig = columnNames.map((name: any) => ({
+              field: name,
+              title: name,
+            }));
+
+            // Extract rows from the remaining data
+            this.gridData = data.extractedRowsBody.slice(1).map((row: any) => {
+              return row.reduce((acc: any, value: any, index: any) => {
+                acc[columnNames[index]] = value; // Map each value to its corresponding column name
+                return acc;
+              }, {});
+            });
+            console.log('columnsConfig', this.columnsConfig);
+
+            console.log('gridData', this.gridData);
+          });
+      })
+      .catch((e: any) => console.log('error', e));
   }
 }

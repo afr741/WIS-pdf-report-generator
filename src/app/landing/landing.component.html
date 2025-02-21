@@ -1,0 +1,17 @@
+<div class="landing-container">
+  <h1 class="centered-header">Choose your action:</h1>
+  <div class="tile-container">
+    <div *ngFor="let dataItem of filteredTilesData" class="tile">
+      <img alt="dataItem.label" [src]="dataItem.icon" class="tile-image" />
+      <div class="tile-overlay"></div>
+      <button
+        class="tile-button"
+        type="button"
+        (click)="handleClickTile(dataItem)"
+      >
+        {{ dataItem.label }}
+      </button>
+    </div>
+  </div>
+  <div></div>
+</div>

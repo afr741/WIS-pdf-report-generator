@@ -1,5 +1,5 @@
 <div class="pdf-wrapper">
-  <div *ngIf="!isLoading && error == null">
+  <div *ngIf="!isLoading && error == null && this.reports.length > 0">
     <div class="pdf-ready-section">
       <h1>Your report is ready!</h1>
       <div class="button-section">
@@ -21,7 +21,7 @@
           [rounded]="'medium'"
           [fillMode]="'solid'"
           [themeColor]="'success'"
-          (click)="openPDF(pdfData)"
+          (click)="openPDF(reports[0])"
         >
           Open
         </button>
@@ -32,7 +32,7 @@
           [rounded]="'medium'"
           [fillMode]="'solid'"
           [themeColor]="'warning'"
-          (click)="downloadPDF(pdfData)"
+          (click)="downloadPDF(reports[0])"
         >
           Download
         </button>
@@ -43,6 +43,7 @@
           [rounded]="'medium'"
           [fillMode]="'solid'"
           [themeColor]="'info'"
+          *ngIf="isManagerUp"
           (click)="handleEditTemplate()"
         >
           Edit Template
@@ -51,17 +52,19 @@
     </div>
     <h3>Previous Reports:</h3>
     <kendo-grid [kendoGridBinding]="reports" [filterable]="true" [height]="800">
-      <kendo-grid-column field="id" title="Report ID" [filterable]="false">
+      <kendo-grid-column field="email" title="Owner email"> </kendo-grid-column>
+      <kendo-grid-column field="labLocation" title="Lab Location">
       </kendo-grid-column>
+
+      <kendo-grid-column field="customerName" title="Customer Name">
+      </kendo-grid-column>
+
+      <!-- <kendo-grid-column field="id" title="Report ID" [filterable]="false">
+      </kendo-grid-column> -->
       <kendo-grid-column field="name" title="Report Name"> </kendo-grid-column>
       <kendo-grid-column field="origin" title="Origin" filter="text">
       </kendo-grid-column>
-      <kendo-grid-column
-        field="testLocation"
-        title="Test Location"
-        filter="text"
-      >
-      </kendo-grid-column>
+
       <kendo-grid-column
         field="updatedAt"
         title="Date"
@@ -79,6 +82,7 @@
             [rounded]="'small'"
             [fillMode]="'solid'"
             [themeColor]="'success'"
+            [disabled]="isButtonDisabled"
             (click)="openPDF(dataItem)"
           >
             Open
@@ -90,6 +94,7 @@
             [rounded]="'small'"
             [fillMode]="'solid'"
             [themeColor]="'warning'"
+            [disabled]="isButtonDisabled"
             (click)="downloadPDF(dataItem)"
           >
             Download
@@ -113,8 +118,13 @@
     </div>
   </div>
   <!-- </ng-template> -->
-  <div class="error-section" *ngIf="error">
-    <p class="alert alert-danger" role="alert">{{ error }}</p>
+  <div
+    class="error-section"
+    *ngIf="error || (this.reports.length == 0 && !isLoading)"
+  >
+    <p class="alert alert-danger" role="alert">
+      {{ error ? error : "No reports found!" }}
+    </p>
     <button
       type="button"
       kendoButton
@@ -124,7 +134,18 @@
       [themeColor]="'warning'"
       (click)="handlBackButton()"
     >
-      Try again
+      Create again
+    </button>
+    <button
+      type="button"
+      kendoButton
+      [size]="'large'"
+      [rounded]="'medium'"
+      [fillMode]="'solid'"
+      [themeColor]="'success'"
+      (click)="handleViewAgain()"
+    >
+      View current report
     </button>
   </div>
 </div>

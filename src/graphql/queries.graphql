@@ -7,6 +7,7 @@ query GetReportTemplate($id: ID!) {
     localCompanyNameTranslation
     letterHeadImageName
     stampImageName
+    certificationImageTop
     address
     addressTranslation
     phone
@@ -14,9 +15,14 @@ query GetReportTemplate($id: ID!) {
     email
     testLocation
     origin
+    labLocation
+    testingInstrumentType
+    remarksList
+    testConditionsList
     id
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -33,6 +39,7 @@ query ListReportTemplates(
       localCompanyNameTranslation
       letterHeadImageName
       stampImageName
+      certificationImageTop
       address
       addressTranslation
       phone
@@ -40,9 +47,14 @@ query ListReportTemplates(
       email
       testLocation
       origin
+      labLocation
+      testingInstrumentType
+      remarksList
+      testConditionsList
       id
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -54,35 +66,33 @@ query GetReport($id: ID!) {
   getReport(id: $id) {
     id
     name
-    testLocation
+    samplesSenderName
+    email
+    labLocation
+    hviVersion
     reportNum
     lotNum
     customerName
     origin
     stations
     variety
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
+    invoiceNumber
+    sellerName
+    buyerName
+    testingInstrumentType
     attachmentUrl
     dataRows
-    reportTemplate {
-      templateId
-      localCompanyName
-      localCompanyNameTranslation
-      letterHeadImageName
-      stampImageName
-      address
-      addressTranslation
-      phone
-      fax
-      email
-      testLocation
-      origin
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -96,17 +106,33 @@ query ListReports(
     items {
       id
       name
-      testLocation
+      samplesSenderName
+      email
+      labLocation
+      hviVersion
       reportNum
       lotNum
       customerName
       origin
       stations
       variety
+      dateOfTesting
+      dateOfSampling
+      samplingParty
+      samplingLocation
+      samplingPercentage
+      vesselOrConveyance
+      cropYear
+      conveyanceRefNo
+      invoiceNumber
+      sellerName
+      buyerName
+      testingInstrumentType
       attachmentUrl
       dataRows
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -114,36 +140,63 @@ query ListReports(
   }
 }
 
-query ReportsByAttachmentUrlAndName(
-  $attachmentUrl: String!
-  $name: ModelStringKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelReportFilterInput
+query GetUserInfo($id: ID!) {
+  getUserInfo(id: $id) {
+    id
+    labLocation
+    hviVersion
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+query ListUserInfos(
+  $filter: ModelUserInfoFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  reportsByAttachmentUrlAndName(
-    attachmentUrl: $attachmentUrl
-    name: $name
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
+  listUserInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      name
-      testLocation
-      reportNum
-      lotNum
-      customerName
-      origin
-      stations
-      variety
-      attachmentUrl
-      dataRows
+      labLocation
+      hviVersion
       createdAt
       updatedAt
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query GetLabs($id: ID!) {
+  getLabs(id: $id) {
+    labCountry
+    labCode
+    label
+    defaultHVIProcessingVersion
+    id
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+query ListLabs($filter: ModelLabsFilterInput, $limit: Int, $nextToken: String) {
+  listLabs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      labCountry
+      labCode
+      label
+      defaultHVIProcessingVersion
+      id
+      createdAt
+      updatedAt
+      owner
       __typename
     }
     nextToken
