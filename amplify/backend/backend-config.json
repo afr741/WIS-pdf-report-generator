@@ -14,6 +14,12 @@
                 "description": "api key description"
               },
               "authenticationType": "API_KEY"
+            },
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authwispdfgeneratorv1c92bf7b7"
+              }
             }
           ],
           "defaultAuthentication": {
