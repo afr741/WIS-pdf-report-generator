@@ -125,27 +125,29 @@
     <p class="alert alert-danger" role="alert">
       {{ error ? error : "No reports found!" }}
     </p>
-    <button
-      type="button"
-      kendoButton
-      [size]="'large'"
-      [rounded]="'medium'"
-      [fillMode]="'solid'"
-      [themeColor]="'warning'"
-      (click)="handlBackButton()"
-    >
-      Create again
-    </button>
-    <button
-      type="button"
-      kendoButton
-      [size]="'large'"
-      [rounded]="'medium'"
-      [fillMode]="'solid'"
-      [themeColor]="'success'"
-      (click)="handleViewAgain()"
-    >
-      View current report
-    </button>
+    <div class="button-section">
+      <button
+        type="button"
+        kendoButton
+        [size]="'large'"
+        [rounded]="'medium'"
+        [fillMode]="'solid'"
+        [themeColor]="'warning'"
+        (click)="handlBackButton()"
+      >
+        Create again
+      </button>
+      <button
+        type="button"
+        kendoButton
+        [size]="'large'"
+        [rounded]="'medium'"
+        [fillMode]="'solid'"
+        [themeColor]="'success'"
+        (click)="handleViewAgain()"
+      >
+        View current report
+      </button>
+    </div>
   </div>
 </div>
