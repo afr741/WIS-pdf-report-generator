@@ -1296,8 +1296,14 @@ export class PdfparseService {
       'P R No': ['P.R No', 'P.R No.', 'P.R.No.'],
       'HVI ID No': ['ID No'],
       'Cont/Mark/Lot No': ['Lot No.', ' Lot No.'],
-      'S B  No': ['S.B. No', 'S.B.No', 'Bale No.', 'Sample No.', 'Bale ID'],
-      // 'Bale/Sample No.': ['Bale No.', 'Sample No.', 'Bale ID'], removed per Senthil's req
+      'Bale/Sample No': [
+        'S.B. No',
+        'S.B.No',
+        'Bale No.',
+        'Sample No.',
+        'Bale ID',
+      ],
+      // 'S.B. No.': ['Bale No.', 'Sample No.', 'Bale ID'], removed per Senthil's req and Peter req
       SCI: ['SCI'],
       Mic: ['Mic'],
       Rd: ['Rd'],

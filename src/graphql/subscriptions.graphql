@@ -204,6 +204,120 @@ subscription OnDeleteReport(
   }
 }
 
+subscription OnCreateReport2(
+  $filter: ModelSubscriptionReport2FilterInput
+  $owner: String
+) {
+  onCreateReport2(filter: $filter, owner: $owner) {
+    id
+    name
+    samplesSenderName
+    email
+    labLocation
+    hviVersion
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
+    invoiceNumber
+    sellerName
+    buyerName
+    testingInstrumentType
+    attachmentUrl
+    dataRows
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+subscription OnUpdateReport2(
+  $filter: ModelSubscriptionReport2FilterInput
+  $owner: String
+) {
+  onUpdateReport2(filter: $filter, owner: $owner) {
+    id
+    name
+    samplesSenderName
+    email
+    labLocation
+    hviVersion
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
+    invoiceNumber
+    sellerName
+    buyerName
+    testingInstrumentType
+    attachmentUrl
+    dataRows
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+subscription OnDeleteReport2(
+  $filter: ModelSubscriptionReport2FilterInput
+  $owner: String
+) {
+  onDeleteReport2(filter: $filter, owner: $owner) {
+    id
+    name
+    samplesSenderName
+    email
+    labLocation
+    hviVersion
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
+    invoiceNumber
+    sellerName
+    buyerName
+    testingInstrumentType
+    attachmentUrl
+    dataRows
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
 subscription OnCreateUserInfo(
   $filter: ModelSubscriptionUserInfoFilterInput
   $owner: String

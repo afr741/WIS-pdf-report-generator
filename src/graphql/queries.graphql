@@ -140,6 +140,84 @@ query ListReports(
   }
 }
 
+query GetReport2($id: ID!) {
+  getReport2(id: $id) {
+    id
+    name
+    samplesSenderName
+    email
+    labLocation
+    hviVersion
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
+    invoiceNumber
+    sellerName
+    buyerName
+    testingInstrumentType
+    attachmentUrl
+    dataRows
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+query ListReport2s(
+  $filter: ModelReport2FilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listReport2s(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      samplesSenderName
+      email
+      labLocation
+      hviVersion
+      reportNum
+      lotNum
+      customerName
+      origin
+      stations
+      variety
+      dateOfTesting
+      dateOfSampling
+      samplingParty
+      samplingLocation
+      samplingPercentage
+      vesselOrConveyance
+      cropYear
+      conveyanceRefNo
+      invoiceNumber
+      sellerName
+      buyerName
+      testingInstrumentType
+      attachmentUrl
+      dataRows
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
 query GetUserInfo($id: ID!) {
   getUserInfo(id: $id) {
     id

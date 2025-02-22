@@ -16,6 +16,9 @@ export type __SubscriptionContainer = {
   onCreateReport: OnCreateReportSubscription;
   onUpdateReport: OnUpdateReportSubscription;
   onDeleteReport: OnDeleteReportSubscription;
+  onCreateReport2: OnCreateReport2Subscription;
+  onUpdateReport2: OnUpdateReport2Subscription;
+  onDeleteReport2: OnDeleteReport2Subscription;
   onCreateUserInfo: OnCreateUserInfoSubscription;
   onUpdateUserInfo: OnUpdateUserInfoSubscription;
   onDeleteUserInfo: OnDeleteUserInfoSubscription;
@@ -305,6 +308,135 @@ export type DeleteReportInput = {
   id: string;
 };
 
+export type CreateReport2Input = {
+  id?: string | null;
+  name: string;
+  samplesSenderName?: string | null;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
+  testingInstrumentType?: string | null;
+  attachmentUrl: string;
+  dataRows?: Array<string | null> | null;
+};
+
+export type ModelReport2ConditionInput = {
+  name?: ModelStringInput | null;
+  samplesSenderName?: ModelStringInput | null;
+  email?: ModelStringInput | null;
+  labLocation?: ModelStringInput | null;
+  hviVersion?: ModelStringInput | null;
+  reportNum?: ModelStringInput | null;
+  lotNum?: ModelStringInput | null;
+  customerName?: ModelStringInput | null;
+  origin?: ModelStringInput | null;
+  stations?: ModelStringInput | null;
+  variety?: ModelStringInput | null;
+  dateOfTesting?: ModelStringInput | null;
+  dateOfSampling?: ModelStringInput | null;
+  samplingParty?: ModelStringInput | null;
+  samplingLocation?: ModelStringInput | null;
+  samplingPercentage?: ModelStringInput | null;
+  vesselOrConveyance?: ModelStringInput | null;
+  cropYear?: ModelStringInput | null;
+  conveyanceRefNo?: ModelStringInput | null;
+  invoiceNumber?: ModelStringInput | null;
+  sellerName?: ModelStringInput | null;
+  buyerName?: ModelStringInput | null;
+  testingInstrumentType?: ModelStringInput | null;
+  attachmentUrl?: ModelStringInput | null;
+  dataRows?: ModelStringInput | null;
+  and?: Array<ModelReport2ConditionInput | null> | null;
+  or?: Array<ModelReport2ConditionInput | null> | null;
+  not?: ModelReport2ConditionInput | null;
+  createdAt?: ModelStringInput | null;
+  updatedAt?: ModelStringInput | null;
+  owner?: ModelStringInput | null;
+};
+
+export type Report2 = {
+  __typename: "Report2";
+  id: string;
+  name: string;
+  samplesSenderName?: string | null;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
+  testingInstrumentType?: string | null;
+  attachmentUrl: string;
+  dataRows?: Array<string | null> | null;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type UpdateReport2Input = {
+  id: string;
+  name?: string | null;
+  samplesSenderName?: string | null;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
+  testingInstrumentType?: string | null;
+  attachmentUrl?: string | null;
+  dataRows?: Array<string | null> | null;
+};
+
+export type DeleteReport2Input = {
+  id: string;
+};
+
 export type CreateUserInfoInput = {
   id?: string | null;
   labLocation: string;
@@ -461,6 +593,47 @@ export type ModelReportConnection = {
   nextToken?: string | null;
 };
 
+export type ModelReport2FilterInput = {
+  id?: ModelIDInput | null;
+  name?: ModelStringInput | null;
+  samplesSenderName?: ModelStringInput | null;
+  email?: ModelStringInput | null;
+  labLocation?: ModelStringInput | null;
+  hviVersion?: ModelStringInput | null;
+  reportNum?: ModelStringInput | null;
+  lotNum?: ModelStringInput | null;
+  customerName?: ModelStringInput | null;
+  origin?: ModelStringInput | null;
+  stations?: ModelStringInput | null;
+  variety?: ModelStringInput | null;
+  dateOfTesting?: ModelStringInput | null;
+  dateOfSampling?: ModelStringInput | null;
+  samplingParty?: ModelStringInput | null;
+  samplingLocation?: ModelStringInput | null;
+  samplingPercentage?: ModelStringInput | null;
+  vesselOrConveyance?: ModelStringInput | null;
+  cropYear?: ModelStringInput | null;
+  conveyanceRefNo?: ModelStringInput | null;
+  invoiceNumber?: ModelStringInput | null;
+  sellerName?: ModelStringInput | null;
+  buyerName?: ModelStringInput | null;
+  testingInstrumentType?: ModelStringInput | null;
+  attachmentUrl?: ModelStringInput | null;
+  dataRows?: ModelStringInput | null;
+  createdAt?: ModelStringInput | null;
+  updatedAt?: ModelStringInput | null;
+  and?: Array<ModelReport2FilterInput | null> | null;
+  or?: Array<ModelReport2FilterInput | null> | null;
+  not?: ModelReport2FilterInput | null;
+  owner?: ModelStringInput | null;
+};
+
+export type ModelReport2Connection = {
+  __typename: "ModelReport2Connection";
+  items: Array<Report2 | null>;
+  nextToken?: string | null;
+};
+
 export type ModelUserInfoFilterInput = {
   id?: ModelIDInput | null;
   labLocation?: ModelStringInput | null;
@@ -586,6 +759,40 @@ export type ModelSubscriptionReportFilterInput = {
   updatedAt?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionReportFilterInput | null> | null;
   or?: Array<ModelSubscriptionReportFilterInput | null> | null;
+  owner?: ModelStringInput | null;
+};
+
+export type ModelSubscriptionReport2FilterInput = {
+  id?: ModelSubscriptionIDInput | null;
+  name?: ModelSubscriptionStringInput | null;
+  samplesSenderName?: ModelSubscriptionStringInput | null;
+  email?: ModelSubscriptionStringInput | null;
+  labLocation?: ModelSubscriptionStringInput | null;
+  hviVersion?: ModelSubscriptionStringInput | null;
+  reportNum?: ModelSubscriptionStringInput | null;
+  lotNum?: ModelSubscriptionStringInput | null;
+  customerName?: ModelSubscriptionStringInput | null;
+  origin?: ModelSubscriptionStringInput | null;
+  stations?: ModelSubscriptionStringInput | null;
+  variety?: ModelSubscriptionStringInput | null;
+  dateOfTesting?: ModelSubscriptionStringInput | null;
+  dateOfSampling?: ModelSubscriptionStringInput | null;
+  samplingParty?: ModelSubscriptionStringInput | null;
+  samplingLocation?: ModelSubscriptionStringInput | null;
+  samplingPercentage?: ModelSubscriptionStringInput | null;
+  vesselOrConveyance?: ModelSubscriptionStringInput | null;
+  cropYear?: ModelSubscriptionStringInput | null;
+  conveyanceRefNo?: ModelSubscriptionStringInput | null;
+  invoiceNumber?: ModelSubscriptionStringInput | null;
+  sellerName?: ModelSubscriptionStringInput | null;
+  buyerName?: ModelSubscriptionStringInput | null;
+  testingInstrumentType?: ModelSubscriptionStringInput | null;
+  attachmentUrl?: ModelSubscriptionStringInput | null;
+  dataRows?: ModelSubscriptionStringInput | null;
+  createdAt?: ModelSubscriptionStringInput | null;
+  updatedAt?: ModelSubscriptionStringInput | null;
+  and?: Array<ModelSubscriptionReport2FilterInput | null> | null;
+  or?: Array<ModelSubscriptionReport2FilterInput | null> | null;
   owner?: ModelStringInput | null;
 };
 
@@ -787,6 +994,105 @@ export type DeleteReportMutation = {
   owner?: string | null;
 };
 
+export type CreateReport2Mutation = {
+  __typename: "Report2";
+  id: string;
+  name: string;
+  samplesSenderName?: string | null;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
+  testingInstrumentType?: string | null;
+  attachmentUrl: string;
+  dataRows?: Array<string | null> | null;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type UpdateReport2Mutation = {
+  __typename: "Report2";
+  id: string;
+  name: string;
+  samplesSenderName?: string | null;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
+  testingInstrumentType?: string | null;
+  attachmentUrl: string;
+  dataRows?: Array<string | null> | null;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type DeleteReport2Mutation = {
+  __typename: "Report2";
+  id: string;
+  name: string;
+  samplesSenderName?: string | null;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
+  testingInstrumentType?: string | null;
+  attachmentUrl: string;
+  dataRows?: Array<string | null> | null;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
 export type CreateUserInfoMutation = {
   __typename: "UserInfo";
   id: string;
@@ -944,6 +1250,76 @@ export type ListReportsQuery = {
   __typename: "ModelReportConnection";
   items: Array<{
     __typename: "Report";
+    id: string;
+    name: string;
+    samplesSenderName?: string | null;
+    email?: string | null;
+    labLocation?: string | null;
+    hviVersion?: string | null;
+    reportNum?: string | null;
+    lotNum?: string | null;
+    customerName?: string | null;
+    origin?: string | null;
+    stations?: string | null;
+    variety?: string | null;
+    dateOfTesting?: string | null;
+    dateOfSampling?: string | null;
+    samplingParty?: string | null;
+    samplingLocation?: string | null;
+    samplingPercentage?: string | null;
+    vesselOrConveyance?: string | null;
+    cropYear?: string | null;
+    conveyanceRefNo?: string | null;
+    invoiceNumber?: string | null;
+    sellerName?: string | null;
+    buyerName?: string | null;
+    testingInstrumentType?: string | null;
+    attachmentUrl: string;
+    dataRows?: Array<string | null> | null;
+    createdAt: string;
+    updatedAt: string;
+    owner?: string | null;
+  } | null>;
+  nextToken?: string | null;
+};
+
+export type GetReport2Query = {
+  __typename: "Report2";
+  id: string;
+  name: string;
+  samplesSenderName?: string | null;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
+  testingInstrumentType?: string | null;
+  attachmentUrl: string;
+  dataRows?: Array<string | null> | null;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type ListReport2sQuery = {
+  __typename: "ModelReport2Connection";
+  items: Array<{
+    __typename: "Report2";
     id: string;
     name: string;
     samplesSenderName?: string | null;
@@ -1172,6 +1548,105 @@ export type OnUpdateReportSubscription = {
 
 export type OnDeleteReportSubscription = {
   __typename: "Report";
+  id: string;
+  name: string;
+  samplesSenderName?: string | null;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
+  testingInstrumentType?: string | null;
+  attachmentUrl: string;
+  dataRows?: Array<string | null> | null;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type OnCreateReport2Subscription = {
+  __typename: "Report2";
+  id: string;
+  name: string;
+  samplesSenderName?: string | null;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
+  testingInstrumentType?: string | null;
+  attachmentUrl: string;
+  dataRows?: Array<string | null> | null;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type OnUpdateReport2Subscription = {
+  __typename: "Report2";
+  id: string;
+  name: string;
+  samplesSenderName?: string | null;
+  email?: string | null;
+  labLocation?: string | null;
+  hviVersion?: string | null;
+  reportNum?: string | null;
+  lotNum?: string | null;
+  customerName?: string | null;
+  origin?: string | null;
+  stations?: string | null;
+  variety?: string | null;
+  dateOfTesting?: string | null;
+  dateOfSampling?: string | null;
+  samplingParty?: string | null;
+  samplingLocation?: string | null;
+  samplingPercentage?: string | null;
+  vesselOrConveyance?: string | null;
+  cropYear?: string | null;
+  conveyanceRefNo?: string | null;
+  invoiceNumber?: string | null;
+  sellerName?: string | null;
+  buyerName?: string | null;
+  testingInstrumentType?: string | null;
+  attachmentUrl: string;
+  dataRows?: Array<string | null> | null;
+  createdAt: string;
+  updatedAt: string;
+  owner?: string | null;
+};
+
+export type OnDeleteReport2Subscription = {
+  __typename: "Report2";
   id: string;
   name: string;
   samplesSenderName?: string | null;
@@ -1543,6 +2018,153 @@ export class APIService {
     )) as any;
     return <DeleteReportMutation>response.data.deleteReport;
   }
+  async CreateReport2(
+    input: CreateReport2Input,
+    condition?: ModelReport2ConditionInput
+  ): Promise<CreateReport2Mutation> {
+    const statement = `mutation CreateReport2($input: CreateReport2Input!, $condition: ModelReport2ConditionInput) {
+        createReport2(input: $input, condition: $condition) {
+          __typename
+          id
+          name
+          samplesSenderName
+          email
+          labLocation
+          hviVersion
+          reportNum
+          lotNum
+          customerName
+          origin
+          stations
+          variety
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
+          invoiceNumber
+          sellerName
+          buyerName
+          testingInstrumentType
+          attachmentUrl
+          dataRows
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <CreateReport2Mutation>response.data.createReport2;
+  }
+  async UpdateReport2(
+    input: UpdateReport2Input,
+    condition?: ModelReport2ConditionInput
+  ): Promise<UpdateReport2Mutation> {
+    const statement = `mutation UpdateReport2($input: UpdateReport2Input!, $condition: ModelReport2ConditionInput) {
+        updateReport2(input: $input, condition: $condition) {
+          __typename
+          id
+          name
+          samplesSenderName
+          email
+          labLocation
+          hviVersion
+          reportNum
+          lotNum
+          customerName
+          origin
+          stations
+          variety
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
+          invoiceNumber
+          sellerName
+          buyerName
+          testingInstrumentType
+          attachmentUrl
+          dataRows
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <UpdateReport2Mutation>response.data.updateReport2;
+  }
+  async DeleteReport2(
+    input: DeleteReport2Input,
+    condition?: ModelReport2ConditionInput
+  ): Promise<DeleteReport2Mutation> {
+    const statement = `mutation DeleteReport2($input: DeleteReport2Input!, $condition: ModelReport2ConditionInput) {
+        deleteReport2(input: $input, condition: $condition) {
+          __typename
+          id
+          name
+          samplesSenderName
+          email
+          labLocation
+          hviVersion
+          reportNum
+          lotNum
+          customerName
+          origin
+          stations
+          variety
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
+          invoiceNumber
+          sellerName
+          buyerName
+          testingInstrumentType
+          attachmentUrl
+          dataRows
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <DeleteReport2Mutation>response.data.deleteReport2;
+  }
   async CreateUserInfo(
     input: CreateUserInfoInput,
     condition?: ModelUserInfoConditionInput
@@ -1890,6 +2512,107 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
     return <ListReportsQuery>response.data.listReports;
+  }
+  async GetReport2(id: string): Promise<GetReport2Query> {
+    const statement = `query GetReport2($id: ID!) {
+        getReport2(id: $id) {
+          __typename
+          id
+          name
+          samplesSenderName
+          email
+          labLocation
+          hviVersion
+          reportNum
+          lotNum
+          customerName
+          origin
+          stations
+          variety
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
+          invoiceNumber
+          sellerName
+          buyerName
+          testingInstrumentType
+          attachmentUrl
+          dataRows
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      id
+    };
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <GetReport2Query>response.data.getReport2;
+  }
+  async ListReport2s(
+    filter?: ModelReport2FilterInput,
+    limit?: number,
+    nextToken?: string
+  ): Promise<ListReport2sQuery> {
+    const statement = `query ListReport2s($filter: ModelReport2FilterInput, $limit: Int, $nextToken: String) {
+        listReport2s(filter: $filter, limit: $limit, nextToken: $nextToken) {
+          __typename
+          items {
+            __typename
+            id
+            name
+            samplesSenderName
+            email
+            labLocation
+            hviVersion
+            reportNum
+            lotNum
+            customerName
+            origin
+            stations
+            variety
+            dateOfTesting
+            dateOfSampling
+            samplingParty
+            samplingLocation
+            samplingPercentage
+            vesselOrConveyance
+            cropYear
+            conveyanceRefNo
+            invoiceNumber
+            sellerName
+            buyerName
+            testingInstrumentType
+            attachmentUrl
+            dataRows
+            createdAt
+            updatedAt
+            owner
+          }
+          nextToken
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (limit) {
+      gqlAPIServiceArguments.limit = limit;
+    }
+    if (nextToken) {
+      gqlAPIServiceArguments.nextToken = nextToken;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <ListReport2sQuery>response.data.listReport2s;
   }
   async GetUserInfo(id: string): Promise<GetUserInfoQuery> {
     const statement = `query GetUserInfo($id: ID!) {
@@ -2314,6 +3037,168 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     ) as Observable<
       SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteReport">>
+    >;
+  }
+
+  OnCreateReport2Listener(
+    filter?: ModelSubscriptionReport2FilterInput,
+    owner?: string
+  ): Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateReport2">>
+  > {
+    const statement = `subscription OnCreateReport2($filter: ModelSubscriptionReport2FilterInput, $owner: String) {
+        onCreateReport2(filter: $filter, owner: $owner) {
+          __typename
+          id
+          name
+          samplesSenderName
+          email
+          labLocation
+          hviVersion
+          reportNum
+          lotNum
+          customerName
+          origin
+          stations
+          variety
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
+          invoiceNumber
+          sellerName
+          buyerName
+          testingInstrumentType
+          attachmentUrl
+          dataRows
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
+    }
+    return API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    ) as Observable<
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateReport2">>
+    >;
+  }
+
+  OnUpdateReport2Listener(
+    filter?: ModelSubscriptionReport2FilterInput,
+    owner?: string
+  ): Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateReport2">>
+  > {
+    const statement = `subscription OnUpdateReport2($filter: ModelSubscriptionReport2FilterInput, $owner: String) {
+        onUpdateReport2(filter: $filter, owner: $owner) {
+          __typename
+          id
+          name
+          samplesSenderName
+          email
+          labLocation
+          hviVersion
+          reportNum
+          lotNum
+          customerName
+          origin
+          stations
+          variety
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
+          invoiceNumber
+          sellerName
+          buyerName
+          testingInstrumentType
+          attachmentUrl
+          dataRows
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
+    }
+    return API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    ) as Observable<
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateReport2">>
+    >;
+  }
+
+  OnDeleteReport2Listener(
+    filter?: ModelSubscriptionReport2FilterInput,
+    owner?: string
+  ): Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteReport2">>
+  > {
+    const statement = `subscription OnDeleteReport2($filter: ModelSubscriptionReport2FilterInput, $owner: String) {
+        onDeleteReport2(filter: $filter, owner: $owner) {
+          __typename
+          id
+          name
+          samplesSenderName
+          email
+          labLocation
+          hviVersion
+          reportNum
+          lotNum
+          customerName
+          origin
+          stations
+          variety
+          dateOfTesting
+          dateOfSampling
+          samplingParty
+          samplingLocation
+          samplingPercentage
+          vesselOrConveyance
+          cropYear
+          conveyanceRefNo
+          invoiceNumber
+          sellerName
+          buyerName
+          testingInstrumentType
+          attachmentUrl
+          dataRows
+          createdAt
+          updatedAt
+          owner
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (owner) {
+      gqlAPIServiceArguments.owner = owner;
+    }
+    return API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    ) as Observable<
+      SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteReport2">>
     >;
   }
 

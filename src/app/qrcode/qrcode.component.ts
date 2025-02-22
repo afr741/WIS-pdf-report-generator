@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { APIService, Report } from '../API.service';
+import { APIService, Report2 } from '../API.service';
 // import { DataparseService } from '../dataparse.service';
 import { PdfparseService } from '../pdfparse.service';
 
@@ -22,7 +22,7 @@ import { API, GRAPHQL_AUTH_MODE } from '@aws-amplify/api';
 export class QrcodeComponent implements OnInit {
   public decodedID: string;
   private secretKey: string = 'wis';
-  public dbEntryData: Report[] = [];
+  public dbEntryData: Report2[] = [];
   public dataRows: any = {};
   public rawDataRows: any[] = [];
 
@@ -77,8 +77,8 @@ export class QrcodeComponent implements OnInit {
     const fetchProducts = async () => {
       try {
         const productsData = await API.graphql({
-          query: `query GetReport($id: ID!) {
-        getReport(id: $id) {
+          query: `query GetReport2($id: ID!) {
+        getReport2(id: $id) {
           __typename
           id
           name
@@ -114,7 +114,7 @@ export class QrcodeComponent implements OnInit {
     await fetchProducts()
       .then((event: any) => {
         console.log('then event', event);
-        this.dbEntryData = [event.data.getReport];
+        this.dbEntryData = [event.data.getReport2];
         this.dateCreated = new Date(
           this.dbEntryData[0].createdAt
         ).toDateString();

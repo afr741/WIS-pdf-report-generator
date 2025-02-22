@@ -3,7 +3,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { AuthService } from '../AuthService';
 import * as CryptoJS from 'crypto-js';
-import { APIService, Report, ReportTemplate } from '../API.service';
+import { APIService, Report2, ReportTemplate } from '../API.service';
 import { PdfparseService } from '../pdfparse.service';
 import { Router } from '@angular/router';
 import * as QRCode from 'qrcode';
@@ -22,7 +22,7 @@ import {
   styleUrls: ['./pdf.component.css'],
 })
 export class PdfComponent implements OnInit {
-  public reports: Array<Report> = [];
+  public reports: Array<Report2> = [];
   public templateInfo: ReportTemplate[] = [];
   public selectedHviVersion: any = 'v1';
   public selectedLab: any = '';
@@ -99,13 +99,13 @@ export class PdfComponent implements OnInit {
       });
     const fetchData = () => {
       this.api
-        .ListReports()
+        .ListReport2s()
         .then((event) => {
           if (event.items.length == 0) {
             this.reports = [];
           }
           // console.log('event.items ', event.items);
-          this.reports = (event.items as Report[])
+          this.reports = (event.items as Report2[])
             .sort((a, b) => {
               // sort by most recent date
               let dateA: any = new Date(a.updatedAt);
@@ -539,7 +539,7 @@ export class PdfComponent implements OnInit {
                 invoiceNumber == '' || invoiceNumber == null
                   ? 'N/A'
                   : invoiceNumber,
-                'Origin',
+                'Origin/Growth',
                 origin == '' || origin == null ? 'N/A' : origin,
               ],
               [
@@ -564,14 +564,12 @@ export class PdfComponent implements OnInit {
                 variety == '' || variety == null ? 'N/A' : variety,
               ],
               [
-                this.selectedHviVersion === 'v6'
-                  ? 'BL No / Samples from'
-                  : 'B/L or Conveyance  Ref  No.',
+                'B/L or Conveyance  Ref  No.',
                 conveyanceRefNo == '' || conveyanceRefNo == null
                   ? 'N/A'
                   : conveyanceRefNo,
 
-                'Growth / Crop year',
+                'Crop year',
                 cropYear == '' || cropYear == null ? 'N/A' : cropYear,
               ],
               [

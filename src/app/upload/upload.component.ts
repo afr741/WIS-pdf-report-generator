@@ -1,4 +1,4 @@
-import { APIService, Report } from '../API.service';
+import { APIService, Report2 } from '../API.service';
 import { AuthService } from '../AuthService';
 import * as XLSX from 'xlsx';
 
@@ -31,7 +31,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   private selectedFile: File | null = null; // Store the selected file
   public error?: string | null = null;
   public isLoading: boolean = false;
-  private currentReport: Report | null = null;
+  private currentReport: Report2 | null = null;
   public jsonData: any = null;
   public selectedLab: any = '';
   public selectedHviVersion: any = '';
@@ -109,7 +109,7 @@ export class UploadComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.api.ListReports().then((reports) => {
+    this.api.ListReport2s().then((reports) => {
       console.log('reports', reports);
     });
     this.authService.getUserEmailAndLab().then((res) => {
@@ -118,7 +118,7 @@ export class UploadComponent implements OnInit, OnDestroy {
     });
   }
 
-  public async onCreate(report: Report) {
+  public async onCreate(report: Report2) {
     if (this.selectedFile) {
       this.error = '';
       const uniqueIdentifier = new Date().getTime();
@@ -156,7 +156,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   }
 
   // Create the report and wait until it's found in the list of existing reports
-  private async createReportAndWaitForConfirmation(report: Report) {
+  private async createReportAndWaitForConfirmation(report: Report2) {
     const maxRetries = 8; // Maximum number of retries
     let attempt = 0;
     let success = false;
@@ -166,7 +166,7 @@ export class UploadComponent implements OnInit, OnDestroy {
         console.log(`Attempt ${attempt + 1} to create report...`);
 
         // Check if the report already exists before creating it again
-        let existingReports = await this.api.ListReports();
+        let existingReports = await this.api.ListReport2s();
         let existingReport = existingReports.items.find(
           (r: any) => r.name === report.name
         );
@@ -180,7 +180,7 @@ export class UploadComponent implements OnInit, OnDestroy {
         }
 
         // Attempt to create the report
-        const res = await this.api.CreateReport(report);
+        const res = await this.api.CreateReport2(report);
         console.log('Report creation response:', res);
 
         // Wait for the report to appear in ListReports
@@ -205,14 +205,14 @@ export class UploadComponent implements OnInit, OnDestroy {
   }
 
   // Wait until the report is found in the list of existing reports
-  private async waitForReportToBeFound(report: Report): Promise<boolean> {
+  private async waitForReportToBeFound(report: Report2): Promise<boolean> {
     let retries = 0;
     const maxRetries = 4;
     const delayMs = 1500;
 
     while (retries < maxRetries) {
       console.log(`Checking if report exists (attempt ${retries + 1})...`);
-      let existingReports = await this.api.ListReports();
+      let existingReports = await this.api.ListReport2s();
       let existingReport = existingReports.items.find(
         (r: any) => r.name === report.name
       );

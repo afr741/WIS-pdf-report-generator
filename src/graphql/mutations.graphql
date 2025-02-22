@@ -204,6 +204,120 @@ mutation DeleteReport(
   }
 }
 
+mutation CreateReport2(
+  $input: CreateReport2Input!
+  $condition: ModelReport2ConditionInput
+) {
+  createReport2(input: $input, condition: $condition) {
+    id
+    name
+    samplesSenderName
+    email
+    labLocation
+    hviVersion
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
+    invoiceNumber
+    sellerName
+    buyerName
+    testingInstrumentType
+    attachmentUrl
+    dataRows
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+mutation UpdateReport2(
+  $input: UpdateReport2Input!
+  $condition: ModelReport2ConditionInput
+) {
+  updateReport2(input: $input, condition: $condition) {
+    id
+    name
+    samplesSenderName
+    email
+    labLocation
+    hviVersion
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
+    invoiceNumber
+    sellerName
+    buyerName
+    testingInstrumentType
+    attachmentUrl
+    dataRows
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
+mutation DeleteReport2(
+  $input: DeleteReport2Input!
+  $condition: ModelReport2ConditionInput
+) {
+  deleteReport2(input: $input, condition: $condition) {
+    id
+    name
+    samplesSenderName
+    email
+    labLocation
+    hviVersion
+    reportNum
+    lotNum
+    customerName
+    origin
+    stations
+    variety
+    dateOfTesting
+    dateOfSampling
+    samplingParty
+    samplingLocation
+    samplingPercentage
+    vesselOrConveyance
+    cropYear
+    conveyanceRefNo
+    invoiceNumber
+    sellerName
+    buyerName
+    testingInstrumentType
+    attachmentUrl
+    dataRows
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+
 mutation CreateUserInfo(
   $input: CreateUserInfoInput!
   $condition: ModelUserInfoConditionInput

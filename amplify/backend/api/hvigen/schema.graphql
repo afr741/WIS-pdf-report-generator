@@ -1,4 +1,12 @@
-type ReportTemplate @model @auth(rules: [{allow: owner}, {allow: private, provider: userPools}, {allow: public, provider: apiKey}]) {
+type ReportTemplate
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, provider: userPools }
+      { allow: public, provider: apiKey }
+    ]
+  ) {
   templateId: ID!
   localCompanyName: String
   localCompanyNameTranslation: String
@@ -18,7 +26,51 @@ type ReportTemplate @model @auth(rules: [{allow: owner}, {allow: private, provid
   testConditionsList: [String]
 }
 
-type Report @model @auth(rules: [{allow: owner}, {allow: private, provider: userPools}, {allow: public, provider: apiKey}]) {
+type Report
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, provider: userPools }
+      { allow: public, provider: apiKey }
+    ]
+  ) {
+  id: ID!
+  name: String!
+  samplesSenderName: String
+  email: String
+  labLocation: String
+  hviVersion: String
+  reportNum: String
+  lotNum: String
+  customerName: String
+  origin: String
+  stations: String
+  variety: String
+  dateOfTesting: String
+  dateOfSampling: String
+  samplingParty: String
+  samplingLocation: String
+  samplingPercentage: String
+  vesselOrConveyance: String
+  cropYear: String
+  conveyanceRefNo: String
+  invoiceNumber: String
+  sellerName: String
+  buyerName: String
+  testingInstrumentType: String
+  attachmentUrl: String!
+  dataRows: [AWSJSON]
+}
+type Report2
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, provider: userPools }
+      { allow: public, provider: apiKey }
+    ]
+  ) {
   id: ID!
   name: String!
   samplesSenderName: String
@@ -47,15 +99,23 @@ type Report @model @auth(rules: [{allow: owner}, {allow: private, provider: user
   dataRows: [AWSJSON]
 }
 
-type UserInfo @model @auth(rules: [{allow: owner}]) {
+type UserInfo @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   labLocation: String!
   hviVersion: String!
 }
 
-type Labs @model @auth(rules: [{allow: owner}, {allow: private, provider: userPools}, {allow: public, provider: apiKey}]) {
+type Labs
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, provider: userPools }
+      { allow: public, provider: apiKey }
+    ]
+  ) {
   labCountry: String!
   labCode: String!
   label: String
   defaultHVIProcessingVersion: String
-} 
+}
