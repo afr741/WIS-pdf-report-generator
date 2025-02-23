@@ -194,7 +194,7 @@ export class PdfparseService {
       return formattedResult;
     }
 
-    const roundToInteger = ['P.R No.', 'Amt']; // Columns to round to integer
+    const roundToInteger = ['P R No', 'Amt']; // Columns to round to integer
     const roundTwoDecimal = ['Mic', 'Mat', 'SFI', 'C-G', 'Area', 'UI'];
     const roundOneDecimal = [
       'SCI',
@@ -863,7 +863,7 @@ export class PdfparseService {
       return formattedResult;
     }
 
-    const roundToInteger = ['SCI', 'Cnt', 'T.L']; // Columns to round to integer
+    const roundToInteger = ['SCI', 'Cnt', 'T L']; // Columns to round to integer
     const roundTwoDecimal = ['Area', 'Len', 'Mic'];
     const roundOneDecimal = ['Rd', '+b', 'Unf', 'Str', 'SFI', 'ELG'];
 
@@ -1154,7 +1154,7 @@ export class PdfparseService {
       return formattedResult;
     }
 
-    const roundToInteger = ['SCI', 'T.L']; // Columns to round to integer
+    const roundToInteger = ['SCI', 'T L']; // Columns to round to integer
     const roundTwoDecimal = ['Area', 'Len', 'Mic'];
     const roundOneDecimal = ['Rd', '+b', 'Unf', 'Str', 'SFI', 'ELG'];
 
@@ -1366,7 +1366,7 @@ export class PdfparseService {
       return formattedResult;
     }
 
-    const roundToInteger = ['SCI', 'T.L', 'Cnt']; // Columns to round to integer
+    const roundToInteger = ['SCI', 'T L', 'Cnt']; // Columns to round to integer
     const roundTwoDecimal = ['Area', 'Len', 'Mic'];
     const roundOneDecimal = ['Rd', '+b', 'Unf', 'Str', 'SFI', 'ELG'];
 
