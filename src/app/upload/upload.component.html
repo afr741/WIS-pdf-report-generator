@@ -38,15 +38,23 @@
         <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
       </kendo-formfield>
       <ng-container>
-        <kendo-formfield>
-          <kendo-label labelCssClass="k-form-label" text="Origin" />
-          <kendo-textbox
-            formControlName="origin"
-            #origin
-            placeholder="Origin"
-          ></kendo-textbox>
-          <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
-        </kendo-formfield>
+        <ng-container
+          *ngIf="
+            selectedHviVersion !== 'v1' ||
+            selectedHviVersion !== 'v2' ||
+            selectedHviVersion !== 'v3'
+          "
+        >
+          <kendo-formfield>
+            <kendo-label labelCssClass="k-form-label" text="Origin" />
+            <kendo-textbox
+              formControlName="origin"
+              #origin
+              placeholder="Origin"
+            ></kendo-textbox>
+            <!-- <kendo-formerror> Locat is required</kendo-formerror> -->
+          </kendo-formfield>
+        </ng-container>
         <kendo-formfield>
           <kendo-label labelCssClass="k-form-label" text="Stations" />
           <kendo-textbox

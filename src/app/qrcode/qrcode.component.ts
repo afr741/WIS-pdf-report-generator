@@ -25,7 +25,7 @@ export class QrcodeComponent implements OnInit {
   public dbEntryData: Report2[] = [];
   public dataRows: any = {};
   public rawDataRows: any[] = [];
-
+  public selectedOrigin: string = 'N/A';
   public columnsConfig: Array<{ field: string; title: string }> = [];
   public gridData: Array<any> = [];
 
@@ -108,6 +108,47 @@ export class QrcodeComponent implements OnInit {
       }
     };
 
+    //TBD - FIX TEMPLATE FETCGHING
+    const fetchTemplates = async () => {
+      try {
+        const templates = await API.graphql({
+          query: `query ListReportTemplates($filter: ModelReportFilterInput, $limit: Int, $nextToken: String) {
+  listReportTemplates {
+    items {
+      id
+      fax
+      email
+      createdAt
+      certificationImageTop
+      addressTranslation
+      address
+      labLocation
+      letterHeadImageName
+      localCompanyName
+      localCompanyNameTranslation
+      origin
+      owner
+      phone
+      remarksList
+      stampImageName
+      templateId
+      testConditionsList
+      testLocation
+      testingInstrumentType
+      updatedAt
+    }
+  }
+}`,
+          variables: {},
+          authMode: GRAPHQL_AUTH_MODE.API_KEY,
+        });
+        console.log('fetchTemplates', templates);
+        return templates;
+      } catch (error) {
+        return error;
+      }
+    };
+
     this.decodeQueryParam(queryParams['code']);
     console.log('this.decodedID', this.decodedID);
 
@@ -147,10 +188,18 @@ export class QrcodeComponent implements OnInit {
                 return acc;
               }, {});
             });
+
+            // selectedOrigin = dbEntryData[0].origin :
             console.log('columnsConfig', this.columnsConfig);
 
             console.log('gridData', this.gridData);
           });
+      })
+      .catch((e: any) => console.log('error', e));
+
+    await fetchTemplates()
+      .then((event: any) => {
+        console.log('then fetchTemplates events', event);
       })
       .catch((e: any) => console.log('error', e));
   }

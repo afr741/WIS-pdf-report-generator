@@ -88,6 +88,8 @@ export class PdfComponent implements OnInit {
       .then((user) => {
         this.selectedHviVersion = user.items[0]?.hviVersion;
         this.selectedLab = user.items[0]?.labLocation;
+        console.log('user', user);
+        this.updateFonts();
       })
       .then(() => {
         try {
@@ -170,7 +172,14 @@ export class PdfComponent implements OnInit {
 
   updateFonts() {
     (pdfMake as any).fonts =
-      this.selectedHviVersion === 'v5'
+      this.selectedHviVersion === 'v6'
+        ? {
+            NotoSansSC: {
+              normal: `${window.location.origin}/assets/fonts/Noto_Sans_SC/static/NotoSans-Regular.ttf`,
+              bold: `${window.location.origin}/assets/fonts/Noto_Sans_SC/static/NotoSans-Bold.ttf`,
+            },
+          }
+        : this.selectedHviVersion === 'v5'
         ? {
             NotoSansSC: {
               normal: `${window.location.origin}/assets/fonts/Noto_Sans_SC/static/NotoSansSC-Regular.ttf`,
@@ -327,11 +336,18 @@ export class PdfComponent implements OnInit {
       this.activeTemplateInfo
     );
     const { qrImage, qrURL } = await this.generateQRCodeImageAndURL(id);
+    let selectedOrigin = '';
 
     let qrImageProcessed = await this.getBase64ImageFromURL(qrImage);
     let testLocation = 'N/A';
     if (this.activeTemplateInfo?.testLocation) {
       testLocation = this.activeTemplateInfo?.testLocation;
+      selectedOrigin =
+        this.selectedHviVersion == 'v1' ||
+        this.selectedHviVersion == 'v2' ||
+        this.selectedHviVersion == 'v3'
+          ? this.activeTemplateInfo?.origin
+          : origin;
     }
 
     let formatedDate = () => {
@@ -540,7 +556,7 @@ export class PdfComponent implements OnInit {
                   ? 'N/A'
                   : invoiceNumber,
                 'Origin/Growth',
-                origin == '' || origin == null ? 'N/A' : origin,
+                selectedOrigin == '' ? 'N/A' : selectedOrigin,
               ],
               [
                 'Buyer name',
@@ -737,7 +753,10 @@ export class PdfComponent implements OnInit {
         },
       ],
       defaultStyle: {
-        font: this.selectedHviVersion === 'v5' ? 'NotoSansSC' : null,
+        font:
+          this.selectedHviVersion === 'v5' || this.selectedHviVersion === 'v6'
+            ? 'NotoSansSC'
+            : null,
       },
       styles: {
         header: {
@@ -819,7 +838,8 @@ export class PdfComponent implements OnInit {
               this.pdfData,
               undefined,
               undefined,
-              this.selectedHviVersion === 'v5'
+              this.selectedHviVersion === 'v5' ||
+                this.selectedHviVersion === 'v6'
                 ? this.customFonts
                 : pdfFonts.pdfMake.vfs
             )
@@ -842,7 +862,7 @@ export class PdfComponent implements OnInit {
             this.pdfData,
             undefined,
             undefined,
-            this.selectedHviVersion === 'v5'
+            this.selectedHviVersion === 'v5' || this.selectedHviVersion === 'v6'
               ? this.customFonts
               : pdfFonts.pdfMake.vfs
           )
