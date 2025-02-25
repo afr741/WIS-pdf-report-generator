@@ -693,16 +693,12 @@ export class PdfComponent implements OnInit {
                         this.selectedHviVersion !== 'v5' ? `\nFx ${fax}` : ''
                       }\nPh ${phone} \nEm ${email}\n www.wiscontrol.com`,
                     },
-                    this.selectedHviVersion !== 'v6'
-                      ? {
-                          width: 90,
-                          text: `${addressTranslation}${
-                            this.selectedHviVersion !== 'v5'
-                              ? `\nFx ${fax}`
-                              : ''
-                          }\nPh ${phone} \nEm ${email}\n www.wiscontrol.com`,
-                        }
-                      : null,
+                    {
+                      width: 90,
+                      text: `${addressTranslation}${
+                        this.selectedHviVersion !== 'v5' ? `\nFx ${fax}` : ''
+                      }\nPh ${phone} \nEm ${email}\n www.wiscontrol.com`,
+                    },
                     (await this.certificationImage)
                       ? {
                           image: await this.certificationImage,
@@ -725,7 +721,8 @@ export class PdfComponent implements OnInit {
             (await this.stampImage) && {
               image: await this.stampImage,
               fit:
-                this.selectedHviVersion === 'v1'
+                this.selectedHviVersion === 'v1' ||
+                this.selectedHviVersion === 'v5'
                   ? [200, 200]
                   : this.selectedHviVersion === 'v2' ||
                     this.selectedHviVersion === 'v3'
