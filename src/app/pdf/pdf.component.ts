@@ -613,7 +613,7 @@ export class PdfComponent implements OnInit {
                 samplingParty == '' || samplingParty == null
                   ? 'N/A'
                   : samplingParty,
-                'Total sampling',
+                'Total samples',
                 `${numberOfSamples} samples`,
               ],
               [
