@@ -77,7 +77,19 @@
         [data]="gridData"
         scrollable="scrollable"
         class="qr-data-grid"
+        [autoSize]="isResizable"
       >
+        <kendo-grid-column
+          *ngFor="let column of columnsConfig"
+          [field]="column.field"
+          [title]="column.title"
+          [width]="
+            column.title == 'Bale/Sample No' || column.title == 'Container'
+              ? 190
+              : 100
+          "
+        >
+        </kendo-grid-column>
       </kendo-grid>
     </div>
   </div>

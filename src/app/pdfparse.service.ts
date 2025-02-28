@@ -719,8 +719,8 @@ export class PdfparseService {
     console.log('parsedRawData', parsedRawData);
 
     const masterObject = {
-      'No.': ['No', 'No.', 'Sample Count'],
-      'S B No.': ['S.B. No.'],
+      No: ['No', 'No.', 'Sample Count'],
+      'S B No': ['S.B. No.'],
       'P R No': ['P.R No.'],
       'HVI ID No': ['Gin Code'],
       Container: ['Container'],
@@ -732,7 +732,7 @@ export class PdfparseService {
         'Mark No.',
         'Gin Bale Number',
       ],
-      'Bale/Sample No.': ['Bale No.', 'Sample No.', 'Bale ID', 'Bale '],
+      'Bale/Sample No': ['Bale No.', 'Sample No.', 'Bale ID', 'Bale '],
       SCI: ['SCI'],
       Mic: ['Mic'],
       Rd: ['Rd'],

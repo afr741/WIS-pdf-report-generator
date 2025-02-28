@@ -28,7 +28,7 @@ export class QrcodeComponent implements OnInit {
   public selectedOrigin: string = 'N/A';
   public columnsConfig: Array<{ field: string; title: string }> = [];
   public gridData: Array<any> = [];
-
+  public isResizable: boolean = true;
   public dateCreated: string = '';
   public isLoading: boolean = true;
   public loader = {
