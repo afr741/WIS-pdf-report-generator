@@ -29,7 +29,7 @@
     "@progress/kendo-angular-grid": "^14.1.0",
     "@progress/kendo-angular-icons": "^14.1.0",
     "@progress/kendo-angular-indicators": "^14.1.0",
-    "@progress/kendo-angular-inputs": "14.1.0",
+    "@progress/kendo-angular-inputs": "^14.1.0",
     "@progress/kendo-angular-intl": "14.1.0",
     "@progress/kendo-angular-l10n": "14.1.0",
     "@progress/kendo-angular-label": "14.1.0",

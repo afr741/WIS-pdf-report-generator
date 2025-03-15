@@ -22,6 +22,7 @@ subscription OnCreateReportTemplate(
     testingInstrumentType
     remarksList
     testConditionsList
+    columnSettings
     id
     createdAt
     updatedAt
@@ -52,6 +53,7 @@ subscription OnUpdateReportTemplate(
     testingInstrumentType
     remarksList
     testConditionsList
+    columnSettings
     id
     createdAt
     updatedAt
@@ -82,6 +84,7 @@ subscription OnDeleteReportTemplate(
     testingInstrumentType
     remarksList
     testConditionsList
+    columnSettings
     id
     createdAt
     updatedAt

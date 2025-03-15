@@ -22,6 +22,7 @@ mutation CreateReportTemplate(
     testingInstrumentType
     remarksList
     testConditionsList
+    columnSettings
     id
     createdAt
     updatedAt
@@ -52,6 +53,7 @@ mutation UpdateReportTemplate(
     testingInstrumentType
     remarksList
     testConditionsList
+    columnSettings
     id
     createdAt
     updatedAt
@@ -82,6 +84,7 @@ mutation DeleteReportTemplate(
     testingInstrumentType
     remarksList
     testConditionsList
+    columnSettings
     id
     createdAt
     updatedAt

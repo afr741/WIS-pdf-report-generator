@@ -19,6 +19,7 @@ query GetReportTemplate($id: ID!) {
     testingInstrumentType
     remarksList
     testConditionsList
+    columnSettings
     id
     createdAt
     updatedAt
@@ -51,6 +52,7 @@ query ListReportTemplates(
       testingInstrumentType
       remarksList
       testConditionsList
+      columnSettings
       id
       createdAt
       updatedAt

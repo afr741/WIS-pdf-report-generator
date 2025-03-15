@@ -13,12 +13,17 @@ import {
   LoaderThemeColor,
   LoaderSize,
 } from '@progress/kendo-angular-indicators';
-
 import { FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Storage } from 'aws-amplify';
 import { NotificationService } from '@progress/kendo-angular-notification';
 import { ZenObservable } from 'zen-observable-ts';
+
+export interface ColumnSetting {
+  id: string;
+  label?: string;
+  isChecked?: boolean;
+}
 
 @Component({
   selector: 'app-edit',
@@ -52,7 +57,20 @@ export class EditComponent implements OnInit, OnDestroy {
   public activeTemplateInfo: ReportTemplate | undefined = undefined;
   public remarksList: FormArray = this.fb.array([]);
   public testConditionsList: FormArray = this.fb.array([]);
-
+  //TBD make it work as form array
+  public columnSettings: ColumnSetting[] = [
+    { id: 'sbno', label: 'S B No', isChecked: true },
+    { id: 'prno', label: 'P R No', isChecked: true },
+    { id: 'hvidno', label: 'HVI ID No', isChecked: true },
+    { id: 'containerno', label: 'Container', isChecked: true },
+    {
+      id: 'balesampleno',
+      label: 'Bale/Sample No',
+      isChecked: true,
+    },
+    { id: 'marklotno', label: 'Cont/Mark/Lot No', isChecked: true },
+    { id: 'remarks', label: 'Remarks', isChecked: true },
+  ];
   constructor(
     private fb: FormBuilder,
     private api: APIService,
@@ -61,6 +79,7 @@ export class EditComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService
   ) {
     this.createForm = this.fb.group({
+      checkboxGroup: this.fb.array([this.fb.control(true)]),
       localCompanyName: ['', Validators.required],
       localCompanyNameTranslation: ['', Validators.required],
       letterHeadImage: [null, Validators.required],
@@ -141,16 +160,12 @@ export class EditComponent implements OnInit, OnDestroy {
             console.log('fieldsToPrefill:', fieldsToPrefill);
 
             console.log('createForm:', this.createForm);
+
             console.log(
-              ' this.createForm.get("remarksList")',
-              this.createForm.get('remarksList')
-            );
-            console.log(
-              ' this.createForm.get("testConditionsList")',
-              this.createForm.get('testConditionsList')
+              ' this.createForm.get("checkboxGroup")',
+              this.createForm.get('checkboxGroup')
             );
 
-            // remarksList: this.fb.array(remarksList),
             this.createForm.patchValue({
               ...fieldsToPrefill,
             });
@@ -160,14 +175,19 @@ export class EditComponent implements OnInit, OnDestroy {
               });
               this.createForm.setControl('remarksList', this.remarksList);
             }
-            if (testConditionsList) {
-              testConditionsList.forEach((item) => {
-                this.testConditionsList.push(this.fb.control(item));
-              });
-              this.createForm.setControl(
-                'testConditionsList',
-                this.testConditionsList
-              );
+
+            // if (testConditionsList) {
+            //   testConditionsList.forEach((item) => {
+            //     this.testConditionsList.push(this.fb.control(item));
+            //   });
+            //   this.createForm.setControl(
+            //     'testConditionsList',
+            //     this.testConditionsList
+            //   );
+            // }
+            //
+            if (fieldsToPrefill.columnSettings) {
+              this.columnSettings = JSON.parse(fieldsToPrefill.columnSettings);
             }
 
             if (fieldsToPrefill.stampImageName) {
@@ -222,7 +242,13 @@ export class EditComponent implements OnInit, OnDestroy {
     let generatedStampImageName = `${stampImageNamePredefined}-${this.selectedLab}`;
     let generatedCertificationsImageName = `${certificationImagePredefined}-${this.selectedLab}`;
     let generatedLetterHeadImageName = `${letterHeadImageNamePredefined}-${this.selectedLab}`;
-    const { stampImage, letterHeadImage, certificationImage, ...rest } = report;
+    const {
+      stampImage,
+      letterHeadImage,
+      certificationImage,
+      checkboxGroup, // to remove tbd
+      ...rest
+    } = report;
     this.isLoading = true;
     //update report
     if (this.activeTemplateInfo && this.userInfo) {
@@ -231,6 +257,7 @@ export class EditComponent implements OnInit, OnDestroy {
         certificationImageTop: generatedCertificationsImageName,
         labLocation: this.selectedLab,
         id: this.selectedLab,
+        columnSettings: JSON.stringify(this.columnSettings),
       };
 
       if (
@@ -274,9 +301,20 @@ export class EditComponent implements OnInit, OnDestroy {
         letterHeadImageName: generatedLetterHeadImageName,
         id: this.selectedLab,
         templateId: this.selectedLab,
+        columnSettings: JSON.stringify(this.columnSettings),
       };
       this.createReportWithAttachment(modifiedReport);
     }
+  }
+
+  handleCheckboxChange(event: Event, index: number): void {
+    const checkbox = event.target as HTMLInputElement;
+    this.columnSettings[index].isChecked = checkbox.checked;
+    // console.log(
+    //   `Checkbox ${this.columnSettings[index].label} is now ${
+    //     checkbox.checked ? 'checked' : 'unchecked'
+    //   }`
+    // );
   }
 
   // Handle file change event and update the formData
@@ -321,14 +359,14 @@ export class EditComponent implements OnInit, OnDestroy {
       reader.readAsDataURL(fileList[0].rawFile);
     }
   }
-  addAdditionalText(): void {
-    this.remarksList.push(this.fb.control(''));
-    this.createForm.setControl('remarksList', this.remarksList);
-  }
-  addAdditionalText2(): void {
-    this.testConditionsList.push(this.fb.control(''));
-    this.createForm.setControl('testConditionsList', this.testConditionsList);
-  }
+  // addAdditionalText(): void {
+  //   this.remarksList.push(this.fb.control(''));
+  //   this.createForm.setControl('remarksList', this.remarksList);
+  // }
+  // addAdditionalText2(): void {
+  //   this.testConditionsList.push(this.fb.control(''));
+  //   this.createForm.setControl('testConditionsList', this.testConditionsList);
+  // }
 
   deleteRemark(index: number): void {
     (this.createForm.get('remarksList') as FormArray).removeAt(index);

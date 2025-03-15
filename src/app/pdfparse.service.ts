@@ -7,8 +7,36 @@ import { Report } from './API.service';
 export class PdfparseService {
   constructor() {}
 
+  filterMasterObject(masterObj: any, settings: any) {
+    // Create a copy of masterObject to avoid mutating the original
+    const filteredMasterObject = { ...masterObj };
+    settings.forEach((setting: any) => {
+      // Check if the setting is not checked
+      if (!setting.isChecked) {
+        // Normalize the label to match masterObject keys (remove dots and spaces)
+        const normalizedLabel = setting.label
+          .replace(/[.\s]/g, '')
+          .toLowerCase();
+
+        // Check for matching keys in masterObject
+        for (const key in filteredMasterObject) {
+          // Normalize the key from masterObject
+          const normalizedKey = key.replace(/[.\s]/g, '').toLowerCase();
+
+          // If they match, delete the key from filteredMasterObject
+          if (normalizedKey === normalizedLabel) {
+            delete filteredMasterObject[key];
+            break; // Exit loop once found and deleted
+          }
+        }
+      }
+    });
+
+    return filteredMasterObject;
+  }
+
   //Dushanbe
-  processPDFDataV1(report: Report, handleShowError: any) {
+  processPDFDataV1(report: Report, handleShowError: any, columnSettings: any) {
     let {
       dataRows,
       reportNum,
@@ -145,9 +173,13 @@ export class PdfparseService {
       ELG: ['Elg'],
       Remarks: ['Remarks'],
     };
-
-    const result = processPDFContent(parsedRawData, masterObject);
-    console.log(result);
+    const filteredMasterColumnObj = this.filterMasterObject(
+      masterObject,
+      JSON.parse(columnSettings)
+    );
+    console.log('filteredMasterColumnObj', filteredMasterColumnObj);
+    const result = processPDFContent(parsedRawData, filteredMasterColumnObj);
+    console.log('result', result);
 
     function formatAndRoundResult(
       result: { headers: string[]; rows: Record<string, any>[] },
@@ -244,7 +276,11 @@ export class PdfparseService {
     };
   }
   //Bohktar
-  async processPDFDataV2(report: Report, handleShowError: any) {
+  async processPDFDataV2(
+    report: Report,
+    handleShowError: any,
+    columnSettings: any
+  ) {
     let {
       dataRows,
       reportNum,
@@ -364,8 +400,13 @@ export class PdfparseService {
       Remarks: ['Remarks'],
     };
 
-    const result = processPDFContent(parsedRawData, masterObject);
-    console.log(result);
+    const filteredMasterColumnObj = this.filterMasterObject(
+      masterObject,
+      JSON.parse(columnSettings)
+    );
+    console.log('filteredMasterColumnObj', filteredMasterColumnObj);
+    const result = processPDFContent(parsedRawData, filteredMasterColumnObj);
+    console.log('result', result);
 
     function formatAndRoundResult(
       result: { headers: string[]; rows: Record<string, any>[] },
@@ -463,7 +504,11 @@ export class PdfparseService {
     };
   }
   // Hujand
-  async processPDFDataV3(report: Report, handleShowError: any) {
+  async processPDFDataV3(
+    report: Report,
+    handleShowError: any,
+    columnSettings: any
+  ) {
     let {
       dataRows,
       reportNum,
@@ -583,8 +628,13 @@ export class PdfparseService {
       Remarks: ['Remarks'],
     };
 
-    const result = processPDFContent(parsedRawData, masterObject);
-    console.log(result);
+    const filteredMasterColumnObj = this.filterMasterObject(
+      masterObject,
+      JSON.parse(columnSettings)
+    );
+    console.log('filteredMasterColumnObj', filteredMasterColumnObj);
+    const result = processPDFContent(parsedRawData, filteredMasterColumnObj);
+    console.log('result', result);
 
     function formatAndRoundResult(
       result: { headers: string[]; rows: Record<string, any>[] },
@@ -684,7 +734,11 @@ export class PdfparseService {
   }
 
   // Vietnam new
-  async processPDFDataV4(report: Report, handleShowError: any) {
+  async processPDFDataV4(
+    report: Report,
+    handleShowError: any,
+    columnSettings: any
+  ) {
     let {
       dataRows,
       reportNum,
@@ -724,7 +778,7 @@ export class PdfparseService {
       'P R No': ['P.R No.'],
       'HVI ID No': ['Gin Code'],
       Container: ['Container'],
-      'Mark/Lot No': [
+      'Cont/Mark/Lot No': [
         'Lot',
         'Lot No.',
         'Lot ID',
@@ -824,10 +878,13 @@ export class PdfparseService {
         rows: processedRows,
       };
     }
-
-    const result = processPDFContent(parsedRawData, masterObject);
+    const filteredMasterColumnObj = this.filterMasterObject(
+      masterObject,
+      JSON.parse(columnSettings)
+    );
+    console.log('filteredMasterColumnObj', filteredMasterColumnObj);
+    const result = processPDFContent(parsedRawData, filteredMasterColumnObj);
     console.log('result', result);
-
     function formatAndRoundResult(
       result: { headers: string[]; rows: Record<string, any>[] },
       roundToInteger: string[],
@@ -904,7 +961,11 @@ export class PdfparseService {
   }
 
   //China - Shanghai
-  async processPDFDataV5(report: Report, handleShowError: any) {
+  async processPDFDataV5(
+    report: Report,
+    handleShowError: any,
+    columnSettings: any
+  ) {
     let {
       dataRows,
       reportNum,
@@ -1114,8 +1175,13 @@ export class PdfparseService {
 
     // Example usage
 
-    const result = processPDFContent(parsedRawData, masterObject);
-    console.log(result);
+    const filteredMasterColumnObj = this.filterMasterObject(
+      masterObject,
+      JSON.parse(columnSettings)
+    );
+    console.log('filteredMasterColumnObj', filteredMasterColumnObj);
+    const result = processPDFContent(parsedRawData, filteredMasterColumnObj);
+    console.log('result', result);
 
     function formatAndRoundResult(
       result: { headers: string[]; rows: Record<string, any>[] },
@@ -1195,7 +1261,11 @@ export class PdfparseService {
   }
 
   // India
-  async processPDFDataV6(report: Report, handleShowError: any) {
+  async processPDFDataV6(
+    report: Report,
+    handleShowError: any,
+    columnSettings: any
+  ) {
     let {
       dataRows,
       reportNum,
@@ -1320,45 +1390,50 @@ export class PdfparseService {
       Remarks: ['Remarks'],
     };
 
-    const result = processPDFContent(parsedRawData, masterObject);
-    console.log(result);
+    // Execute the filtering function
+    const filteredMasterColumnObj = this.filterMasterObject(
+      masterObject,
+      JSON.parse(columnSettings)
+    );
+    console.log('filteredMasterColumnObj', filteredMasterColumnObj);
+    const result = processPDFContent(parsedRawData, filteredMasterColumnObj);
+    console.log('result', result);
 
+    // Modify formatAndRoundResult to use only selected columns
     function formatAndRoundResult(
       result: { headers: string[]; rows: Record<string, any>[] },
-      roundToInteger: string[], // Columns to round to integer
+      roundToInteger: string[],
       roundOneDecimal: string[],
-      roundTwoDecimal: string[] // Columns to round to 2 decimal points
+      roundTwoDecimal: string[]
     ) {
       const { headers, rows } = result;
 
-      // Initialize the final array with the headers as the first row.
+      // Initialize the final array with the filtered headers as the first row
       const formattedResult: string[][] = [headers];
 
-      // Iterate over each row and map it to an array of strings.
+      // Iterate over each row and map it to an array of strings based on filtered headers
       rows.forEach((row) => {
         const formattedRow = headers.map((header) => {
           let value = row[header];
 
           if (value !== undefined && typeof value === 'number') {
             if (roundToInteger.includes(header)) {
-              value = Math.round(value); // Round to integer
+              value = Math.round(value);
             } else if (roundTwoDecimal.includes(header)) {
-              value = value.toFixed(2); // Round to 2 decimal points
+              value = value.toFixed(2);
             } else if (roundOneDecimal.includes(header)) {
-              value = value.toFixed(1); // Round to 2 decimal points
+              value = value.toFixed(1);
             }
           }
 
-          // Replace undefined or missing values with "-"
           return value !== undefined ? String(value) : '-';
         });
-        // Check if the length of the formattedRow is less than the headers length
-        // Check if most fields are undefined
+
+        // Exclude rows with mostly missing values
         const undefinedCount = formattedRow.filter(
           (cell) => cell === '-'
         ).length;
         if (undefinedCount < headers.length * 0.7) {
-          // adjust the threshold as needed
           formattedResult.push(formattedRow);
         }
       });
@@ -1409,28 +1484,53 @@ export class PdfparseService {
   async handleProcessingVersion(
     dataItem: any,
     selectedHviVersion: any,
-    handleShowError: any
+    handleShowError: any,
+    columnSettings: any
   ): Promise<any> {
     const version = selectedHviVersion;
 
     switch (version) {
       case 'v1':
-        const process = this.processPDFDataV1(dataItem, handleShowError);
+        const process = this.processPDFDataV1(
+          dataItem,
+          handleShowError,
+          columnSettings
+        );
         return process;
       case 'v2':
-        const process2 = this.processPDFDataV2(dataItem, handleShowError);
+        const process2 = this.processPDFDataV2(
+          dataItem,
+          handleShowError,
+          columnSettings
+        );
         return process2;
       case 'v3':
-        const process3 = this.processPDFDataV3(dataItem, handleShowError);
+        const process3 = this.processPDFDataV3(
+          dataItem,
+          handleShowError,
+          columnSettings
+        );
         return process3;
       case 'v4':
-        const process4 = this.processPDFDataV4(dataItem, handleShowError);
+        const process4 = this.processPDFDataV4(
+          dataItem,
+          handleShowError,
+          columnSettings
+        );
         return process4;
       case 'v5':
-        const process5 = this.processPDFDataV5(dataItem, handleShowError);
+        const process5 = this.processPDFDataV5(
+          dataItem,
+          handleShowError,
+          columnSettings
+        );
         return process5;
       case 'v6':
-        const process6 = this.processPDFDataV6(dataItem, handleShowError);
+        const process6 = this.processPDFDataV6(
+          dataItem,
+          handleShowError,
+          columnSettings
+        );
         return process6;
       default:
         handleShowError("version doesn't exist!");

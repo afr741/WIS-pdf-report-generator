@@ -45,6 +45,7 @@ export type CreateReportTemplateInput = {
   testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
+  columnSettings?: string | null;
   id?: string | null;
 };
 
@@ -66,6 +67,7 @@ export type ModelReportTemplateConditionInput = {
   testingInstrumentType?: ModelStringInput | null;
   remarksList?: ModelStringInput | null;
   testConditionsList?: ModelStringInput | null;
+  columnSettings?: ModelStringInput | null;
   and?: Array<ModelReportTemplateConditionInput | null> | null;
   or?: Array<ModelReportTemplateConditionInput | null> | null;
   not?: ModelReportTemplateConditionInput | null;
@@ -148,6 +150,7 @@ export type ReportTemplate = {
   testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
+  columnSettings?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -172,6 +175,7 @@ export type UpdateReportTemplateInput = {
   testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
+  columnSettings?: string | null;
   id: string;
 };
 
@@ -537,6 +541,7 @@ export type ModelReportTemplateFilterInput = {
   testingInstrumentType?: ModelStringInput | null;
   remarksList?: ModelStringInput | null;
   testConditionsList?: ModelStringInput | null;
+  columnSettings?: ModelStringInput | null;
   id?: ModelIDInput | null;
   createdAt?: ModelStringInput | null;
   updatedAt?: ModelStringInput | null;
@@ -690,6 +695,7 @@ export type ModelSubscriptionReportTemplateFilterInput = {
   testingInstrumentType?: ModelSubscriptionStringInput | null;
   remarksList?: ModelSubscriptionStringInput | null;
   testConditionsList?: ModelSubscriptionStringInput | null;
+  columnSettings?: ModelSubscriptionStringInput | null;
   id?: ModelSubscriptionIDInput | null;
   createdAt?: ModelSubscriptionStringInput | null;
   updatedAt?: ModelSubscriptionStringInput | null;
@@ -839,6 +845,7 @@ export type CreateReportTemplateMutation = {
   testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
+  columnSettings?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -864,6 +871,7 @@ export type UpdateReportTemplateMutation = {
   testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
+  columnSettings?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -889,6 +897,7 @@ export type DeleteReportTemplateMutation = {
   testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
+  columnSettings?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -1178,6 +1187,7 @@ export type GetReportTemplateQuery = {
   testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
+  columnSettings?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -1205,6 +1215,7 @@ export type ListReportTemplatesQuery = {
     testingInstrumentType?: string | null;
     remarksList?: Array<string | null> | null;
     testConditionsList?: Array<string | null> | null;
+    columnSettings?: string | null;
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -1424,6 +1435,7 @@ export type OnCreateReportTemplateSubscription = {
   testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
+  columnSettings?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -1449,6 +1461,7 @@ export type OnUpdateReportTemplateSubscription = {
   testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
+  columnSettings?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -1474,6 +1487,7 @@ export type OnDeleteReportTemplateSubscription = {
   testingInstrumentType?: string | null;
   remarksList?: Array<string | null> | null;
   testConditionsList?: Array<string | null> | null;
+  columnSettings?: string | null;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -1772,6 +1786,7 @@ export class APIService {
           testingInstrumentType
           remarksList
           testConditionsList
+          columnSettings
           id
           createdAt
           updatedAt
@@ -1813,6 +1828,7 @@ export class APIService {
           testingInstrumentType
           remarksList
           testConditionsList
+          columnSettings
           id
           createdAt
           updatedAt
@@ -1854,6 +1870,7 @@ export class APIService {
           testingInstrumentType
           remarksList
           testConditionsList
+          columnSettings
           id
           createdAt
           updatedAt
@@ -2348,6 +2365,7 @@ export class APIService {
           testingInstrumentType
           remarksList
           testConditionsList
+          columnSettings
           id
           createdAt
           updatedAt
@@ -2389,6 +2407,7 @@ export class APIService {
             testingInstrumentType
             remarksList
             testConditionsList
+            columnSettings
             id
             createdAt
             updatedAt
@@ -2756,6 +2775,7 @@ export class APIService {
           testingInstrumentType
           remarksList
           testConditionsList
+          columnSettings
           id
           createdAt
           updatedAt
@@ -2806,6 +2826,7 @@ export class APIService {
           testingInstrumentType
           remarksList
           testConditionsList
+          columnSettings
           id
           createdAt
           updatedAt
@@ -2856,6 +2877,7 @@ export class APIService {
           testingInstrumentType
           remarksList
           testConditionsList
+          columnSettings
           id
           createdAt
           updatedAt

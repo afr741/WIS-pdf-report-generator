@@ -73,8 +73,6 @@ export class PdfComponent implements OnInit {
           this.selectedLab = updatedUser.labLocation;
           fetchTemplateData().then(() => fetchData());
         }
-
-        // console.log('userList update ng init', this.userList);
       });
     this.authService.getUserEmailAndLab().then((res) => {
       console.log('user lab', res);
@@ -221,7 +219,6 @@ export class PdfComponent implements OnInit {
             })
           )
         );
-        console.log('stampImage', this.stampImage);
       }
 
       if (this.activeTemplateInfo.certificationImageTop) {
@@ -264,7 +261,6 @@ export class PdfComponent implements OnInit {
 
     const appURL = window.location.origin;
 
-    // console.log('encrypted url', ecnryptedURLParam, ' current url', appURL);
     const fetchedImageURL = `${appURL}/qrcode?code=${ecnryptedURLParam}`;
     const fetchedImage = await QRCode.toDataURL(fetchedImageURL);
 
@@ -407,82 +403,95 @@ export class PdfComponent implements OnInit {
       this.selectedHviVersion == 'v2' ||
       this.selectedHviVersion == 'v1';
 
-    let columnLength = extractedRowsBody[0].length;
+    let headerRow = extractedRowsBody[0];
+    let columnLength = headerRow.length;
+    function calculateWidthPerColumn(columns: any) {
+      // Slope and intercept from the linear equation
+      const slope = -8 / 3;
+      const intercept = 232 / 3;
+
+      // Calculate width per column using the linear equation
+      const widthPerColumn = slope * columns + intercept;
+
+      return widthPerColumn;
+    }
 
     let selectedColumnWidth = isLandscapeMode
-      ? 24
+      ? calculateWidthPerColumn(headerRow.length)
       : this.selectedHviVersion == 'v4'
       ? 16
       : 18;
     let columnWidthArray = columnLength
       ? Array(columnLength).fill(selectedColumnWidth)
       : [];
+
+    // console.log('(headerRow', headerRow);
+    const findHeaderRowIndex = (name: string) =>
+      headerRow.findIndex((headerRowName: string) => name === headerRowName);
     const customColumnWidths: any =
       isLandscapeMode && this.selectedHviVersion === 'v6'
         ? {
-            0: 42, // Pr.No
-            1: 42, // Pr.No
-            2: 28, // HVI id
-            3: 54, // Cont/mark/lot no
-            4: 28, // Bale/Bale/Sample No.
-            18: 75, //Remarks
+            [findHeaderRowIndex('P R No')]: 42,
+            [findHeaderRowIndex('HVI ID No')]: 28,
+            [findHeaderRowIndex('Cont/Mark/Lot No')]: 54,
+            [findHeaderRowIndex('Bale/Sample No')]: 28,
+            [findHeaderRowIndex('Remarks')]: 75,
           }
         : isLandscapeMode && this.selectedHviVersion === 'v4'
         ? {
-            0: 35, // No./Average
-            5: 42, // Mark/Lot no
-            6: 54, // Bale/Sample No
-            20: 54, // Remarks
+            [findHeaderRowIndex('No')]: 35,
+            [findHeaderRowIndex('Cont/Mark/Lot No')]: 42,
+            [findHeaderRowIndex('Bale/Sample No')]: 54,
+            [findHeaderRowIndex('Remarks')]: 54,
           }
         : isLandscapeMode && this.selectedHviVersion === 'v3' //Khujand
         ? {
-            0: 35, // Bale ID,
-            5: 35, // TrId
-            12: 35, // G-C
-            21: 50, // Remarks
+            [findHeaderRowIndex('Bale/Sample No')]: 35,
+            [findHeaderRowIndex('P R No')]: 35,
+            [findHeaderRowIndex('C-G')]: 35,
+            [findHeaderRowIndex('Remarks')]: 50,
           }
         : isLandscapeMode && this.selectedHviVersion === 'v2' //bohtar
         ? {
-            0: 35,
-            8: 30,
-            13: 30, // C-G
-            23: 50, // Remarks
+            [findHeaderRowIndex('No')]: 35,
+            [findHeaderRowIndex('P R No')]: 30,
+            [findHeaderRowIndex('C-G')]: 30,
+            [findHeaderRowIndex('Remarks')]: 50,
           }
         : isLandscapeMode && this.selectedHviVersion === 'v1'
         ? {
-            0: 35, //No/Average
-            6: 30, //Tr ID,
-            3: 32, // Mst
-            13: 35, // C-G
-            21: 50, // Remarks
+            [findHeaderRowIndex('No')]: 35,
+            [findHeaderRowIndex('P R No')]: 30,
+            [findHeaderRowIndex('HVI ID No')]: 32,
+            [findHeaderRowIndex('C-G')]: 35,
+            [findHeaderRowIndex('Remarks')]: 50,
           }
         : {};
     columnWidthArray = columnWidthArray.map((width, index) => {
       return customColumnWidths[index] || width;
     });
     const modifiedBody = extractedRowsBody.map((item: any) => {
-      // console.log('item', item);
       return item.map((itemInner: any) => {
         if (Array.isArray(itemInner)) {
           return itemInner.map((itemInnerInner: any) => {
             if (itemInnerInner[0].text) {
               return {
                 text: itemInnerInner.text || itemInnerInner,
-                width: 90,
-                _minWidth: 90,
+                width: 140,
+                _minWidth: 140,
               };
             } else {
-              return { text: itemInnerInner, width: 90, _maxWidth: 90 };
+              return { text: itemInnerInner, width: 140, _maxWidth: 140 };
             }
           });
         } else if (typeof itemInner === 'object') {
           return {
             text: itemInner.text || itemInner,
-            width: 90,
-            _maxWidth: 90,
+            width: 140,
+            _maxWidth: 140,
           };
         } else {
-          return { text: itemInner, width: 90, _maxWidth: 90 };
+          return { text: itemInner, width: 140, _maxWidth: 140 };
         }
       });
     });
@@ -818,7 +827,8 @@ export class PdfComponent implements OnInit {
         .handleProcessingVersion(
           dataItem,
           this.selectedHviVersion,
-          this.handleShowError
+          this.handleShowError,
+          this.activeTemplateInfo?.columnSettings
         )
         .then((res) => {
           this.renderPDF(res);

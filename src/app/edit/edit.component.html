@@ -7,6 +7,24 @@
       (ngSubmit)="onCreate(createForm.value)"
     >
       <fieldset class="k-form-fieldset">
+        <div class="column-names-wrapper">
+          <h4><b>Header and Footer Section data</b></h4>
+
+          <div formArrayName="checkboxGroup">
+            <div *ngFor="let control of columnSettings; let i = index">
+              <div class="inputSection">
+                <input
+                  type="checkbox"
+                  [id]="control.id"
+                  [name]="control.id"
+                  [checked]="control.isChecked"
+                  (change)="handleCheckboxChange($event, i)"
+                />
+                <label [for]="control.id">{{ control.label }} </label>
+              </div>
+            </div>
+          </div>
+        </div>
         <ng-container
           *ngIf="
             selectedHviVersion === 'v1' ||
@@ -173,6 +191,7 @@
             />
           </div>
         </div>
+
         <!--
         <div class="asset-wrapper">
           <div class="select-wrapper">

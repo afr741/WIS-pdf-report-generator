@@ -24,6 +24,7 @@ type ReportTemplate
   testingInstrumentType: String
   remarksList: [String]
   testConditionsList: [String]
+  columnSettings: AWSJSON
 }
 
 type Report

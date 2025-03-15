@@ -37,7 +37,7 @@ export class QrcodeComponent implements OnInit {
     size: <LoaderSize>'large',
   };
   public letterheadImageUrl: string = '../../assets/images/letterhead.png';
-
+  public templateData: any;
   // when pinging this page
   // take the query param from page URL
   // decode the query param, get page id(attachementurlname)
@@ -108,45 +108,30 @@ export class QrcodeComponent implements OnInit {
       }
     };
 
-    //TBD - FIX TEMPLATE FETCGHING
     const fetchTemplates = async () => {
-      try {
-        const templates = await API.graphql({
-          query: `query ListReportTemplates($filter: ModelReportFilterInput, $limit: Int, $nextToken: String) {
-  listReportTemplates {
-    items {
-      id
-      fax
-      email
-      createdAt
-      certificationImageTop
-      addressTranslation
-      address
-      labLocation
-      letterHeadImageName
-      localCompanyName
-      localCompanyNameTranslation
-      origin
-      owner
-      phone
-      remarksList
-      stampImageName
-      templateId
-      testConditionsList
-      testLocation
-      testingInstrumentType
-      updatedAt
-    }
-  }
-}`,
-          variables: {},
-          authMode: GRAPHQL_AUTH_MODE.API_KEY,
-        });
-        console.log('fetchTemplates', templates);
-        return templates;
-      } catch (error) {
-        return error;
+      this.isLoading = true;
+      const templates = await API.graphql({
+        query: `query ListReportTemplates {
+      listReportTemplates {
+        items {
+          id
+          labLocation
+          origin
+          owner
+          phone
+          remarksList
+          stampImageName
+          templateId
+          testConditionsList
+          testLocation
+          columnSettings
+        }
       }
+    }`,
+        authMode: GRAPHQL_AUTH_MODE.API_KEY,
+      });
+      console.log('template info event', templates);
+      return templates;
     };
 
     this.decodeQueryParam(queryParams['code']);
@@ -161,46 +146,58 @@ export class QrcodeComponent implements OnInit {
         ).toDateString();
 
         console.log('dbEntryData', this.dbEntryData);
-        this.pdfService
-          .handleProcessingVersion(
-            this.dbEntryData[0],
-            this.dbEntryData[0].hviVersion,
-            (e: any) => {
-              console.log(e);
-            }
-          )
-          .then((data) => {
-            this.isLoading = false;
-            this.dataRows = data.extractedRowsBody;
+      })
+      .then(() => {
+        fetchTemplates()
+          .then((event: any) => {
+            console.log('fetchTemplates event', event);
+            this.templateData = event.data.listReportTemplates.items.find(
+              (template: any) =>
+                this.dbEntryData[0].labLocation?.toLowerCase() ===
+                template.labLocation?.toLowerCase()
+            );
+            console.log('this.template', this.templateData);
+          })
+          .then(() => {
+            this.pdfService
+              .handleProcessingVersion(
+                this.dbEntryData[0],
+                this.dbEntryData[0].hviVersion,
+                (e: any) => {
+                  console.log(e);
+                },
+                this.templateData?.columnSettings
+              )
+              .then((data) => {
+                this.isLoading = false;
+                this.dataRows = data.extractedRowsBody;
 
-            console.log('data', data);
+                console.log('data', data);
 
-            const columnNames = data.extractedRowsBody[0];
-            this.columnsConfig = columnNames.map((name: any) => ({
-              field: name,
-              title: name,
-            }));
+                const columnNames = data.extractedRowsBody[0];
+                this.columnsConfig = columnNames.map((name: any) => ({
+                  field: name,
+                  title: name,
+                }));
 
-            // Extract rows from the remaining data
-            this.gridData = data.extractedRowsBody.slice(1).map((row: any) => {
-              return row.reduce((acc: any, value: any, index: any) => {
-                acc[columnNames[index]] = value; // Map each value to its corresponding column name
-                return acc;
-              }, {});
-            });
+                // Extract rows from the remaining data
+                this.gridData = data.extractedRowsBody
+                  .slice(1)
+                  .map((row: any) => {
+                    return row.reduce((acc: any, value: any, index: any) => {
+                      acc[columnNames[index]] = value; // Map each value to its corresponding column name
+                      return acc;
+                    }, {});
+                  });
 
-            // selectedOrigin = dbEntryData[0].origin :
-            console.log('columnsConfig', this.columnsConfig);
+                // selectedOrigin = dbEntryData[0].origin :
+                console.log('columnsConfig', this.columnsConfig);
 
-            console.log('gridData', this.gridData);
+                console.log('gridData', this.gridData);
+              });
           });
       })
-      .catch((e: any) => console.log('error', e));
-
-    await fetchTemplates()
-      .then((event: any) => {
-        console.log('then fetchTemplates events', event);
-      })
-      .catch((e: any) => console.log('error', e));
+      .catch((e: any) => console.log('error', e))
+      .finally(() => (this.isLoading = false));
   }
 }
