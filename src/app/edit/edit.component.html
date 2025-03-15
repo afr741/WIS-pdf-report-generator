@@ -8,7 +8,7 @@
     >
       <fieldset class="k-form-fieldset">
         <div class="column-names-wrapper">
-          <h4><b>Header and Footer Section data</b></h4>
+          <h4><b>Tick or Untick extra columns here:</b></h4>
 
           <div formArrayName="checkboxGroup">
             <div *ngFor="let control of columnSettings; let i = index">
@@ -25,6 +25,9 @@
             </div>
           </div>
         </div>
+
+        <h4><b>Header and Footer Section data: </b></h4>
+
         <ng-container
           *ngIf="
             selectedHviVersion === 'v1' ||
